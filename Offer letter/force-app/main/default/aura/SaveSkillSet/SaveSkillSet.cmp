@@ -1,0 +1,568 @@
+<aura:component controller="smartSearchController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:registerEvent name="candProfileEvent" type="c:CandidateProfile"/>
+    <!--declare events handlers-->  
+    <aura:handler name="oRetailerdataEvent" event="c:selectedSkillsdataEvent" action="{!c.handleComponentEvent}"/>
+    <aura:handler name="oRetailerdataEvent1" event="c:selectedLocationdataEvent" action="{!c.handleComponentEvent1}"/>
+    <aura:handler name="oRetailerdataEvent2" event="c:selectedCandidatedataEvent" action="{!c.handleComponentEvent2}"/>
+    
+    <!--aura:attribute name="selectedTab" type="String"/-->
+    <aura:attribute name="candidateProfile" type="Candidate_Profile__c" default="{'SObject':'KTDO1__Candidate_Profile__c'}"/>
+    <aura:attribute name="skillAndExp" type="List" default=""/>
+    <aura:attribute name="ShowCandidateProfile" type="boolean" default="false"/>
+    <aura:attribute name="selectedNoticePeriod" type="String"/>
+    <aura:attribute name="listOfNoticePeriod" type="List"/>
+    <aura:attribute name="SearchUserKeyWord" type="string"/>
+    <aura:attribute name="listOfUserSearchRecords" type="List" description="Use,for store the list of search records which returns from apex class"/>
+    <aura:attribute name="selectedUserRecord" type="List" description="Use,for store SELECTED sObject Record" default="[]"/>
+    <aura:attribute name="selectedUserRecordClone" type="List" description="Use,for store SELECTED sObject Record" default="[]"/>
+    <aura:attribute name="selectedCandidateRecord" type="List" description="Use,for store SELECTED sObject Record" default="[]"/>
+    <aura:attribute name="Message" type="String" default="Search Result.."/>
+    <aura:attribute name="selectedparentList" type="String"/>
+    <aura:attribute name="selectedSkillsetExp" type="String"/>
+    <aura:attribute name="skillAndExpObjList" type="Skill_Set_Experience__c" default="{'SObject':'KTDO1__Skill_Set_Experience__c'}" />
+    <aura:attribute name="candidateSkills" type="Map" default="{}"/>    
+    <!--aura attributes for Industry-->
+    <aura:attribute name="selectedIndustry" type="String"/>
+    <aura:attribute name="listOfIndustries" type="List"/>
+    
+    <!--aura attributes for Functional Areas/Roles-->
+    <aura:attribute name="selectedFunctionalArea" type="String"/>
+    <aura:attribute name="listOfFunctionalAreas" type="List"/>
+    
+    <!--aura attributes for SkillSet Ratings-->
+    <aura:attribute name="selectedRating" type="String"/>
+    <aura:attribute name="listOfRatings" type="List"/>
+    
+    <!--aura attributes for Designation-->
+    <aura:attribute name="selectedDesignation" type="String"/>
+    <aura:attribute name="listOfDesignation" type="List"/>
+    
+    <!--aura attributes for UG Streams-->
+    <aura:attribute name="selectedStream" type="String"/>
+    <aura:attribute name="listOfStreams" type="List"/>
+    
+    <!--aura attributes for PG Streams-->
+    <aura:attribute name="selectedPGStream" type="String"/>
+    <aura:attribute name="listOfPGStreams" type="List"/>
+    
+    <!--aura attributes for Type of Rolls And Responsibilities-->
+    <aura:attribute name="selectedType" type="String"/>
+    <aura:attribute name="listOfType" type="List"/>
+    <aura:attribute name="SearchUserKeyWord3" type="string"/>
+    <aura:attribute name="listOfRollsAndResponsibilitiesRecords" type="List" description="Use,for store the list of search records which returns from apex class"/>
+    <aura:attribute name="selectedRollsandRespo" type="String"/>
+    <aura:handler name="oRetailerdataEvent3" event="c:selectedRollsAndRespdataEvent" action="{!c.handleRollsComponentEvent}"/>
+    <aura:attribute name="selectedRollsAndRespRecord" type="List" description="Use,for store SELECTED sObject Record" default="[]"/>
+    <aura:attribute name="rollsAndResp" type="String" />
+    <aura:attribute name="listOfRollsAndResp" type="List"/>
+    
+    <!-- aura attributes--> 
+    <aura:attribute name="parentList" type="list" default="[]" description=""/>
+    <aura:attribute name="childList" type="list" default="[]"/>
+    <aura:attribute name="pickListMap" type="map"/>
+    <aura:attribute name="disabledChildField" type="boolean" default="true"/>
+    <aura:attribute name="skillSetList" type="list" default="[]" description=""/>
+    <aura:attribute name="experience" type="String" />
+    
+    <!-- To create job application -->
+    <aura:attribute name="showModal" type="boolean" default="false"/>
+    <aura:attribute name="jobPostingList" type="list" default="[]" description=""/>
+    <aura:attribute name="selectedJobPostingList" type="String"/>
+    <aura:attribute name="jobApplication" type="List"/>
+    <aura:attribute name="jobApplicationList" type="List"/>
+    <aura:attribute name="selectedClientList" type="String"/>
+    <aura:attribute name="clientList" type="list" default="[]" description=""/>
+    
+    
+    <aura:attribute name="listOfLocationSearchRecords" type="List" description="Use,for store the list of search records which returns from apex class"/>
+    <aura:attribute name="selectedLocationRecord" type="List" description="Use,for store SELECTED sObject Record"/>
+    <aura:attribute name="listOfSearchRecords1" type="List" description="Use,for store the list of search records which returns from apex class"/>
+    <aura:attribute name="SearchUserKeyWord1" type="string"/>
+    <aura:attribute name="SearchUserKeyWord2" type="string"/>
+    
+    <aura:attribute name="listOfSearchProfiles" type="List" description="Use,for store the list of search records which returns from apex class"/>
+    
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    
+    <div class="content1">   
+        <div class="smartSearch">
+            <fieldset class="smartSearchContent">
+                <div class="slds-align_absolute-center slds-theme_alt-inverse slds-p-bottom_small slds-p-top_small">
+                    <h1><b>Candidate Details</b></h1> 
+                </div> 
+                <table class="display">
+                    <tbody>
+                        <br/>
+                        <tr>
+                            <td class="body"><b>Upload Document</b></td>
+                            <td class="body"> <lightning:input aura:id="fuploader" onchange="{!c.handleFilesChange}" type="file" name="file"  multiple="false"/>
+                                <div class="slds-text-body_medium slds-text-color_success">{!v.fileName} </div>
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="body"><b>Candidate Name </b></td>
+                            <lightning:input type="text" value="{!v.candidateProfile.Name}" placeholder="Name"/>
+                            
+                        </tr>
+                        <tr>
+                            <td class="body"><b>Email </b></td>
+                            <lightning:input type="text" value="{!v.candidateProfile.KTDO1__Email__c}" placeholder="EX:123@gmail.com"/>
+                            
+                        </tr>
+                        <!-- Skills  block start from here -->
+                        <tr>
+                            <td class="body"><b>Any Keywords</b></td>
+                            <td>    
+                                <lightning:select name="select1"  value="{!v.selectedparentList}" label="Department"  required="">   
+                                    <option value="NULL" text="None"></option>
+                                    <aura:iteration items="{!v.parentList}" var="lst" >
+                                        <option value="{!lst}" text="{!lst}" selected="{!lst==v.selectedparentList}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>  </td>
+                            <td >
+                                <div onmouseleave="{!c.onblur}" aura:id="searchUserRes" class="slds-form-element slds-lookup slds-is-close" data-select="single">
+                                    <label class="slds-form-element__label" for="horizontal-input-id-01">Skills</label>                        
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-input-has-icon slds-input-has-icon--right">
+                                            <div aura:id="lookupUserField" class="slds-show">
+                                                <lightning:icon class="slds-input__icon slds-show" iconName="standard:search" size="x-small" alternativeText="search"/>
+                                                <span class="slds-icon_container  slds-combobox__input-entity-icon" title="record">
+                                                    <span class="slds-assistive-text"></span>
+                                                </span>
+                                                <ui:inputText  aura:id="searchUserValue" size="25"   updateOn="keyup" keyup="{!c.keyPressUserController}" class="slds-lookup__search-input slds-input leftPaddingClass" value="{!v.SearchUserKeyWord}" placeholder="search.." />
+                                                <input type="hidden"  id='valueHolder'  name = "" value = ""  />                                                       
+                                            </div>                                                
+                                        </div>
+                                        <!--This part is for Display typehead lookup result List-->
+                                        <ul style="min-height:40px;width:291px;margin-right:68px;" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
+                                            <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
+                                            <center> {!v.Message}</center>
+                                            <aura:iteration items="{!v.listOfUserSearchRecords}" var="singleRec">
+                                                <c:customLookupforSkillsdata oUser="{!singleRec}" rowIndex="{!index}" IconName="standard:skill" selectedSkillsetExp="{!v.selectedSkillsetExp}"/>
+                                            </aura:iteration>
+                                        </ul>
+                                    </div>                 
+                                </div>  
+                            </td> 
+                            <td class=" slds-p-left_x-small slds-col">
+                                <lightning:select name="mySelect"  aura:id="mySelect" value="{!v.selectedSkillsetExp}" label="SkillSet Experience"  required="">   
+                                    <option value="NULL" text="None"></option>
+                                    <aura:iteration items="{!v.skillSetList}" var="lst" >
+                                        <option value="{!lst}" text="{!lst}" selected="{!lst==v.selectedSkillsetExp}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </td>
+                            
+                            <td class="slds-p-left_x-small slds-col">
+                                <lightning:select name="selectRating"  aura:id="selectRating" value="{!v.selectedRating}" label="SkillSet Rating" onchange="{!c.onSelectRating}" required="">   
+                                    <option value="NULL" text="None"></option>
+                                    <aura:iteration items="{!v.listOfRatings}" var="lst" >
+                                        <option value="{!lst}" text="{!lst}" selected="{!lst==v.selectedRating}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </td>
+                            
+                            <td>
+                                <div class="slds-clearfix slds-m-top_large slds-p-left_x-small" >
+                                    <lightning:button class="slds-theme_inverse " aura:id="setSkillandExp" label="Add" onclick="{!c.setSkillandExp}"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tbody class="slds-box">
+                            <tr class="slds-p-top_xx-medium "> 
+                                <aura:iteration items="{!v.selectedUserRecordClone}" var="user"> 
+                                    <div aura:id="lookupUser-pill" class="slds-pill-container" style="width:170px">
+                                        <lightning:pill class="pillSize" label="{!user}" name="{!user.Id}" onremove="{!c.clearUser}">
+                                            <aura:set attribute="media">
+                                                <lightning:icon iconName="standard:skill" size="x-small" alternativeText="close"/>
+                                            </aura:set>
+                                        </lightning:pill>
+                                    </div>
+                                </aura:iteration>
+                                
+                            </tr>
+                        </tbody>
+                        <!-- Skills  block Ends here -->
+                        
+                        <tr>
+                            <td class="body"><b>Experience</b></td>
+                            <lightning:input type="text" value="{!v.candidateProfile.KTDO1__Experience__c}"/>
+                            <!--td class="body"><lightning:input aura:id="input4" name="input4" placeholder="Min"/></td>
+                            <td class="slds-p-left_x-small"><lightning:input aura:id="input5" name="input5" placeholder="Max"/></td-->
+                        </tr>
+                        <tr>
+                            <td class="body"><b>Expected Annual Salary<br/>(Ex:0.0 to 0.0)</b></td>
+                            <lightning:input type="text" value="{!v.candidateProfile.KTDO1__Expected_CTC__c}"/>
+                            <!--td class="body"><lightning:input aura:id="input7" name="input7" placeholder="0 Lacs"/></td>
+                            <td class="slds-p-left_x-small"><lightning:input aura:id="input9" name="input9" placeholder="0 Lacs"/></td-->
+                        </tr>
+                        
+                        <tr>
+                            <td class="colomn1"><b>Current Location</b></td>
+                            <lightning:input type="text" value="{!v.candidateProfile.KTDO1__Current_Location__c}"/>
+                        </tr>
+                        <br/>
+                        
+                        
+                        <!-- Preferred Location  block start from here -->
+                        <tr>
+                            <td class=""><b>Preferred Location</b></td>                            
+                            <td class="">
+                                <div onmouseleave="{!c.onblur1}" aura:id="searchLocationRes" class="slds-form-element slds-lookup slds-is-close" data-select="single" >
+                                    <!--label class="slds-form-element__label" for="horizontal-input-id-01">Preferred Location</label-->                        
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-input-has-icon slds-input-has-icon--right">
+                                            <div aura:id="lookupUserField" class="slds-show">
+                                                <lightning:icon class="slds-input__icon slds-show" iconName="standard:search" size="x-small" alternativeText="search"/>
+                                                <span class="slds-icon_container  slds-combobox__input-entity-icon" title="record">
+                                                    <span class="slds-assistive-text"></span>
+                                                </span>
+                                                <ui:inputText  aura:id="searchUserValue" size="25"   updateOn="keyup" keyup="{!c.keyPressUserController1}" class="slds-lookup__search-input slds-input leftPaddingClass" value="{!v.SearchUserKeyWord1}" placeholder="search.." />
+                                                <input type="hidden"  id='valueHolder'  name = "" value = ""  />                                                       
+                                            </div>                                                
+                                        </div>
+                                        <!--This part is for Display typehead lookup result List-->
+                                        <ul style="min-height:40px;width:291px;margin-right:68px;" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
+                                            <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
+                                            <center> {!v.Message}</center>
+                                            <aura:iteration items="{!v.listOfLocationSearchRecords}" var="singleRec">
+                                                <c:customLookupforLocationdata oUser="{!singleRec}" rowIndex="{!index}" IconName="standard:address" />
+                                            </aura:iteration> 
+                                        </ul>
+                                    </div>                 
+                                </div>  
+                            </td>     
+                            
+                    
+                            <tbody class="slds-box">
+                                <tr class="slds-p-left_large">
+                                    <aura:iteration items="{!v.selectedLocationRecord}" var="user"> 
+                                        <div aura:id="lookupUser-pill1" class="slds-pill-container" style="width:150px">
+                                            <lightning:pill class="pillSize" label="{!user}" name="{!user.Id}" onremove="{!c.clearUser1}">
+                                                <aura:set attribute="media">
+                                                    <lightning:icon iconName="standard:address" size="x-small" alternativeText="close"/>
+                                                </aura:set>
+                                            </lightning:pill>
+                                        </div>
+                                    </aura:iteration> 
+                                </tr>
+                            </tbody>
+                            
+                        </tr>
+                        <!-- Preferred Location  block Ends here -->
+                        
+                        
+                        <tr>
+                            <td class="body"><b>Notice Period</b></td>
+                            <td>
+                                <lightning:select name="select1"  value="{!v.selectedNoticePeriod}" label="" onchange="{!c.preferredNoticePeriod}" required="">   
+                                    <option value="NULL" text="None"></option>
+                                    <aura:iteration items="{!v.listOfNoticePeriod}" var="lst" >
+                                        <option value="{!lst}" text="{!lst}" selected="{!lst==v.selectedNoticePeriod}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td class="body"><b>Sort By</b></td>
+                            <td class="body"><lightning:input aura:id="input14" name="input14" placeholder="Relevance"/></td>
+                        </tr>
+                        <tr>
+                            <td class="body"><b>Resume Per Page</b></td>
+                            <td class="body"><lightning:input aura:id="input15" name="input15" placeholder="10"/></td>
+                        </tr>
+                        <tr>
+                            <td class="body"><b>Active In</b></td>
+                            <td class="body"><lightning:input aura:id="input16" name="input16" placeholder="All Resumes"/></td>
+                        </tr>
+                        
+                    </tbody>
+                </table>                
+            </fieldset>
+            
+            
+            <fieldset class="careerFilterContent">
+                <div class="slds-align_absolute-center slds-theme_alt-inverse slds-p-bottom_small slds-p-top_small">
+                    <h1><b>Career Filter</b></h1> 
+                </div>	
+                <table class="display">
+                    <tbody>
+                        <tr>
+                            <td class="body"><b>Functional Area</b></td>
+                            <td>
+                                <lightning:select name="area"  value="{!v.selectedFunctionalArea}" label="" onchange="{!c.preferredRole}" required="">   
+                                    <option value="NULL" text="None"></option>
+                                    <aura:iteration items="{!v.listOfFunctionalAreas}" var="lst" >
+                                        <option value="{!lst}" text="{!lst}" selected="{!lst==v.selectedFunctionalArea}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="body"><b>Industry</b></td>
+                            <td>
+                                <lightning:select name="industry"  value="{!v.selectedIndustry}" label="" onchange="{!c.preferredIndustry}" required="">   
+                                    <option value="NULL" text="None"></option>
+                                    <aura:iteration items="{!v.listOfIndustries}" var="lst" >
+                                        <option value="{!lst}" text="{!lst}" selected="{!lst==v.selectedIndustry}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="body"><b>Employers</b></td>
+                            <lightning:input type="text" value="{!v.candidateProfile.KTDO1__Employers__c}" placeholder="Type Company Name"/>
+                        </tr>
+                        <tr>
+                            <td class="body"><b>Exclude Employers</b></td>
+                            <lightning:input type="text" value="{!v.candidateProfile.KTDO1__Exclude_Employers__c}" placeholder="Type Company Name"/>
+                        </tr>
+                        <tr>
+                            <td class="body"><b>Designation</b></td>
+                            <td>
+                                <lightning:select name="area"  value="{!v.selectedDesignation}" label="" onchange="{!c.preferredDesignation}" required="">   
+                                    <option value="NULL" text="None"></option>
+                                    <aura:iteration items="{!v.listOfDesignation}" var="lst" >
+                                        <option value="{!lst}" text="{!lst}" selected="{!lst==v.selectedDesignation}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="body"><b>Rolls and Responsibilities</b></td>
+                            <td >
+                                <lightning:select name="area"  value="{!v.selectedType}" label="Type" onchange="{!c.preferredType}" required="">   
+                                    <option value="NULL" text="None"></option>
+                                    <aura:iteration items="{!v.listOfType}" var="lst" >
+                                        <option value="{!lst}" text="{!lst}" selected="{!lst==v.selectedType}"></option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </td>
+                            <td class="slds-p-left_small">
+                                <div onmouseleave="{!c.onblur2}" aura:id="searchRollsAndRespRes" class="slds-form-element slds-lookup slds-is-close" data-select="single" style="width:200px">
+                                    <label class="slds-form-element__label" for="horizontal-input-id-01">Search</label>                        
+                                    <div class="slds-form-element__control">
+                                        <div class="slds-input-has-icon slds-input-has-icon--right">
+                                            <div aura:id="lookupUserField" class="slds-show">
+                                                <lightning:icon class="slds-input__icon slds-show" iconName="standard:search" size="x-small" alternativeText="search"/>
+                                                <span class="slds-icon_container  slds-combobox__input-entity-icon" title="record">
+                                                    <span class="slds-assistive-text"></span>
+                                                </span>
+                                                <ui:inputText  aura:id="searchUserValue" size="25"   updateOn="keyup" keyup="{!c.keyPressUserController2}" class="slds-lookup__search-input slds-input leftPaddingClass" value="{!v.SearchUserKeyWord3}" placeholder="search.." />
+                                                <input type="hidden"  id='valueHolder'  name = "" value = ""  />                                                       
+                                            </div>                                                
+                                        </div>
+                                        <!--This part is for Display typehead lookup result List-->
+                                        <ul style="min-height:40px;width:291px;margin-right:68px;" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
+                                            <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
+                                            <center> {!v.Message}</center>
+                                            <aura:iteration items="{!v.listOfRollsAndResponsibilitiesRecords}" var="singleRec">
+                                                <c:customLookupforRollsAndRespData oUser="{!singleRec}" rowIndex="{!index}" IconName="standard:skill" selectedRollsandRespo="{!v.selectedRollsandRespo}"/>
+                                            </aura:iteration>
+                                        </ul>
+                                    </div>                 
+                                </div>  
+                            </td>
+                        </tr>
+                        
+                        <br/>
+                        
+                    </tbody>
+                </table>     
+                <table class="slds-truncate ">
+                    <thead class="slds-theme_alt-inverse">
+                        <tr>
+                            
+                            <th class="head slds-size_1-of-2">Rolls</th>
+                            <th class="head slds-size_2-of-2">Responsibilities</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody class="slds-box">
+                        <tr class="slds-p-top_xx-medium ">
+                            <td class="body1">
+                                <aura:iteration items="{!v.selectedRollsAndRespRecord}" var="user"> 
+                                    <aura:if  isTrue="{!user.KTDO1__Type__c == 'Rolls'}">
+                                        
+                                        <div aura:id="lookupUser-pill2" class="slds-pill-container" style="width:180px">
+                                            <lightning:pill class="pillSize" label="{!user.Name}" name="{!user.Id}" onremove="{!c.clearUser}">
+                                                <aura:set attribute="media">
+                                                    <lightning:icon iconName="standard:skill" size="x-small" alternativeText="close"/>
+                                                </aura:set>
+                                            </lightning:pill>
+                                        </div>
+                                    </aura:if>
+                                </aura:iteration> 
+                            </td>
+                            <td class="body1">
+                                <aura:iteration items="{!v.selectedRollsAndRespRecord}" var="user"> 
+                                    <aura:if  isTrue="{!user.KTDO1__Type__c == 'Responsibilities'}">
+                                        <div aura:id="lookupUser-pill2" class="slds-pill-container" style="width:180px">
+                                            <lightning:pill class="pillSize" label="{!user.Name}" name="{!user.Id}" onremove="{!c.clearUser}">
+                                                <aura:set attribute="media">
+                                                    <lightning:icon iconName="standard:skill" size="x-small" alternativeText="close"/>
+                                                </aura:set>
+                                            </lightning:pill>
+                                        </div>
+                                    </aura:if>
+                                </aura:iteration> 
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>           
+            </fieldset>
+            
+            
+            
+            <fieldset class="academicsFilterContent">
+                <div class="slds-align_absolute-center slds-theme_alt-inverse slds-p-bottom_small slds-p-top_small">
+                    <h1><b>Academics Filter</b></h1> 
+                </div>	
+                
+                <div class="slds-theme_default slds-p-top_xx-large slds-p-left_xx-large">
+                    <lightning:tabset class="slds-p-bottom_x-large" aura:id="tabs" selectedTabId="{!v.selectedTab}">
+                        
+                        <!--UG Qualification-->
+                        <lightning:tab class="slds-theme_shade" label="UG Qualification" id="UGQualification" onactive="" iconName="">   
+                            <table class="display">
+                                <tbody>
+                                    <tr>
+                                        <td class="body"><b>Stream/Discipline</b></td>
+                                        <td>
+                                            <lightning:select name="stream"  value="{!v.selectedStream}" label="" onchange="{!c.preferredStream}" required="">   
+                                                <option value="NULL" text="None"></option>
+                                                <aura:iteration items="{!v.listOfStreams}" var="lst" >
+                                                    <option value="{!lst}" text="{!lst}" selected="{!lst==v.selectedStream}"></option>
+                                                </aura:iteration>
+                                            </lightning:select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="body"><b>Institute Name</b></td>
+                                        <lightning:input type="text" value="{!v.candidateProfile.KTDO1__UG_Institute_Name__c}" placeholder="Type Institute/university/college name"/>
+                                    </tr>
+                                    <tr>
+                                        <td class="body"><b>Education Type</b></td>
+                                        <td class="body"><lightning:input aura:id="input24" name="input24" placeholder="Select Any One"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="body"><b>Year Of Graduation</b></td>
+                                        <td class="body"><lightning:input aura:id="input25" name="input25" placeholder="From"/></td>
+                                        <td class="slds-p-left_x-small slds-p-right_xxx-small"><lightning:input aura:id="input26" name="input26" placeholder="To"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>        
+                        </lightning:tab>
+                        
+                        <!--No UG Qualification-->
+                        <!--lightning:tab class="slds-theme_shade" label="No UG Qualification" id="NoUGQualification" onactive="" iconName="">   
+                        <lightning:input type="radio" label="Only those candidates who have completed 10th or 12th and are not pursuing graduation" name="" value="1" />
+                    </lightning:tab-->
+                        
+                        <!--PG Qualification-->
+                        <lightning:tab class="slds-theme_shade" label="PG Qualification" id="PGQualification" onactive="" iconName="">   
+                            <table class="display">
+                                <tbody>
+                                    <tr>
+                                        <td class="body"><b>PG Stream/Discipline</b></td>
+                                        <td>
+                                            <lightning:select name="stream"  value="{!v.selectedPGStream}" label="" onchange="{!c.preferredPGStream}" required="">   
+                                                <option value="NULL" text="None"></option>
+                                                <aura:iteration items="{!v.listOfPGStreams}" var="lst" >
+                                                    <option value="{!lst}" text="{!lst}" selected="{!lst==v.selectedPGStream}"></option>
+                                                </aura:iteration>
+                                            </lightning:select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="body"><b>PG Institute Name</b></td>
+                                        <lightning:input type="text" value="{!v.candidateProfile.KTDO1__PG_Institute_Name__c}" placeholder="Type Institute/university/college name"/>
+                                    </tr>
+                                    <tr>
+                                        <td class="body"><b>PG Education Type</b></td>
+                                        <td class="body"><lightning:input aura:id="input29" name="input29" placeholder="Select Any One"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="body"><b>Year Of Graduation</b></td>
+                                        <td class="body"><lightning:input aura:id="input30" name="input30" placeholder="From"/></td>
+                                        <td class="slds-p-left_x-small slds-p-right_xxx-small"><lightning:input aura:id="input31" name="input31" placeholder="To"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>        
+                        </lightning:tab>
+                    </lightning:tabset>
+                </div>             
+            </fieldset>
+            
+            
+            
+        </div>
+        <div class="slds-p-top_small slds-p-bottom_medium">
+            <lightning:button class="slds-theme_inverse " aura:id="saveSkillandExp" label="Create Candidate Profile" onclick="{!c.saveSkillandExp}"/>
+            <lightning:button class="slds-theme_inverse" aura:id="createJobApplication" label="Create Profile with Job Application" onclick="{!c.openModel}"/>
+        </div>  
+        <div class="slds-m-around_xx-small">
+            
+            <aura:if isTrue="{!v.showModal}">
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" 
+                         aria-modal="true" aria-describedby="modal-content-id-1" 
+                         class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <lightning:buttonIcon iconName="utility:close"
+                                                  onclick="{! c.hideModel }"
+                                                  alternativeText="close"
+                                                  variant="bare-inverse"
+                                                  class="slds-modal__close"/>
+                            <!-- <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                                Modal Box</h2>-->
+                        </header>
+                        <!--Modal/Popup Box Body Starts here-->
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <lightning:select aura:id="selectClient" name="selectClient"  value="{!v.selectedClientList}" label="Select Client"  onchange="{!c.clientSelected}" required="">   
+                                <option value="NULL" text="None"></option>
+                                <aura:iteration items="{!v.clientList}" var="lst" >
+                                    <option text="{!lst.label}" value="{!lst.value}"></option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <lightning:select aura:id="select" name="select"  value="{!v.selectedJobPostingList}" label="Assign to Job Posting"  required="">   
+                                <option value="NULL" text="None"></option>
+                                <aura:iteration items="{!v.jobPostingList}" var="lst" >
+                                    <option text="{!lst.label}" value="{!lst.value}"></option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>
+                        <!--Modal/Popup Box Footer Starts here-->
+                        <footer class="slds-modal__footer"> 
+                            <lightning:button variant="neutral"
+                                              label="Cancel"
+                                              title="Cancel"
+                                              onclick="{! c.hideModel }"/>
+                            <lightning:button variant="brand"
+                                              label="OK"
+                                              title="OK"
+                                              onclick="{!c.handleChange}"/>
+                            
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </aura:if>
+        </div>
+    </div> 
+    <!--aura:if isTrue="{!v.showParticularToggle}" >
+        <c:HomePage OpenHomePage="{!v.showParticularToggle}" JobAppdetails="{!v.jobApplication}"/>
+    </aura:if-->    
+    
+    
+</aura:component>

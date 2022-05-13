@@ -1,0 +1,44 @@
+.THIS .smartSearchContent{
+    background-color: white;
+    width:60%;
+    padding:2%;
+}
+.THIS .careerFilterContent{
+    background-color: white;
+    width:60%;
+    padding:2%;
+}
+.THIS .academicsFilterContent{
+    background-color: white;
+    width:60%;
+    padding:2%;
+}
+.THIS .displayFilterContent{
+    background-color: white;
+    width:60%;
+    padding:2%;
+}
+.THIS .content1{
+    width:60%;
+   
+}
+
+.THIS .pillSize{
+    width:100%; 
+}
+
+.THIS .head {
+    border: 1px solid black;
+    
+      text-align:center;
+      padding:1%;
+      color:white;
+      font-size: 15px;
+  }
+
+  .THIS .body1 {
+    border: 1px solid black;
+      background-color:white;
+      font-size: 15px;
+      text-align:center;
+  }
