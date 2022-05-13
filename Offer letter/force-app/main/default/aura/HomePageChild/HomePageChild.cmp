@@ -1,0 +1,63 @@
+<aura:component  controller = "JobProfileCntrl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:attribute name="JobList" type="Job_Posting__c"/>
+    <aura:attribute name="CandidateProfiles" type="List"/> 
+    <aura:attribute name="expanded" type="Boolean" default="false"/>
+    <aura:attribute name="checkThis" type = "Boolean" default ="true" />
+    <tr class= "slds-text-title_caps" Style="Width:100%">    
+        
+        <td Style="align-content:right, width:50px"><button class="slds-button slds-button_neutral" aura:id="toggle" onclick="{!c.toggle}" value="{!v.checkThis}"  style="padding:0 2px;"> 
+            <lightning:Icon aura:id="chevronright" iconName="utility:chevronright" size="x-small"/>
+            <lightning:Icon  class="slds-hide" aura:id="chevrondown" iconName="utility:chevrondown" size="x-small"/>
+            </button> 
+        </td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.Name}</b></div></td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.KTDO1__No_Of_Candidate_Selected__c}</b></div></td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.KTDO1__Posting_Due_Date__c}</b></div></td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b class="status">{!v.JobList.KTDO1__Job_OC_Status__c}</b></div></td>
+        <td></td>
+        <td></td>
+        
+    </tr>
+    <!--<tr>       
+        <td><button class="slds-button slds-button_neutral" aura:id="toggle" onclick="{!c.toggle}" value="{!v.checkThis}"  style="padding:0 2px;"> 
+            <lightning:Icon aura:id="chevronright" iconName="utility:chevronright" size="x-small"/>
+            <lightning:Icon  class="slds-hide" aura:id="chevrondown" iconName="utility:chevrondown" size="x-small"/>
+            </button> 
+        </td>
+        
+        
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.Name}</b></div></td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.KTDO1__No_Of_Candidate_Selected__c}</b></div></td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.KTDO1__Posting_Due_Date__c}</b></div></td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b class="status">{!v.JobList.KTDO1__Job_OC_Status__c}</b></div></td>
+        
+    </tr>-->
+    
+    
+    <aura:if isTrue="{!v.expanded}">         
+       
+                <tr class="slds-text-title_caps " style="background-color: #F3F3F3">
+                    
+                    <th></th>
+                    <th></th>
+                    <th><div class="slds-truncate"><b>Job Applicants </b></div></th>
+                    <th><div class="slds-truncate"><b>Application Status </b></div></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+         
+                </tr>
+
+                
+                <aura:iteration items="{!v.CandidateProfiles}" var="var1" indexVar="index">
+                    <c:JobProfileChild POList="{!var1}"  /> 
+                </aura:iteration>
+                
+   
+       
+    </aura:if>
+    
+    
+</aura:component>

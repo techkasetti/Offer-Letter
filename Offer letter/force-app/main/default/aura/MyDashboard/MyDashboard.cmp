@@ -1,0 +1,134 @@
+<aura:component controller = "MyDashboardController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="options" type="List" default="[
+                                                        { 'value': 'Client', 'label': 'Client' },
+                                                        { 'value': 'Recruiter', 'label': 'Recruiter' }
+                                                        ]"/>
+    <aura:attribute name="recruiterData" type="SObject"/>
+    <aura:attribute name="value" type="String" default="option1"/>
+    <aura:attribute name="options1" type="List" default="[
+                                                         { 'value': 'Today', 'label': 'Today' },
+                                                         { 'value': 'This Week', 'label': 'This Week' },
+                                                         { 'value': 'This Month', 'label': 'This Month' },
+                                                         { 'value': 'This Year', 'label': 'This Year' },
+                                                         ]"/>
+    
+    <aura:attribute name="dataValues" type="List"/>
+    <aura:attribute name="MyDashboard" type="String" default="" access="GLOBAL" />
+    <aura:attribute name="selectedRetailerRecord" type="Recruiter__c" default="{}" description="Use,for store SELECTED sObject Record"/>
+    <aura:attribute name="selectedrecordByEvent" type="Recruiter__c" default="{}" description="Use,for store SELECTED sObject Record"/>
+    <aura:attribute name="selectedUserRecord" type="List" description="Use,for store SELECTED sObject Record"/>
+    <aura:attribute name="SearchUserKeyWord" type="string"/>
+    <aura:attribute name="listOfUserSearchRecords" type="List" description="Use,for store the list of search records which returns from apex class"/> 
+    <aura:attribute name="showSpinner" type="Boolean" default="false" />
+    
+    <aura:if isTrue="{!v.showSpinner}">    
+        <lightning:spinner class="slds-is-fixed" variant="brand" alternativeText="Loading" size="large" />
+    </aura:if>
+    
+    
+    <!--declare events handlers-->  
+    <aura:handler name="oRecruiterdataEvent" event="c:selectedRecruiterDataEvent" action="{!c.handleComponentEvent}"/>
+    
+    <div class="slds-box slds-theme_shade">   
+        <!--lightning:button variant="brand " label="Training" title="Training" onclick="{! c.handleClick }" class="slds-float_right"/>
+        <lightning:button variant="brand " label="Help" title="Help" onclick="{! c.handleClick }" class="slds-float_right"/-->
+        
+        <div class="slds-align_absolute-center slds-theme_alt-inverse slds-p-bottom_small slds-p-top_small slds-text-heading_medium">
+            <h1><b>MY DASHBOARD</b></h1> 
+        </div> <br/>
+        <div>
+            <br/>
+            <lightning:radioGroup 
+                                  
+                                  options="{! v.options }"                
+                                  value="{! v.value }"
+                                  onchange="{! c.handleChange }"
+                                  class="customRadioCls"
+                                  />
+            <tr>
+                <td>
+                    <div>
+                        
+                        <div class="buttontopalign">
+                            <lightning:radioGroup name="radioGroup" 
+                                                  options="{! v.options1 }"
+                                                  value="{! v.value }"
+                                                  type="radio"
+                                                  onchange="{! c.handleChangeResult}"
+                                                  class="customRadioCls1 "/>
+                            
+                        </div>
+                    </div>
+                </td>     
+                <td>
+                    <div class="slds-p-left_xx-large"  style="height:5rem">
+                        <div onmouseleave="{!c.onblur}" aura:id="searchUserRes" class="slds-form-element slds-lookup slds-is-close" data-select="single" style="width:250px">
+                            
+                            <div class="slds-form-element__control">
+                                <div aura:id="lookup-pill" class="slds-pill-container slds-hide">
+                                    
+                                    <lightning:pill class="pillSize" label="{!v.selectedRetailerRecord.Name}" name="{!v.selectedRetailerRecord.Name}" onremove="{!c.clear}"> 
+                                        <aura:set attribute="media">
+                                            <lightning:icon iconName="standard:contact" size="x-small" alternativeText="close"/>
+                                        </aura:set> 
+                                    </lightning:pill>
+                                </div>   
+                                <div aura:id="lookupUserField" class="slds-show">
+                                    
+                                    <span class="slds-icon_container  slds-combobox__input-entity-icon" title="record">
+                                        <lightning:icon class="slds-input__icon slds-show" iconName="standard:search" size="x-small" alternativeText="search"/>
+                                        <span class="slds-assistive-text"></span>
+                                    </span>
+                                    <ui:inputText  aura:id="searchUserValue" size="25"   updateOn="keyup" keyup="{!c.keyPressUserController}" class="slds-lookup__search-input slds-input leftPaddingClass" value="{!v.SearchUserKeyWord}" placeholder="Search Recruiters" />
+                                    <input type="hidden"  id='valueHolder'  name = "" value = ""  />                                                       
+                                </div>                                                
+                            </div>
+                            <!--This part is for Display typehead lookup result List-->
+                            <ul style="min-height:40px;width:291px;margin-right:68px;" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
+                                <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
+                                <center> {!v.Message}</center>
+                                <aura:iteration items="{!v.listOfUserSearchRecords}" var="singleRec">
+                                    <c:customLookUpforRecruiterData oUser="{!singleRec}" rowIndex="{!index}" IconName="standard:account"  />
+                                </aura:iteration>
+                            </ul>
+                        </div>                 
+                    </div> 
+                </td>
+            </tr>
+            
+            
+            <table class="slds-truncate">
+                <thead>
+                    <tr>
+                        <th class="head">Recruiters</th>
+                        <th class="head">Requirements</th>
+                        <th class="head">Openings</th>
+                        <th class="head">Submissions</th>
+                        <th class="head">Interviews</th> 
+                        <th class="head">Selections</th> 
+                        <th class="head">Offers</th> 
+                        <th class="head">Onboardings</th> 
+                        
+                    </tr>
+                    
+                </thead>
+                <tbody>
+                    
+                    
+                    <tr>
+                        <td><div  align="center" class="body" style="color:black">{!v.recruiterData.selectName}&nbsp;</div></td>
+                        <td><div  align="center" class="body" style="color:black">4&nbsp;</div></td> 
+                        <td><div  align="center" class="body" style="color:black">5&nbsp;</div></td>     
+                        <td><div  align="center" class="body" style="color:black">{!v.recruiterData.internalSubmit}&nbsp;</div></td>     
+                        <td><div  align="center" class="body" style="color:black">{!v.recruiterData.onInterview}&nbsp;</div></td>     
+                        <td><div  align="center" class="body" style="color:black">{!v.recruiterData.interviewCleared}&nbsp;</div></td>     
+                        <td><div  align="center" class="body" style="color:black">{!v.recruiterData.offerLetter}&nbsp;</div></td>     
+                        <td><div  align="center" class="body" style="color:black">{!v.recruiterData.onBoard}&nbsp;</div></td>     
+                        
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,161 @@
+<aura:component controller="smartSearchController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="selectedTab" type="String"/>
+    <aura:attribute name="candidateProfile" type="sObject"/>
+    <aura:attribute name="showModal" type="boolean" default="false"/>
+    
+    <aura:attribute name="jobPostingList" type="list" default="[]" description=""/>
+    <aura:attribute name="selectedJobPostingList" type="String"/>
+    <aura:attribute name="selectedClientList" type="String"/>
+    <aura:attribute name="clientList" type="list" default="[]" description=""/>
+    
+    <aura:attribute name="jobApplication" type="List"/>
+    <aura:attribute name="candProfileSkills" type="List"/>
+    <aura:attribute name="skills" type="String[]"/>
+    
+    
+    <aura:iteration items="{!v.candidateProfile}" var="lst" >                                        
+        <div class="showCandidatesProfile slds-m-around_small">
+            <fieldset class="candidatesProfile">
+                <div class="slds-theme_alt-inverse slds-p-bottom_small slds-p-top_small">
+                    <table class="display">
+                        <tbody> 
+                            <tr>
+                                <td class="slds-align_absolute-center">
+                                    <h1><b>Candidate Profile</b></h1> <br/>
+                                    
+                                </td>
+                            </tr>
+                            
+                        </tbody></table>
+                    <table class="display">
+                        <tbody> 
+                            
+                            <tr>
+                                <td class="body">Name : 
+                                    {!lst.Name}</td>
+                                <td  class="body slds-float_right slds-p-right_xx-large">
+                                    <lightning:button variant="brand" label="View Document" value="{!lst}" onclick="{!c.viewDocument}" />       
+                                </td>
+                            </tr>
+                            <tr>
+                                
+                                <td class="body">Location :
+                                    {!lst.KTDO1__Current_Location__c}</td>
+                                
+                            </tr>
+                            
+                        </tbody>
+                    </table> 
+                    <table class="display">
+                        <tbody>
+                            <tr>
+                                <td class="body">Email :{!lst.KTDO1__Email__c}</td>
+                                <td class="body" style="width:50%;float:right;">Phone :{!lst.KTDO1__Phone__c}</td>
+                            </tr>
+                            
+                        </tbody>
+                    </table> 
+                </div> 
+                <div>
+                    <table class="display1" style="width:50%;float:left;">
+                        <tbody>
+                            <tr>
+                                <td class="body"><b>Designation :</b>{!lst.KTDO1__Designation__c}</td>
+                            </tr>
+                            <tr>
+                                <td class="body"><b>Current Employer :</b>{!lst.KTDO1__Employers__c}</td>
+                            </tr>
+                            <tr>
+                                <td class="body"><b>Current CTC :</b>{!lst.KTDO1__Annual_CTC__c}LPA</td>
+                            </tr>
+                            <tr>
+                                <td class="body"><b>Expected CTC :</b>{!lst.KTDO1__Expected_CTC__c}LPA</td>
+                            </tr>
+                            <tr>
+                                <td class="body"><b>Preferred Location :</b>{!lst.KTDO1__Preferred_Location__c}</td>
+                            </tr>
+                            
+                        </tbody>
+                    </table> 
+                    <table class="display2" style="width:50%;float:left;">
+                        <tbody>
+                            
+                            <tr>
+                                <td class="body"><b>Key Skills :</b>
+                                    <aura:iteration items="{!lst.KTDO1__Skill_Set_Experiences__r}" var="skill" >
+                                        {!skill.Name} - {!skill.KTDO1__SkillSet_Experience__c},  </aura:iteration>
+                                </td>
+                                
+                            </tr>
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>       
+                
+            </fieldset>
+            <div class="slds-m-around_xx-small slds-float_left" >
+                <lightning:button variant="brand"
+                                  value="{!lst}"
+                                  label="Create Job Application"
+                                  title="Create Job Application"
+                                  onclick="{! c.openModel }" />
+            </div>  
+            
+        </div>
+    </aura:iteration>
+    
+    <div class="slds-m-around_xx-small">
+        
+        <aura:if isTrue="{!v.showModal}">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" 
+                     aria-modal="true" aria-describedby="modal-content-id-1" 
+                     class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{! c.hideModel }"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <!-- <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                    Modal Box</h2>-->
+                    </header>
+                    <!--Modal/Popup Box Body Starts here-->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <lightning:select aura:id="selectClient" name="selectClient"  value="{!v.selectedClientList}" label="Select Client"  onchange="{!c.clientSelected}" required="">   
+                                <option value="NULL" text="None"></option>
+                                <aura:iteration items="{!v.clientList}" var="lst" >
+                                    <option text="{!lst.label}" value="{!lst.value}"></option>
+                                </aura:iteration>
+                            </lightning:select>
+                        </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <lightning:select aura:id="select" name="select"  value="{!v.selectedJobPostingList}" label="Assign to Job Posting" onchange="{!c.getJobPosting}" required="">   
+                            <option value="NULL" text="None"></option>
+                            <aura:iteration items="{!v.jobPostingList}" var="lst" >
+                                <option text="{!lst.label}" value="{!lst.value}"></option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+                    <!--Modal/Popup Box Footer Starts here-->
+                    <footer class="slds-modal__footer"> 
+                        <lightning:button variant="neutral"
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.hideModel }"/>
+                        <lightning:button variant="brand"
+                                          label="OK"
+                                          title="OK"
+                                          onclick="{!c.saveDetails}"/>
+                        
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+    </div>
+    
+    
+</aura:component>

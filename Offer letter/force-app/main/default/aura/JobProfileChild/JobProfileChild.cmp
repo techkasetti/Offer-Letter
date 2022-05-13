@@ -1,0 +1,321 @@
+<aura:component controller = "JobProfileCntrl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:attribute name="POList" type="Object"/>
+    <aura:attribute name="expanded" type="Boolean" default="false"/>
+    <aura:attribute name="checkThis" type = "Boolean" default ="true" />
+    <aura:attribute name="viewDocument" type="boolean" default="false"/>
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="myval" default="10" type="Integer"/>
+    <aura:attribute name="ShowUploadDocuments" type="boolean" default="false"/>
+    <aura:attribute name="ShowStatusAction" type="boolean" default="false"/>
+    <aura:attribute name="ShowResubmissionButton" type="boolean" default="false"/>
+    <aura:attribute name="ShowResumissionModal" type="boolean" default="false"/>
+    <aura:attribute name="addComments" type="boolean" default="false"/>
+    <aura:attribute name="viewComments" type="boolean" default="false"/>
+    <aura:attribute name="disableButton" type="boolean" default="false" />
+    <aura:attribute name="commentsList" type="List"/>
+    <!--Aura attributes for Interview schedule/-->
+    <aura:attribute name="ShowInterviewScheduled" type="boolean" default="false"/>
+    <aura:attribute name="options" type="List" default="[
+                                                        {'label': 'Face to Face', 'value': 'option1'},
+                                                        {'label': 'Telephonic', 'value': 'option2'},
+                                                        {'label': 'Skype', 'value': 'option3'}                                                      
+                                                        ]"/>
+    <aura:attribute name="option" type="String" default="option1"/>
+    <aura:attribute name="contactList" type="List" />
+    <aura:attribute name="contactSelected" type="Object"/>
+    <aura:attribute name="comments" type="Comments__c" default="{'SObject':'KTDO1__Comments__c'}"/>
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <aura:attribute name="JobAppdetails" type="Object"/>    
+    <aura:attribute name="OpenJobProfileChild" type="boolean" default="false"/>
+    
+    <tr Style="Width:100%">
+        <td></td>
+        <td><button class="slds-button slds-button_neutral" aura:id="toggle" onclick="{!c.toggle}" value="{!v.checkThis}"  style="padding:0 2px;"> 
+            <lightning:Icon aura:id="chevronright" iconName="utility:chevronright" size="x-small"/>
+            <lightning:Icon  class="slds-hide" aura:id="chevrondown" iconName="utility:chevrondown" size="x-small"/>
+            </button> </td>
+        
+        <td><div class="slds-text-heading-large"><b>{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.Name}/{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Designation__c}</b></div></td>
+        <td><div class="slds-text-heading-large"><b>{!v.POList.JobAppication.KTDO1__Profile_Status__c}</b></div></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <aura:if isTrue="{!v.expanded}">   
+        <tr class="slds-text-title_caps slds-gray" style="background-color: #F3F3F3">
+            
+            <th style="width: 2.5%;"><div class="slds-truncate"></div></th>
+            <th><div class="slds-truncate"><b>Candidate Name </b></div></th>
+            <th><div class="slds-truncate"><b>Experience </b></div></th>
+            <th><div class="slds-truncate"><b>Skills</b></div></th>                           
+            <th><div class="slds-truncate"><b>Location</b></div></th>
+            <th><div class="slds-truncate"><b>Notice Period</b></div></th>
+            <!--<th><div class="slds-truncate">Retailer Vendor Country</div></th>-->
+            <th><div class="slds-truncate"><b>Current Status</b></div></th>
+            <th><div class="slds-truncate"><b>Next Step Action </b></div></th> 
+            
+        </tr> 
+        
+        <tr Style="Width:100%"> 
+            <td></td>
+            <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.Name}/{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Designation__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Experience__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Skills__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Current_Location__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Notice_Period__c}</div></td> 
+            <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Profile_Status__c}</div></td>
+            <td>
+                <aura:if isTrue="{!v.ShowStatusAction}">
+                    <aura:iteration items="{!v.POList.StatusButtons}" var="status" indexVar="index">
+                        <lightning:button label="{!status}" title="{!status}"  value="{!v.POList.JobAppication.Id}" variant="success" onclick="{! c.handleClick }" disabled="{!v.disableButton}"/>
+                    </aura:iteration>
+                </aura:if>
+            </td>   
+            
+        </tr>
+        <tr Style="Width:100%">
+            <td></td>
+            <td> <div>
+                
+                <lightning:button variant="Brand" label="Add Comments" title="Comments" value ="{!v.POList.JobAppication.Id}"  onclick="{!c.saveComments}"/>
+                <!--<lightning:button variant="Brand" label="Show Comments" title="Show Comments"  value="{!v.POList.JobAppication.Id}" onclick="{!c.showComments}"/>-->
+                <!--lightning:button variant="Brand" label="View Documents" title="View Documents"   value="{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.Id}" onclick="{!c.handleViewDocuments}"/-->
+                <aura:if isTrue="{!v.ShowUploadDocuments}">
+                    <lightning:button variant="Brand" aura:id="profile" value ="{!v.POList}" type="submit" label="Upload Documents" onclick="{!c.handleUpload}"/>
+                </aura:if>
+                <aura:if isTrue="{!v.ShowResubmissionButton}">
+                    <lightning:button variant="Brand" aura:id="candProfile" value ="{!v.POList}" type="submit" label="Re-Submit Profile" onclick="{!c.handleResubmit}"/>
+                </aura:if>
+                <aura:if isTrue="{!v.ShowResumissionModal}">
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" 
+                             aria-modal="true" aria-describedby="modal-content-id-1" 
+                             class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <lightning:buttonIcon iconName="utility:close"
+                                                      onclick="{! c.hideModel2 }"
+                                                      alternativeText="close"
+                                                      variant="bare-inverse"
+                                                      class="slds-modal__close"/>
+                                <h1 class="slds-page-header__title slds-truncate " >Re-Submit Candidate Profile</h1>
+                            </header>
+                            
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <div class="slds-col slds-has-flexi-truncate">
+                                    
+                                </div>
+                                
+                                <td class="body"> <lightning:input aura:id="fuploader" onchange="{!c.handleFilesChange}" type="file" name="file"  multiple="false"/>
+                                    <div class="slds-text-body_medium slds-text-color_success">{!v.fileName} </div>
+                                    
+                                </td>
+                            </div>
+                            
+                            <footer class="slds-modal__footer"> 
+                                <lightning:button variant="neutral"
+                                                  label="Cancel"
+                                                  title="Cancel"
+                                                  onclick="{! c.hideModel2 }"/>
+                                <lightning:button variant="brand"
+                                                  label="OK"
+                                                  title="OK"
+                                                  value ="{!v.POList.JobAppication.KTDO1__Candidate_Profile__c}"
+                                                  onclick="{!c.saveFile}"/>
+                            </footer>
+                        </div>
+                    </section>
+                </aura:if>
+                
+                <!--<aura:if isTrue="{!v.addComments}">
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" 
+                             aria-modal="true" aria-describedby="modal-content-id-1" 
+                             class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <lightning:buttonIcon iconName="utility:close"
+                                                      onclick="{! c.hideModel2 }"
+                                                      alternativeText="close"
+                                                      variant="bare-inverse"
+                                                      class="slds-modal__close"/>
+                               
+                            </header>
+                           
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <div class="slds-col slds-has-flexi-truncate">
+                                  
+                                    
+                                    <h1 class="slds-page-header__title slds-truncate " >Add Comments</h1>
+                                  
+                                    
+                                </div>
+                                
+                                <lightning:input  type="text" value="{!v.comments.Name}" placeholder="Enter Comments" style="width:600px;height:100px"/>
+                                
+                            </div>
+                           
+                            <footer class="slds-modal__footer"> 
+                                <lightning:button variant="neutral"
+                                                  label="Cancel"
+                                                  title="Cancel"
+                                                  onclick="{! c.hideModel2 }"/>
+                                <lightning:button variant="brand"
+                                                  label="OK"
+                                                  title="OK"
+                                                  value ="{!v.POList}" 
+                                                  onclick="{!c.saveComments}"/>
+                            </footer>
+                        </div>
+                    </section>
+                </aura:if>    -->
+                <aura:if isTrue="{!v.ShowInterviewScheduled}">
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" 
+                             aria-modal="true" aria-describedby="modal-content-id-1" 
+                             class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <lightning:buttonIcon iconName="utility:close"
+                                                      onclick="{! c.hideModel1 }"
+                                                      alternativeText="close"
+                                                      variant="bare-inverse"
+                                                      class="slds-modal__close"/>
+                                <!-- <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                                Modal Box</h2>-->
+                            </header>
+                            <!--Modal/Popup Box Body Starts here-->
+                            
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <div class="slds-col slds-has-flexi-truncate">
+                                    <!-- HEADING AREA -->
+                                    <div class="demo-only" style="padding:0.5rem;background:#16325c">
+                                        <h1 class="slds-page-header__title slds-truncate slds-align_absolute-center slds-text-color_inverse" title="Schedule L1 Interview">Schedule L1 Interview</h1>
+                                        <!-- / HEADING AREA -->
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <lightning:radioGroup name="radioGroup"
+                                                          label="Interview mode"
+                                                          options="{! v.options }"
+                                                          value="{! v.option }"
+                                                          type="radio"
+                                                          class="customRadioCls"/>
+                                </div>
+                                <lightning:input type="checkbox" label="Final Interview" name="input1"/>
+                                <div style="width:270px">
+                                    <lightning:input type="date" label="Interview Date" placeholder="DD/MM/YY"/>
+                                    <lightning:input type="time" label="Interview Time" placeholder="Format HH:MM AM/PM"/>
+                                    
+                                    
+                                    <lightning:select aura:id="select" name="select" label="Contact Person" onchange="{! c.onChange }">
+                                        <option value="">Contact Person</option> 
+                                        <aura:iteration items="{!v.contactList}" var="lst" >    
+                                            <option value="{!lst.Name}">{!lst.Name}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    
+                                    <lightning:input type="number" label="Contact Number" value="{!v.contactSelected.Phone}" placeholder="Contact Number" />
+                                    <lightning:input type="number" label="Skype Id" value="{!v.contactSelected.KTDO1__SkypeId__c}" placeholder="Skype Id"/>
+                                    <lightning:input type="text" label="Venue Details" value="{!v.contactSelected.KTDO1__Venue_Details__c}" placeholder="Venue Details"/>
+                                    <lightning:input type="text" label="Additional Information" placeholder="Add Extra Information"/>
+                                    <lightning:input type="checkbox" label="Send email to candidate" name="input1"/>
+                                    <lightning:input type="checkbox" label="Send calendar invite" name="input1"/>
+                                    <lightning:input type="email" label="Email Id" value="{!v.contactSelected.Email}" placeholder="example@gmail.com"/>
+                                </div>
+                            </div>
+                            <!--Modal/Popup Box Footer Starts here-->
+                            <footer class="slds-modal__footer"> 
+                                <lightning:button variant="neutral"
+                                                  label="Cancel"
+                                                  title="Cancel"
+                                                  onclick="{! c.hideModel1 }"/>
+                                <lightning:button variant="brand"
+                                                  label="OK"
+                                                  title="OK"
+                                                  onclick="{!c.handleSchedule}"/>
+                            </footer>
+                        </div>
+                    </section>
+                </aura:if>
+                </div>
+            </td>
+        </tr>
+        
+        
+    </aura:if>
+    
+    <aura:if isTrue="{!v.viewDocument}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" 
+                 aria-modal="true" aria-describedby="modal-content-id-1" 
+                 class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.hideModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <!-- <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                    Modal Box</h2>-->
+                </header>
+                <!--Modal/Popup Box Body Starts here-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:recordViewForm  objectApiName="KTDO1__Candidate_Profile__c" aura:id="myRecordForm" recordId="{!v.recordId}" density="{!v.profileStatus}" >
+                        <div class="slds-box slds-box slds-theme_shade">
+                            <b><lightning:outputField fieldName="Name" /></b>
+                            <lightning:outputField fieldName="KTDO1__Annual_CTC__c" />
+                            <lightning:outputField fieldName="KTDO1__Current_Location__c" />
+                            <lightning:outputField fieldName="KTDO1__Experience__c" />
+                            <lightning:outputField fieldName="KTDO1__Designation__c" />
+                            <lightning:outputField fieldName="KTDO1__Skills__c" />
+                            <lightning:outputField fieldName="KTDO1__Status__c" />
+                            
+                        </div>
+                    </lightning:recordViewForm>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.viewComments}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" 
+                 aria-modal="true" aria-describedby="modal-content-id-1" 
+                 class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.hideModel3 }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                        Comments</h2>
+                    
+                </header>
+                <!--Modal/Popup Box Body Starts here-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <aura:iteration items="{!v.commentsList}" var="com" indexVar="index">
+                        <div class="slds-box slds-box_small">
+                            <p> {!com.KTDO1__Remarks__c}</p>
+                        </div>
+                    </aura:iteration>
+                    <lightning:input  type="text" value="{!v.comments.Name}" placeholder="Enter Comments" style="width:600px;height:100px"/>
+                </div>
+                <!--Modal/Popup Box Body Ends here-->
+                <!--Modal/Popup Box Footer Starts here-->
+                <footer class="slds-modal__footer"> 
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{! c.hideModel3 }"/>
+                    <lightning:button variant="brand"
+                                      label="OK"
+                                      title="OK"
+                                      onclick="{!c.handleSaveComment}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+</aura:component>
