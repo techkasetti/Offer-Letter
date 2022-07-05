@@ -1,31 +1,73 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
+		<members>AzureFileUpload</members>
+		<members>GoogleDriveController</members>
+		<members>GoogleDriveControllerTest</members>
 		<members>HomePageController</members>
+		<members>HomePageControllerTest</members>
 		<members>JobProfileCntrl</members>
-		<members>MyDashboardController</members>
+		<members>JobProfileCntrlTest</members>
+		<members>MockGenerator</members>
+		<members>ZoomMetingSchedule</members>
 		<members>smartSearchController</members>
+		<members>smartSearchControllerTest</members>
+		<members>CandFieldSet</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
-	    <members>ScheduleInterview</members>
+		<members>DocumentUpload</members>
 		<members>HomePage</members>
 		<members>HomePageChild</members>
 		<members>JobProfileChild</members>
-		<members>JobProfileChildlist</members>
-		<members>MyDashboard</members>
 		<members>ProfileSearch</members>
 		<members>SaveSkillSet</members>
-		<members>customLookUpforRecruiterData</members>
-		<members>customLookupforLocationdata</members>
-		<members>customLookupforRollsAndRespData</members>
-		<members>customLookupforSkillsdata</members>
-		<members>selectedLocationdataEvent</members>
-		<members>selectedRecruiterDataEvent</members>
-		<members>selectedRollsAndRespdataEvent</members>
-		<members>selectedSkillsdataEvent</members>
+		<members>jobPosting</members>
 		<members>showCandidateProfileSearch</members>
+		<members>xRaySearch</members>
+		<members>SmartSearchUsingFS</members>
 		<name>AuraDefinitionBundle</name>
+	</types>
+	<types>
+		<members>Offer_Letter</members>
+		<name>CustomApplication</name>
+	</types>
+	<types>
+		<members>Candidate_Profile__c</members>
+		<members>CustomTeams__Team_Members__c</members>
+		<members>CustomTeams__Teams__c</members>
+		<members>Document_Master__c</members>
+		<members>Document_Upload__mdt</members>
+		<members>Google_Drive_File_Upload__c</members>
+		<members>Google_Drive_Token__mdt</members>
+		<members>Job_Application__c</members>
+		<members>Job_Posting_Document__c</members>
+		<members>Job_Posting__c</members>
+		<members>Roll_and_Responsibilities__c</members>
+		<members>Rolls_and_Responsibilities_Master__c</members>
+		<members>Skill_Set_Experience__c</members>
+		<members>Skill_Set__c</members>
+		<name>CustomObject</name>
+	</types>
+	<types>
+		<members>Candidate_Profile__c</members>
+		<members>Document_Master__c</members>
+		<members>Document_Upload</members>
+		<members>Home_Page</members>
+		<members>Job_Application__c</members>
+		<members>Job_Posting_Document__c</members>
+		<members>Job_Posting_UI</members>
+		<members>Job_Posting__c</members>
+		<members>Rolls_and_Responsibilities_Master__c</members>
+		<members>Save_SkillSet</members>
+		<members>Skill_Set_Experience__c</members>
+		<members>Skill_Set__c</members>
+		<members>xRaySearch</members>
+		<name>CustomTab</name>
+	</types>
+	<types>
+		<members>Google_Drive_Token.lable_1</members>
+		<name>CustomMetadata</name>
 	</types>
 	<version>53.0</version>
 </Package>
