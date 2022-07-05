@@ -30,6 +30,10 @@
 		<name>AuraDefinitionBundle</name>
 	</types>
 	<types>
+		<members>*</members>
+		<name>AuthProvider</name>
+	</types>
+	<types>
 		<members>Offer_Letter</members>
 		<name>CustomApplication</name>
 	</types>
@@ -42,7 +46,6 @@
 		<members>CustomTeams__Team_Members__c</members>
 		<members>CustomTeams__Teams__c</members>
 		<members>Document_Master__c</members>
-		<members>Document_Upload__mdt</members>
 		<members>Google_Drive_File_Upload__c</members>
 		<members>Google_Drive_Token__mdt</members>
 		<members>Job_Application__c</members>
@@ -69,6 +72,10 @@
 		<members>Skill_Set__c</members>
 		<members>xRaySearch</members>
 		<name>CustomTab</name>
+	</types>
+	<types>
+		<members>*</members>
+		<name>NamedCredential</name>
 	</types>
 	<version>53.0</version>
 </Package>
