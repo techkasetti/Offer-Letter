@@ -5,25 +5,25 @@ public class HomePageController {
         String currentUser = UserInfo.getUserId();
         system.debug('fetchdata :'+UserInfo.getUserId());
         /*String currentUserName = UserInfo.getName();
-        system.debug('fetchdataName :'+UserInfo.getName());
-        
-        List<CustomTeams__Team_Members__c> userTeam =  [Select CustomTeams__Team__r.Name from CustomTeams__Team_Members__c where CustomTeams__User__r.Name =: currentUserName];
-        system.debug('userTeam>>>'+userTeam);*/
+system.debug('fetchdataName :'+UserInfo.getName());
+
+List<CustomTeams__Team_Members__c> userTeam =  [Select CustomTeams__Team__r.Name from CustomTeams__Team_Members__c where CustomTeams__User__r.Name =: currentUserName];
+system.debug('userTeam>>>'+userTeam);*/
         
         /*String qryJobPosting ='Select Teams__c,Name,Posting_Due_Date__c,No_Of_Candidate_Selected__c,Job_OC_Status__c from Job_Posting__c';
-        String qryjobPostingWhereClause = ' ' ;
-        system.debug('qryJobPosting'+qryJobPosting);
-        
-        for(Integer i=0; i<userTeam.size(); i++){
-            qryjobPostingWhereClause+=' (Teams__r.Name =\''+userTeam[i]+'\')';
-            system.debug('qryjobPostingWhereClause'+qryjobPostingWhereClause);
-        }
-        qryJobPosting = qryJobPosting+ qryjobPostingWhereClause ;
-        system.debug('qryJobPosting'+qryJobPosting);
-        
-        List<Job_Posting__c> listOfValues = Database.query(qryJobPosting);  
-        
-        System.debug('listOfValues'+listOfValues);*/
+String qryjobPostingWhereClause = ' ' ;
+system.debug('qryJobPosting'+qryJobPosting);
+
+for(Integer i=0; i<userTeam.size(); i++){
+qryjobPostingWhereClause+=' (Teams__r.Name =\''+userTeam[i]+'\')';
+system.debug('qryjobPostingWhereClause'+qryjobPostingWhereClause);
+}
+qryJobPosting = qryJobPosting+ qryjobPostingWhereClause ;
+system.debug('qryJobPosting'+qryJobPosting);
+
+List<Job_Posting__c> listOfValues = Database.query(qryJobPosting);  
+
+System.debug('listOfValues'+listOfValues);*/
         //   String companyFilter = 'Sony India';
         String querry = 'Select Account__r.Name, Teams__c,Name,Posting_Due_Date__c,No_Of_Candidate_Selected__c,Job_OC_Status__c from Job_Posting__c WHERE Id <> null ';
         if(String.isNotBlank(companyFilter)){
@@ -75,25 +75,25 @@ public class HomePageController {
     @AuraEnabled
     public static Map<String,String> getClientList(){
         
-            Map<String,String> clientList = new Map<String,String>();
+        Map<String,String> clientList = new Map<String,String>();
         List<Job_Posting__c> client = [SELECT Account__r.Name, Name FROM Job_Posting__c WHERE Account__r.Name <> null];
         for (Job_Posting__c data : client) {
             System.debug(data);
             System.debug(data.Account__r.Name);
             clientList.put(data.Account__r.Id, data.Account__r.Name);
-
+            
         }
         System.debug((clientList));
         return clientList;
     }
-
+    
     @AuraEnabled
     public static Map<String,String> getStatusList(){
-           Schema.DescribeFieldResult statusfield = Job_Posting__c.Job_OC_Status__c.getDescribe();
+        Schema.DescribeFieldResult statusfield = Job_Posting__c.Job_OC_Status__c.getDescribe();
         Map<String,String> statusList = getPickListValuesIntoMap(statusfield);
         return statusList;
     }
-
+    
     public static Map<String,String> getPickListValuesIntoMap(Schema.DescribeFieldResult objval){
         Map<String,String> pickListValuesMap= new Map<String,String>();
         List<Schema.PicklistEntry> ple = objval.getPicklistValues();
@@ -102,29 +102,163 @@ public class HomePageController {
                 pickListValuesMap.put((var.getValue()).toUpperCase(), (var.getLabel()).toUpperCase());
             }
         }
-         return pickListValuesMap;
-     }
-
+        return pickListValuesMap;
+    }
+    
     @AuraEnabled
-    public static  List<Job_Posting__c> togetJobPostings(String companyFilter, String postStatus){
+    public static  List<JobPostingsWrap> togetJobPostings(String companyFilter, String postStatus,String buttonType, String buttonTypeId){
         //System.debug('items>>.'+items);
+        System.debug('buttonType>>.'+buttonType);
+        System.debug('buttonTypeId>>.'+buttonTypeId);
         String currenUser = UserInfo.getUserId();
         system.debug('currenUser>>>'+currenUser);
-
+        
         List<Account> userAccnts = new List<Account>();
         userAccnts = [Select Name from Account where CreatedById =: currenUser];
         system.debug('userAccnts>>'+userAccnts);
-
-        List<Job_Posting__c> jobPostings = [Select Id,Name,Posting_Due_Date__c,No_Of_Candidate_Selected__c,Job_OC_Status__c,(Select Name,Job_Posting__c,Candidate_Profile__r.Designation__c,Candidate_Profile__r.Experience__c,Candidate_Profile__r.Skills__c,Candidate_Profile__r.Current_Location__c,Candidate_Profile__r.Notice_Period__c,Profile_Status__c,Status__c from Job_Applications__r) from Job_Posting__c where  Account__c IN :userAccnts];
-        system.debug('jobPostings>>'+jobPostings);
-        return jobPostings;
+        
+        
+        Schema.sObjectField dependentField = Job_Application__c.Status__c;
+        Map<Object,List<String>> dependentPicklistValues = new Map<Object,List<String>>();
+        //Get dependent field result
+        Schema.DescribeFieldResult dependentFieldResult = dependentField.getDescribe();
+        //Get dependent field controlling field 
+        Schema.sObjectField controllerField = dependentFieldResult.getController();
+        //Check controlling field is not null
+        if(controllerField == null){
+            // return null;
+        } 
+        //Get controlling field result
+        Schema.DescribeFieldResult controllerFieldResult = controllerField.getDescribe();
+        //Get controlling field picklist values if controlling field is not a checkbox
+        List<Schema.PicklistEntry> controllerValues = (controllerFieldResult.getType() == Schema.DisplayType.Boolean ? null : controllerFieldResult.getPicklistValues());
+        
+        //It is used to decode the characters of the validFor fields. 
+        String base64map = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+        
+        for (Schema.PicklistEntry entry : dependentFieldResult.getPicklistValues()){
+            if (entry.isActive()){
+                //The PicklistEntry is serialized and deserialized using the Apex JSON class and it will check to have a 'validFor' field
+                List<String> base64chars = String.valueOf(((Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(entry))).get('validFor')).split('');
+                for (Integer i = 0; i < controllerValues.size(); i++){
+                    Object controllerValue = (controllerValues == null ? (Object) (i == 1) : (Object) (controllerValues[i].isActive() ? controllerValues[i].getLabel() : null));
+                    Integer bitIndex = i / 6;
+                    Integer bitShift = 5 - Math.mod(i, 6 );
+                    if(controllerValue == null || (base64map.indexOf(base64chars[bitIndex]) & (1 << bitShift)) == 0){
+                        continue;
+                    } 
+                    if (!dependentPicklistValues.containsKey(controllerValue)){
+                        system.debug('controllerValue>>'+controllerValue);
+                        
+                        dependentPicklistValues.put(controllerValue, new List<String>());
+                        
+                    }
+                    dependentPicklistValues.get(controllerValue).add(entry.getLabel());
+                    system.debug('controllerValue>>'+entry.getLabel());
+                }
+            }
+        }
+        system.debug('dependentPicklistValues ::'+dependentPicklistValues);
+        List<JobPostingsWrap> JobPostingsWrapList = new List<JobPostingsWrap>();
+        
+        
+        if(buttonType != '' && buttonTypeId != ''){
+            Job_Application__c lstOfValues = [Select Name,Job_Posting__c,Candidate_Profile__r.Designation__c,Candidate_Profile__r.Experience__c,Candidate_Profile__r.Skills__c,Candidate_Profile__r.Current_Location__c,Candidate_Profile__r.Notice_Period__c,Profile_Status__c,Status__c from Job_Application__c where Id =:buttonTypeId ];
+            system.debug('Job_Application__c:'+lstOfValues);
+            
+            lstOfValues.Profile_Status__c = buttonType; 
+            update lstOfValues;
+            List<JobApplicationWrap> JobApplicantsWrapList1 = new List<JobApplicationWrap>();
+            JobPostingsWrap JobPostingsWrapVal = new JobPostingsWrap();
+            JobApplicationWrap JobApplicantsWrapVal = new JobApplicationWrap();
+            JobApplicantsWrapVal.JobApplication = lstOfValues;
+            system.debug('dependentPicklistValues.get(lstOfValues.Profile_Status__c)   :::'+dependentPicklistValues.get(lstOfValues.Profile_Status__c));
+            JobApplicantsWrapVal.StatusButtons = dependentPicklistValues.get(lstOfValues.Profile_Status__c);
+            JobApplicantsWrapList1.add(JobApplicantsWrapVal);
+            JobPostingsWrapVal.JobApplicationWrapList = JobApplicantsWrapList1;
+            system.debug('JobPostingsWrapVal>>'+JobPostingsWrapVal);
+            JobPostingsWrapList.add(JobPostingsWrapVal);
+            system.debug('JobPostingsWrapList>>'+JobPostingsWrapList);
+            system.debug('JobPostingsWrapList>>>>>'+JobPostingsWrapList[0].JobApplicationWrapList);
+            //return JobPostingsWrapList[0].JobApplicationWrapList[0];
+            return JobPostingsWrapList; 
+        }
+        else{
+            List<Job_Posting__c> jobPostings = [Select Id,Name,Posting_Due_Date__c,No_Of_Candidate_Selected__c,Job_OC_Status__c,(Select Name,Candidate_Profile__r.Designation__c,Candidate_Profile__r.Experience__c,Candidate_Profile__r.Skills__c,Candidate_Profile__r.Current_Location__c,Candidate_Profile__r.Notice_Period__c,Profile_Status__c,Status__c from Job_Applications__r) from Job_Posting__c where  Account__c IN :userAccnts];
+            system.debug('jobPostings>>'+jobPostings);
+            for(Job_Posting__c jobPostingValues : jobPostings)
+            {
+                JobPostingsWrap JobPostingsWrapVal = new JobPostingsWrap();
+                JobPostingsWrapVal.JobPosting = jobPostingValues;
+                JobApplicationWrap JobApplicationWrapVal = new JobApplicationWrap();
+                List<JobApplicationWrap> JobApplicationWrapList1 = new List<JobApplicationWrap>() ;
+                system.debug('jobPostingValues>>'+jobPostingValues);
+                system.debug('jobPostingValues.Job_Applications__r>>'+jobPostingValues.Job_Applications__r);
+                for(Job_Application__c jobApplication : jobPostingValues.Job_Applications__r){
+                    
+                    JobApplicationWrapVal.JobApplication = jobApplication;
+                    JobApplicationWrapVal.StatusButtons = dependentPicklistValues.get(jobApplication.Profile_Status__c);
+                    // String allstring = string.join(dependentPicklistValues.get(values.Profile_Status__c),',');
+                    system.debug('dependentPicklistValues.get(jobApplication.Profile_Status__c)   :::'+dependentPicklistValues.get(jobApplication.Profile_Status__c));
+                    //JobApplicationWrapList1.add(JobApplicantsWrapVal);
+                    
+                    JobApplicationWrapList1.add(JobApplicationWrapVal);
+                    system.debug('JobApplicationWrapList1 Inside>>'+JobApplicationWrapList1);
+                }
+                JobPostingsWrapVal.JobApplicationWrapList = JobApplicationWrapList1;
+                system.debug('JobPostingsWrapVal>>'+JobPostingsWrapVal);
+               
+                JobPostingsWrapList.add(JobPostingsWrapVal);
+                system.debug('JobPostingsWrapList>>'+JobPostingsWrapList);
+                // JobPostingsWrapVal.JobApplicationWrapList = JobPostingsWrapList;
+                // system.debug('JobPostingsWrapList>>'+JobPostingsWrapList);
+            }
+        }
+        system.debug('JobPostingsWrapList>>'+JobPostingsWrapList);
+        return JobPostingsWrapList;
+        
     }
     
-     public class JobApplicantsWrap
+    
+    
+    public class JobPostingsWrap
+    {
+        
+        @AuraEnabled public Job_Posting__c JobPosting = new Job_Posting__c();
+        @AuraEnabled public List<JobApplicationWrap> JobApplicationWrapList = new List<JobApplicationWrap>() ;
+    }
+    public class JobApplicationWrap
     {
         @AuraEnabled public List<string> StatusButtons ;
-        @AuraEnabled public Job_Posting__c JobPosting = new Job_Posting__c();
+        @AuraEnabled public Job_Application__c JobApplication = new Job_Application__c();
     }
     
-   
+    @AuraEnabled
+    public static Boolean hideProfileStatus(){
+        String userId = UserInfo.getUserId();
+        system.debug('userId>>>'+userId);
+        User userProfile = [Select ProfileId from User where Id=: userId];
+        system.debug('userProfile>>>'+userProfile);
+        Profile profileName = [Select Name from Profile where Id=:userProfile.ProfileId];
+        system.debug('profileName>>>'+profileName);
+        if(profileName.Name =='System Administrator'){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    @AuraEnabled
+    public static List<Contact> getContact(String jobId){
+        system.debug('jobId>>>'+jobId);
+        Job_Posting__c con = [SELECT Id,Name,Account__c  FROM Job_Posting__c where Id =: jobId LIMIT 1];
+        system.debug('con'+con);
+        Account a = [Select Id, Name,(Select Id,Name,Phone,Email,Venue_Details__c,SkypeId__c from Contacts) from Account where Id=:con.Account__c];
+        system.debug('a'+a);
+        return a.Contacts;
+        
+    }
+    
+    
 }

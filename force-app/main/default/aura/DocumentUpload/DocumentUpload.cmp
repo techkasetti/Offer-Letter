@@ -40,7 +40,7 @@
         <lightning:spinner style="position: fixed" alternativeText="{Loading}" size="large" />
     </div>
 
-    
+
 
     <aura:if isTrue="{!v.isModalOpen}">
         <!-- Modal/Popup Box starts here-->
@@ -55,127 +55,123 @@
                     <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Upload Documents</h2>
                 </header>
 
-                
 
 
-                            <!--content starts here-->
-                                <!--Google drive upload starts here-->
-                            <aura:if isTrue="{!v.tabName == 'Google Drive'}">
-                                <lightning:tabset variant="scoped">
-                                <lightning:tab label="{!v.tabName}">
-                                <div class="slds-modal__content" id="">
-                                    <table class="display">
-                                        <tbody>
-                                            <aura:iteration items="{!v.fileName}" var="file">
-                                                <br />
-                                                <tr>
-                                                    <aura:if isTrue="{!file.GDrive_Doc_URL__c}">
-                                                        <td class="text"><span class="slds-p-right_large"
-                                                                aura:id="{!file.Id}">{!file.Name}</span></td>
-                                                        <lightning:button class="" name="{!file.Id}" type="submit"
-                                                            label="Download File" onclick="{!c.DownloadGDriveFile}" />
-                                                        <lightning:button class="" name="{!file.Id}" type="submit"
-                                                            label="View File" onclick="{!c.ViewGDriveFile}" />
-                                                        <lightning:button class="" name="{!file.Id}" type="submit"
-                                                            label="Modify File" onclick="{!c.ModifyGDriveFile}" />
-                                                        <!--span class="verifyText"></span-->
-                                                        <div class="verify">
-                                                            <td class="slds-p-right_xxx-small">Verify</td>
-                                                            <td>
-                                                                <ui:inputCheckbox aura:id="checkbox" label=""
-                                                                    change="{!c.onCheckGDrive}" />
-                                                            </td>
-                                                        </div>
 
-                                                        <aura:if isTrue="{!v.isModifyOpen}">
-                                                            <aura:if isTrue="{!v.modifyId == file.Id}">
-                                                                <lightning:fileUpload name="{!file.Id}"
-                                                                    fileFieldValue="{!file.Name}" accept="{!v.filetype}"
-                                                                    multiple="false" label="" recordId="{!v.recordId}"
-                                                                    onuploadfinished="{!c.UploadGDriveFile}" />
-                                                            </aura:if>
-                                                        </aura:if>
+                <!--content starts here-->
+                <!--Google drive upload starts here-->
+                <aura:if isTrue="{!v.tabName == 'Google Drive'}">
+                    <lightning:tabset variant="scoped">
+                        <lightning:tab label="{!v.tabName}">
+                            <div class="slds-modal__content" id="">
+                                <table class="display">
+                                    <tbody>
+                                        <aura:iteration items="{!v.fileName}" var="file">
+                                            <br />
+                                            <tr>
+                                                <aura:if isTrue="{!file.GDrive_Doc_URL__c}">
+                                                    <td class="text"><span class="slds-p-right_large"
+                                                            aura:id="{!file.Id}">{!file.Name}</span></td>
+                                                    <lightning:button class="" name="{!file.Id}" type="submit"
+                                                        label="Download File" onclick="{!c.DownloadGDriveFile}" />
+                                                    <lightning:button class="" name="{!file.Id}" type="submit"
+                                                        label="View File" onclick="{!c.ViewGDriveFile}" />
+                                                    <lightning:button class="" name="{!file.Id}" type="submit"
+                                                        label="Modify File" onclick="{!c.ModifyGDriveFile}" />
+                                                    <!--span class="verifyText"></span-->
+                                                    <div class="verify">
+                                                        <td class="slds-p-right_xxx-small">Verify</td>
+                                                        <td>
+                                                            <ui:inputCheckbox aura:id="checkbox" label=""
+                                                                change="{!c.onCheckGDrive}" />
+                                                        </td>
+                                                    </div>
 
-                                                        <aura:set attribute="else">
-                                                            <td class="text">{!file.Name}</td>
+                                                    <aura:if isTrue="{!v.isModifyOpen}">
+                                                        <aura:if isTrue="{!v.modifyId == file.Id}">
                                                             <lightning:fileUpload name="{!file.Id}"
-                                                                accept="{!v.filetype}" multiple="false" label=""
-                                                                recordId="{!v.recordId}"
+                                                                fileFieldValue="{!file.Name}" accept="{!v.filetype}"
+                                                                multiple="false" label="" recordId="{!v.recordId}"
                                                                 onuploadfinished="{!c.UploadGDriveFile}" />
-                                                        </aura:set>
-                                                    </aura:if>
-                                                </tr>
-                                            </aura:iteration>
-                                        </tbody>
-                                    </table>
-                                    <br />
-                                </div>
-                            </lightning:tab>
-                        </lightning:tabset>
-                            </aura:if>
-                                <!--Google drive upload ends here-->
-
-                                
-
-                                    <!--Azure upload starts here-->
-                            <aura:if isTrue="{!v.tabName == 'Azure Storage'}">
-                                <lightning:tabset variant="scoped">
-                                <lightning:tab label="{!v.tabName}">
-                                    <div class="slds-modal__content" id="">
-                                        <table class="display">
-                                            <tbody>
-                                                <aura:iteration items="{!v.fileName}" var="file">
-                                                    <br />
-                                                    <tr>
-                                                        <aura:if isTrue="{!file.Azure_FileID__c}">
-                                                            <td class="text"><span aura:id="{!file.Id}"
-                                                                    class="slds-p-right_large">{!file.Name}</span></td>
-                                                            <lightning:button class="" name="{!file.Id}" type="submit"
-                                                                label="Download File"
-                                                                onclick="{!c.DownloadAzureFile}" />
-                                                            <lightning:button class="" name="{!file.Id}" type="submit"
-                                                                label="View File" onclick="{!c.ViewAzureFile}" />
-                                                            <lightning:button class="" name="{!file.Id}" type="submit"
-                                                                label="Modify File" onclick="{!c.ModifyAzureFile}" />
-                                                            <div class="verify">
-                                                                <td class="slds-p-right_xxx-small">Verify</td>
-                                                                <td>
-                                                                    <ui:inputCheckbox aura:id="checkbox" label=""
-                                                                        change="{!c.onCheckAzure}" />
-                                                                </td>
-                                                            </div>
-
-                                                            <aura:if isTrue="{!v.isModifyOpen}">
-                                                                <aura:if isTrue="{!v.modifyId == file.Id}">
-                                                                    <lightning:fileUpload name="{!file.Id}"
-                                                                        fileFieldValue="{!file.Name}"
-                                                                        accept="{!v.filetype}" multiple="false" label=""
-                                                                        recordId="{!v.recordId}"
-                                                                        onuploadfinished="{!c.UploadAzureFile}" />
-                                                                </aura:if>
-                                                            </aura:if>
-
-                                                            <aura:set attribute="else">
-                                                                <td class="text">{!file.Name}</td>
-                                                                <lightning:fileUpload name="{!file.Id}"
-                                                                    accept="{!v.filetype}" multiple="false" label=""
-                                                                    recordId="{!v.recordId}"
-                                                                    onuploadfinished="{!c.UploadAzureFile}" />
-                                                            </aura:set>
-
                                                         </aura:if>
-                                                    </tr>
-                                                </aura:iteration>
-                                            </tbody>
-                                        </table>
-                                        <br />
-                                    </div>
-                                </lightning:tab>
-                            </lightning:tabset>
-                            </aura:if>
-                            <!--Azure upload ends here-->
+                                                    </aura:if>
 
-                            <!--content ends here-->
+                                                    <aura:set attribute="else">
+                                                        <td class="text">{!file.Name}</td>
+                                                        <lightning:fileUpload name="{!file.Id}" accept="{!v.filetype}"
+                                                            multiple="false" label="" recordId="{!v.recordId}"
+                                                            onuploadfinished="{!c.UploadGDriveFile}" />
+                                                    </aura:set>
+                                                </aura:if>
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                                <br />
+                            </div>
+                        </lightning:tab>
+                    </lightning:tabset>
+                </aura:if>
+                <!--Google drive upload ends here-->
+
+
+
+                <!--Azure upload starts here-->
+                <aura:if isTrue="{!v.tabName == 'Azure Storage'}">
+                    <lightning:tabset variant="scoped">
+                        <lightning:tab label="{!v.tabName}">
+                            <div class="slds-modal__content" id="">
+                                <table class="display">
+                                    <tbody>
+                                        <aura:iteration items="{!v.fileName}" var="file">
+                                            <br />
+                                            <tr>
+                                                <aura:if isTrue="{!file.Azure_FileID__c}">
+                                                    <td class="text"><span aura:id="{!file.Id}"
+                                                            class="slds-p-right_large">{!file.Name}</span></td>
+                                                    <lightning:button class="" name="{!file.Id}" type="submit"
+                                                        label="Download File" onclick="{!c.DownloadAzureFile}" />
+                                                    <lightning:button class="" name="{!file.Id}" type="submit"
+                                                        label="View File" onclick="{!c.ViewAzureFile}" />
+                                                    <lightning:button class="" name="{!file.Id}" type="submit"
+                                                        label="Modify File" onclick="{!c.ModifyAzureFile}" />
+                                                    <div class="verify">
+                                                        <td class="slds-p-right_xxx-small">Verify</td>
+                                                        <td>
+                                                            <ui:inputCheckbox aura:id="checkbox" label=""
+                                                                change="{!c.onCheckAzure}" />
+                                                        </td>
+                                                    </div>
+
+                                                    <aura:if isTrue="{!v.isModifyOpen}">
+                                                        <aura:if isTrue="{!v.modifyId == file.Id}">
+                                                            <lightning:fileUpload name="{!file.Id}"
+                                                                fileFieldValue="{!file.Name}" accept="{!v.filetype}"
+                                                                multiple="false" label="" recordId="{!v.recordId}"
+                                                                onuploadfinished="{!c.UploadAzureFile}" />
+                                                        </aura:if>
+                                                    </aura:if>
+
+                                                    <aura:set attribute="else">
+                                                        <td class="text">{!file.Name}</td>
+                                                        <lightning:fileUpload name="{!file.Id}" accept="{!v.filetype}"
+                                                            multiple="false" label="" recordId="{!v.recordId}"
+                                                            onuploadfinished="{!c.UploadAzureFile}" />
+                                                    </aura:set>
+
+                                                </aura:if>
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                                <br />
+                            </div>
+                        </lightning:tab>
+                    </lightning:tabset>
+                </aura:if>
+                <!--Azure upload ends here-->
+
+                <!--content ends here-->
 
                 <!--Modal/Popup Box Footer Starts here-->
                 <footer class="slds-modal__footer">

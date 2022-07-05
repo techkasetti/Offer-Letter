@@ -14,18 +14,19 @@
         $A.enqueueAction(action);
         //v.batchId from JobProfileChild component
         var job = component.get("v.batchId");
+        // alert(job);
         var jobApplication = JSON.parse(job);
         console.log(jobApplication);
         var action = component.get("c.fetchJobPostingDocList");
         console.log('I here 1');
         action.setParams({
-            "JobApplicationId": jobApplication.JobAppication.Id,
-            "JobPostingId": jobApplication.JobAppication.Job_Posting__c
+            "JobApplicationId": jobApplication.Id,
+            "JobPostingId": jobApplication.Job_Posting__c
         });
 
         // action.setParams({
-        //     "JobApplicationId": 'a088Z000013Af0eQAC',
-        //     "JobPostingId": 'a038Z00000XJ98pQAD'
+        //     "JobApplicationId": "a088Z000013AelKQAS",
+        //     "JobPostingId": "a038Z00000XJ98pQAD"
         // });
         console.log('param set');
         action.setCallback(this, function (response) {
@@ -52,11 +53,11 @@
         //Get documentStorage name from job posting object
         var action = component.get("c.fetchDocumentStorageName");
         action.setParams({
-            "JobPostingId": jobApplication.JobAppication.Job_Posting__c
+            "JobPostingId": jobApplication.Job_Posting__c
         });
 
         // action.setParams({
-        //     "JobPostingId": 'a038Z00000XJ98pQAD'
+        //     "JobPostingId": "a038Z00000XJ98pQAD"
         // });
 
         action.setCallback(this, function (response) {
@@ -142,7 +143,9 @@
         action.setParams({
             "attachmentId": attachmentId,
             "accessToken": component.get("v.accessToken"),
-            "uploadedDocId": uploadedDocId
+            "uploadedDocId": uploadedDocId,
+            "jobApplication": jobApplication.Id,
+            "jobPosting": jobApplication.Job_Posting__c
         });
         action.setCallback(this, function (response) {
             var status = response.getState();
@@ -367,7 +370,7 @@
 
         var action = component.get("c.cloaseDocumentUploadppup");
         action.setParams({
-            "jobApplicationId": jobApplication.JobAppication.Id
+            "jobApplicationId": jobApplication.Id
         });
         action.setCallback(this, function (response) {
             var state = response.getState();

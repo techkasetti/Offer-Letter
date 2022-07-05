@@ -97,9 +97,9 @@
     <lightning:messages />
 
             <div class="slds-theme_shade " style="border:1px solid black;background-color: white;">
-                <lightning:button class="" type="search" label="Home Page" onclick="{!c.backToHP}" iconName="utility:chevronleft"/>
-                <div class="slds-box slds-align_absolute-center slds-var-p-bottom_small slds-p-top_small">
-                    <h2><b>Post New Job</b></h2> 
+                <lightning:button class="" type="search" label="HOME PAGE" onclick="{!c.backToHP}" iconName="utility:chevronleft"/>
+                <div class="slds-text-font_monospace slds-text-heading_medium slds-box slds-align_absolute-center slds-var-p-bottom_small slds-p-top_small slds-theme_alt-inverse">
+                    <h2><b>POST NEW JOB</b></h2> 
                 </div> 
 
                 <!--div>
@@ -108,7 +108,7 @@
 
 <!--section information starts-->
                 <div class="slds-box" style="background-color: #F3F3F3">
-                    <h1><b>Information</b></h1> 
+                    <h1><b>INFORMATION</b></h1> 
                 </div>
                 <lightning:recordEditForm objectApiName="Job_Posting__c" onsuccess="{!c.handleSuccess}" recordId="{!v.jobPostRecordId}">
                             <div class="slds-grid slds-wrap">
@@ -160,7 +160,7 @@
 
                         <div class="slds-box" style="background-color: #F3F3F3">
                             <h1>
-                                <b>Select Skill</b>
+                                <b>SELECT SKILL</b>
                                 <lightning:buttonIcon class="slds-p-left_x-small" iconName="utility:add"  size="large" variant="bare" alternativeText="Add" onclick="{!c.addSkillRow}"/>
                             </h1> 
                         </div> 
@@ -211,7 +211,7 @@
 
                     <div class="slds-box" style="background-color: #F3F3F3">
                         <h1>
-                            <b>Documents to be submitted</b>
+                            <b>DOCUMENTS TO BE SUBMITTED</b>
                             <lightning:buttonIcon class="slds-p-left_x-small" iconName="utility:add"  size="large" variant="bare" alternativeText="Add" onclick="{!c.addDocRow}"/>
                         </h1> 
                     </div> 
@@ -238,7 +238,7 @@
                             <!--DOCUMENT MASTER SECTION FOR UPDATE ENDS-->
 
                             <aura:iteration items="{!v.docMasterList}" var="doc" indexVar="index">
-                                <lightning:recordEditForm objectApiName="Job_Posting_Document__c" aura:id="docForm" onsuccess="{!c.handleOnSuccess}">
+                                <lightning:recordEditForm objectApiName="Job_Posting_Document__c" aura:id="docForm" onsuccess="{!c.handleOnSuccess}" recordId="{!v.jobPostDocRecordId}">
                                     <div class="slds-grid">
                                         <div class="slds-col slds-size_1-of-4">
                                             <lightning:inputField  fieldName="Document_Master__c"  value="{!doc.Document_Master__c}" />
@@ -258,7 +258,7 @@
 
                         <div class="slds-box" style="background-color: #F3F3F3">
                             <h1>
-                                <b>Assign Team Members</b>
+                                <b>ASSIGN TEAM MEMBERS</b>
                                 <lightning:buttonIcon class="slds-p-left_x-small" iconName="utility:add"  size="large" variant="bare" alternativeText="Add" onclick="{!c.addUserRow}"/>
                             </h1>
                         </div>
@@ -322,7 +322,7 @@
 
                         <div class="slds-box" style="background-color: #F3F3F3">
                             <h1>
-                                <b>Reference Attachment</b>
+                                <b>REFERENCE ATTACHMENT</b>
                             </h1>
                         </div>
 <!--section Reference Attachment starts-->
@@ -343,11 +343,11 @@
                         <div class="page-footer">
                             <tr>
                                 <aura:if isTrue="{!not(empty(v.jobPostRecordId))}">
-                                    <td class=""><lightning:button class="slds-theme_inverse slds-align_absolute-center" aura:id="updateJobPostingFields" type="" label="Update Job" onclick="{!c.UpdateJob}" value="{!v.jobPost}"/></td>
+                                    <td class=""><lightning:button class="slds-theme_inverse slds-align_absolute-center" aura:id="updateJobPostingFields" type="submit" label="UPDATE JOB" onclick="{!c.UpdateJob}" value="{!v.jobPost}"/></td>
                                 <aura:set attribute="else">
-                                    <td class="slds-p-right_x-large"><lightning:button class="slds-theme_inverse slds-align_absolute-center" aura:id="search" type="submit" label="+ Add Another Job" onclick="{!c.addAnotherJob}"/></td>
-                                    <td>OR</td>
-                                    <td class="slds-p-left_x-large"><lightning:button class="slds-theme_inverse slds-align_absolute-center"  aura:id="jobPostingFields" type="" label="Post Job" onclick="{!c.postNewJob}" value="{!v.jobPost}" /></td>
+                                    <td class="slds-p-right_x-large"><lightning:button class="slds-button slds-button_destructive slds-align_absolute-center" aura:id="search" type="submit" label="+ ADD ANOTHER JOB" onclick="{!c.addAnotherJob}"/></td>
+                                    <td></td>
+                                    <td class="slds-p-left_x-large"><lightning:button class="slds-button slds-button_brand slds-align_absolute-center"  aura:id="jobPostingFields" type="" label="POST NEW JOB" onclick="{!c.postNewJob}" value="{!v.jobPost}" /></td>
                                     <!--td class="slds-p-left_x-large"><lightning:button class="slds-theme_inverse slds-align_absolute-center" aura:id="ZOOM" type="submit" label="connect zoom" onclick="{!c.zoom}"/></td-->
                                 </aura:set>
                                 </aura:if>

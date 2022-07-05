@@ -3,7 +3,7 @@
     doInit : function(component, event,helper,page) 
     {    
         var items = component.get("v.JobList"); 
-        console.log(component.get("v.JobList"));
+        console.log(JSON.stringify(component.get("v.JobList")));
         //var jobPostings = JSON.parse(items);
         //console.log(jobPostings);
 
@@ -11,7 +11,7 @@
         /*List<Job_Posting__c> deserializeSkill = (List<Job_Posting__c>) System.JSON.deserialize(items, List<Job_Posting__c>.Class);
         
         system.debug('deserializeSkill>>'+deserializeSkill);*/
-        var action = component.get("c.toGetJobApplicants");
+        /*var action = component.get("c.toGetJobApplicants");
         action.setParams({"buttonType":'',
                           "buttonTypeId":'',
                           "items":items});
@@ -48,12 +48,12 @@
                         }
                           }
                     
-                }*/
+                }
                 
             }
             
         });
-        $A.enqueueAction(action);
+        $A.enqueueAction(action);*/
 
         /*var action1 = component.get("c.togetJobPostings");
         action1.setParams({"items":items});

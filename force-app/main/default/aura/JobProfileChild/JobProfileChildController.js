@@ -67,13 +67,15 @@
        // alert(JSON.stringify(component.get('v.jobApplication')));
     },
     handleClick: function (component, event, helper) {
+        
         var buttonType = event.getSource().get("v.label");
         //alert('buttonType ::'+buttonType);
         if (buttonType == 'Interview Cleared') {
+            //alert('Inside');
             component.set("v.ShowUploadDocuments", true);
 
 
-        } else if (buttonType == 'On Interview Process') {
+        }/* else if (buttonType == 'On Interview Process') {
             var items = component.get("v.jobApplication");
             console.log(JSON.stringify(component.get("v.jobApplication")));
             var jobposting = JSON.stringify(component.get("v.jobApplication"));
@@ -103,7 +105,7 @@
                 }
             })
             $A.enqueueAction(pickvar);
-        }
+        }*/
         else if (buttonType == 'Lead Approved') {
 
             component.set("v.ShowResubmissionButton", true);
@@ -114,7 +116,7 @@
         }
 
         var buttonTypeId = event.getSource().get("v.value");
-        // alert('buttonTypeId ::'+buttonTypeId);
+         //alert('buttonTypeId ::'+buttonTypeId);
         helper.handleClickHelper(component, event, helper, buttonType, buttonTypeId);
     },
     handleViewDocuments: function (component, event, helper) {

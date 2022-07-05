@@ -1,10 +1,10 @@
 public class JobProfileCntrl {
     @AuraEnabled
-    public static List<JobApplicantsWrap> toGetJobApplicants(String buttonType, String buttonTypeId, String items)
+    public static List<JobApplicantsWrap> toGetJobApplicants(String buttonType, String buttonTypeId)
     {
         system.debug('buttonType :>>>>>'+buttonType);
         system.debug('buttonTypeId :>>>>>'+buttonTypeId);
-        system.debug('items :>>>>>'+items);
+        
         
         //Added by Dharshan
         //if onboard,increment No_Of_Candidate_Selected__c

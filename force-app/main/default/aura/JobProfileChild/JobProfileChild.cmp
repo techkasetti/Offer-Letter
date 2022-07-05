@@ -1,4 +1,4 @@
-<aura:component controller = "JobProfileCntrl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+<aura:component controller = "HomePageController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     <aura:attribute name="POList" type="Object"/>
     <aura:attribute name="jobApplication" type="Object"/>
@@ -38,9 +38,9 @@
             <lightning:Icon  class="slds-hide" aura:id="chevrondown" iconName="utility:chevrondown" size="x-small"/>
             </button> </td>
         
-        <td><div class="slds-text-heading-large"><b>{!v.jobApplication.Name}/{!v.jobApplication.Candidate_Profile__r.Designation__c}</b></div></td>
+        <td><div class="slds-text-heading-large"><b>{!v.jobApplication.JobApplication.Name}/{!v.jobApplication.JobApplication.Candidate_Profile__r.Designation__c}</b></div></td>
         <!--td><div class="slds-text-heading-large"><b>{!v.POList.Name}/{!v.POList.JobAppication.Candidate_Profile__r.Designation__c}</b></div></td-->
-        <td><div class="slds-text-heading-large"><b>{!v.jobApplication.Profile_Status__c}</b></div></td>
+        <td><div class="slds-text-heading-large"><b>{!v.jobApplication.JobApplication.Profile_Status__c}</b></div></td>
         <td></td>
         <td></td>
     </tr>
@@ -65,16 +65,16 @@
           
             <td></td>
             
-            <td><div class="slds-text-heading-large">{!v.jobApplication.Name}/{!v.jobApplication.Candidate_Profile__r.Designation__c}</div></td>
-            <td><div class="slds-text-heading-large">{!v.jobApplication.Candidate_Profile__r.Experience__c}</div></td>
-            <td><div class="slds-text-heading-large">{!v.jobApplication.Candidate_Profile__r.Skills__c}</div></td>
-            <td><div class="slds-text-heading-large">{!v.jobApplication.Candidate_Profile__r.Current_Location__c}</div></td>
-            <td><div class="slds-text-heading-large">{!v.jobApplication.Candidate_Profile__r.Notice_Period__c}</div></td> 
-            <td><div class="slds-text-heading-large">{!v.jobApplication.Profile_Status__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.jobApplication.JobApplication.Name}/{!v.jobApplication.JobApplication.Candidate_Profile__r.Designation__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.jobApplication.JobApplication.Candidate_Profile__r.Experience__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.jobApplication.JobApplication.Candidate_Profile__r.Skills__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.jobApplication.JobApplication.Candidate_Profile__r.Current_Location__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.jobApplication.JobApplication.Candidate_Profile__r.Notice_Period__c}</div></td> 
+            <td><div class="slds-text-heading-large">{!v.jobApplication.JobApplication.Profile_Status__c}</div></td>
             <td>
                 <aura:if isTrue="{!v.ShowStatusAction}">
                     <aura:iteration items="{!v.jobApplication.StatusButtons}" var="status" indexVar="index">
-                        <lightning:button label="{!status}" title="{!status}"  value="{!v.jobApplication.Id}" variant="success" onclick="{! c.handleClick }" disabled="{!v.disableButton}"/>
+                        <lightning:button label="{!status}" title="{!status}"  value="{!v.jobApplication.JobApplication.Id}" variant="success" onclick="{! c.handleClick }" disabled="{!v.disableButton}"/>
                     </aura:iteration>
                 </aura:if>
             </td>   
@@ -90,7 +90,7 @@
                 <!--<lightning:button variant="Brand" label="Show Comments" title="Show Comments"  value="{!v.POList.JobAppication.Id}" onclick="{!c.showComments}"/>-->
                 <!--lightning:button variant="Brand" label="View Documents" title="View Documents"   value="{!v.POList.JobAppication.Candidate_Profile__r.Id}" onclick="{!c.handleViewDocuments}"/-->
                 <aura:if isTrue="{!v.ShowUploadDocuments}">
-                    <lightning:button variant="Brand" aura:id="profile" value ="{!v.POList}" type="submit" label="Upload Documents" onclick="{!c.handleUpload}"/>
+                    <lightning:button variant="Brand" aura:id="profile" value ="{!v.jobApplication.JobApplication}" type="submit" label="Upload Documents" onclick="{!c.handleUpload}"/>
                 </aura:if>
                 <aura:if isTrue="{!v.ShowResubmissionButton}">
                     <lightning:button variant="Brand" aura:id="candProfile" value ="{!v.POList}" type="submit" label="Re-Submit Profile" onclick="{!c.handleResubmit}"/>

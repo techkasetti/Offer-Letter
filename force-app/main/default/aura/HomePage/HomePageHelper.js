@@ -59,7 +59,9 @@
 		console.log(companyFilter + '' + postStatus);
 		action.setParams({
 			companyFilter: companyFilter,
-			postStatus: postStatus
+			postStatus: postStatus,
+            buttonType:'',
+            buttonTypeId:'',
 		});
 
 		action.setCallback(this, function (response) {
@@ -77,10 +79,10 @@
 				console.log('storeResponseList ::: ' + storeResponseList);
 				component.set("v.jobPostings", storeResponse);
                 var jobPostingName = component.get("v.jobPostings");
-				console.log(jobPostingName[0].Name);
-                component.set("v.jobApplications", storeResponseList);
+				console.log(jobPostingName);
+                /*component.set("v.jobApplications", storeResponseList);
                 var jobApplicationName = component.get("v.jobApplications");
-                console.log(jobApplicationName);
+                console.log(jobApplicationName);*/
 			}
 			else {
 				alert('there is no record to display');

@@ -12,10 +12,10 @@
             </button> 
         </td>
         
-        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.Name}</b></div></td>
-        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.No_Of_Candidate_Selected__c}</b></div></td>
-        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.Posting_Due_Date__c}</b></div></td>
-        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b class="status">{!v.JobList.Job_OC_Status__c}</b></div>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.JobPosting.Name}</b></div></td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.JobPosting.No_Of_Candidate_Selected__c}</b></div></td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.JobPosting.Posting_Due_Date__c}</b></div></td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b class="status">{!v.JobList.JobPosting.Job_OC_Status__c}</b></div>
         </td>
         <td><lightning:button name="{!v.JobList.Id}" label="Edit" iconName="utility:edit" iconPosition="right" variant="brand" onclick="{! c.editJobPosting }"/></td>
         <td></td>
@@ -53,7 +53,7 @@
                 </tr>
 
                 
-                <aura:iteration items="{!v.JobList.Job_Applications__r}" var="var1" indexVar="index">
+                <aura:iteration items="{!v.JobList.JobApplicationWrapList}" var="var1" indexVar="index">
                     <c:JobProfileChild jobApplication="{!var1}"  /> 
                 </aura:iteration>
                 

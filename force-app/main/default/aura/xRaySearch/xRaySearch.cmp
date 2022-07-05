@@ -10,8 +10,8 @@
     <!--aura:if isTrue="{!v.xRaySearch}"-->   
         <!--aura:If isTrue="{!v.selectedTab!=''}"-->
             <div >                        
-                <div class="slds-align_absolute-center slds-theme_alt-inverse slds-p-bottom_small slds-p-top_small">
-                   <h1><b>X-Ray Search</b></h1> 
+                <div class="slds-text-heading_medium slds-text-font_monospace slds-align_absolute-center slds-theme_alt-inverse slds-p-bottom_small slds-p-top_small">
+                   <h1><b>X-RAY SEARCH</b></h1> 
                 </div>																
             </div>
         <!--/aura:If-->
@@ -31,7 +31,7 @@
                 <br/>
                 <div class=""><lightning:input class="" aura:id="input3" name="input3" label="Experience" value="{! v.experience }"/></div>
 
-                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchLinkedin}"/></div>
+                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-button slds-button_brand" aura:id="search" type="submit" label="SEARCH" onclick="{!c.searchLinkedin}"/></div>
             </div>
         </lightning:tab>
         
@@ -48,7 +48,7 @@
                 <br/>
                 <div class=""><lightning:input class="" aura:id="naukri3" name="naukri3" label="Experience" value="{! v.experience }"/></div>
 
-                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchNaukri}"/></div>
+                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-button slds-button_brand" aura:id="search" type="submit" label="SEARCH" onclick="{!c.searchNaukri}"/></div>
             </div>
         </lightning:tab>
         
@@ -65,7 +65,7 @@
                 <br/>
                 <div class=""><lightning:input class="" aura:id="Indeed3" name="Indeed3" label="Experience" value="{! v.experience }"/></div>
 
-                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchIndeed}"/></div>
+                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-button slds-button_brand" aura:id="search" type="submit" label="SEARCH" onclick="{!c.searchIndeed}"/></div>
             </div>
         </lightning:tab>
         
@@ -79,7 +79,7 @@
                 <div class=""><lightning:input name="input1" label="Job title" value="{! v.jobTitle }"/></div>
                 <br/>
                 <div class=""><lightning:input name="input2" label="Location or keywords to include" value="{! v.location }"/></div>
-                <div class="slds-align_absolute-center slds-p-top_medium "><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchStack}"/></div>
+                <div class="slds-align_absolute-center slds-p-top_medium "><lightning:button class="slds-button slds-button_brand" aura:id="search" type="submit" label="SEARCH" onclick="{!c.searchStack}"/></div>
             </div>
         </lightning:tab>
         
@@ -94,7 +94,7 @@
                 <br/>
                 <div class=""><lightning:input name="input2" label="Location or keywords to include" value="{! v.location }"/></div>
 
-                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchDribbble}"/></div>
+                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-button slds-button_brand" aura:id="search" type="submit" label="SEARCH" onclick="{!c.searchDribbble}"/></div>
             </div>
         </lightning:tab>
         
@@ -109,7 +109,7 @@
                 <br/>
                 <div class=""><lightning:input name="input2" label="Location or keywords to include" value="{! v.location }"/></div>
 
-                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchGithub}"/></div>
+                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-button slds-button_brand" aura:id="search" type="submit" label="SEARCH" onclick="{!c.searchGithub}"/></div>
             </div>
         </lightning:tab>
         
@@ -124,7 +124,7 @@
                 <br/>
                 <div class=""><lightning:input name="input2" label="Location or keywords to include" value="{! v.location }"/></div>
 
-                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchTwitter}"/></div>
+                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-button slds-button_brand" aura:id="search" type="submit" label="SEARCH" onclick="{!c.searchTwitter}"/></div>
             </div>
         </lightning:tab>
 
@@ -134,13 +134,13 @@
     <div class="Display " >
         <span>
         <aura:if isTrue="{!v.ShowCandidateProfile}">
-            <lightning:button class="slds-theme_success slds-align_absolute-center" aura:id="profile" type="submit" label="Create Candidate Profile" onclick="{!c.handleProfile}"/>
+            <lightning:button class="slds-theme_success slds-align_absolute-center" aura:id="profile" type="submit" label="CREATE CANDIDATE PROFILE" onclick="{!c.handleProfile}"/>
         </aura:if>
             </span>
     </div>
     <div class="slds-border_top slds-text-align_left slds-p-top_small slds-p-bottom_x-small">
-        <lightning:button class="" type="search" label="Home Page" onclick="{!c.backToHP}" iconName="utility:chevronleft"/>
-        <lightning:button class="" type="search" label="Shedule Zoom" onclick="{!c.sheduleZoom}" iconName="utility:chevronleft"/>
+        <lightning:button class="" type="search" label="HOME PAGE" onclick="{!c.backToHP}" iconName="utility:chevronleft"/>
+        <lightning:button class="" type="search" label="SHEDULE ZOOM MEETING" onclick="{!c.sheduleZoom}" iconName="utility:chevronleft"/>
     </div>
 
 
