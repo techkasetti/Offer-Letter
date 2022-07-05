@@ -86,13 +86,13 @@
             var state = response.getState();
             if (state === "SUCCESS") {                
                 var storeResponse = response.getReturnValue();
-                console.log(storeResponse[0].KTDO1__Billing_City__c);
+                console.log(storeResponse[0].Billing_City__c);
                 if (storeResponse.length == 0) {
                     component.set("v.Message", 'No Result Found...');
                 } else {
                     component.set("v.Message", '');
                 }
-                component.set("v.listOfLocationSearchRecords", storeResponse[0].KTDO1__Billing_City__c);
+                component.set("v.listOfLocationSearchRecords", storeResponse[0].Billing_City__c);
                 console.log(component.get("v.listOfLocationSearchRecords"));
             }
             
@@ -100,7 +100,7 @@
         $A.enqueueAction(action);        
     },
     
-    getSkillset: function(component,event,helper){
+    /*getSkillset: function(component,event,helper){
         var action = component.get("c.getSkillSetPickListValues");
         action.setCallback(this, function(response) {
             var state = response.getState();
@@ -122,7 +122,7 @@
         $A.enqueueAction(action);
         
         
-    },
+    },*/
     
     searchSkillset: function(component,event,selectedUserrecordByEvent){
         if(selectedUserrecordByEvent != null && selectedUserrecordByEvent != ""){
@@ -132,7 +132,7 @@
             pushToSelectdUser.push(selectedUserrecordByEvent);
             // helper.getSkillset(component,event,helper);
             console.log(pushToSelectdUser);
-            pushToSelectdUser[0].KTDO1__SkillSet_Experience__c=component.get("v.selectedSkillsetExp");
+            pushToSelectdUser[0].SkillSet_Experience__c=component.get("v.selectedSkillsetExp");
             console.log(pushToSelectdUser); 
             
             
@@ -168,7 +168,14 @@
         var profile = component.get("v.candidateProfile");
         //alert('saveSkillAndExp>>'+JSON.stringify(component.get('v.candidateProfile')));
         
+        var startDate =  component.get("v.fromDate");
+        var endDate =  component.get("v.toDate");
+        //alert('startDate??'+startDate);
+        //alert('endDate??'+endDate);
         //For skills and Exp
+        component.set("v.candidateProfile.From_Year_Of_Graduation__c",startDate);
+        component.set("v.candidateProfile.To_Year_Of_Graduation__c",endDate);
+        console.log(JSON.stringify(component.get("v.candidateProfile")));
         var skillandexp = component.get("v.selectedUserRecordClone");
         
         var skillobj = component.get("v.skillAndExp");
@@ -187,19 +194,21 @@
             alert(key);
               alert(rollsAndRespMap[key]);
           }*/
-
+        
         //this.locationHelper(component,event,helper);
+        console.log(component.get("v.selectedLocationRecord"));
         var location = component.get("v.selectedLocationRecord");
         
-        
+        //alert(location);
         var locationArray='';
         
         for(var i =0; i<location.length; i++)
         {
             
-            locationArray=locationArray+location[i].Name+', ';
+            locationArray=locationArray+location[i]+', ';
+            console.log(locationArray);
         }                  
-        component.set("v.candidateProfile.KTDO1__Preferred_Location__c",locationArray);          
+        component.set("v.candidateProfile.Preferred_Location__c",locationArray);          
         console.log(JSON.stringify(component.get("v.candidateProfile")));
         
         var getchunk = fileContents.substring(startPosition, endPosition);      
@@ -240,7 +249,7 @@
                     console.log(component.get("v.jobApplication"));
                     var cand = component.get("v.jobApplicationList") ;
                     console.log(component.get("v.jobApplicationList"));
-                    jobApp.push(cand[0].KTDO1__Candidate_Profile__c);
+                    jobApp.push(cand[0].Candidate_Profile__c);
                     
                     jobApp.push(getSelectedJob);
                     
@@ -249,7 +258,7 @@
                 }
                 else{
                     //url redirect
-                    //window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/KTDO1__Home_Page");
+                    window.location.replace("https://kasetti-dev-evironmet-dev-ed.lightning.force.com/lightning/n/Home_Page");
                 }
                 
                 var job = component.get("v.jobApplication"); 
@@ -276,9 +285,10 @@
                         }
                         //$A.get('e.force:refreshView').fire();
                         //url redirect
-                       // window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/KTDO1__Home_Page");
-                        component.set("v.showParticularToggle",true);
-                     
+                        component.set("v.showSpinner",true);
+                        window.location.replace("https://kasetti-dev-evironmet-dev-ed.lightning.force.com/lightning/n/Home_Page");
+                        
+                        
                         
                     }
                     else if(state === 'ERROR'){
@@ -293,7 +303,7 @@
                 $A.enqueueAction(jobPostAction);
                 
                 //url redirect
-                // window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/KTDO1__Home_Page");
+                // window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/Home_Page");
                 
             }
             else if(state === 'ERROR'){
@@ -341,7 +351,7 @@
     //             alert('JOB'+getSelectedJob); 
     //             var jobApp = component.get("v.jobApplication");
     //             console.log(component.get("v.jobApplication"));
-    //             jobApp.push(candiProfile[0].KTDO1__Candidate_Profile__c);
+    //             jobApp.push(candiProfile[0].Candidate_Profile__c);
     
     //             jobApp.push(getSelectedJob);
     
@@ -373,7 +383,7 @@
     //                     }
     //                     //$A.get('e.force:refreshView').fire();
     //                     ////url redirect
-    //                     window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/KTDO1__Home_Page");
+    //                     window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/Home_Page");
     
     //                 }
     //                 else if(state === 'ERROR'){
@@ -402,7 +412,7 @@
     
     // },
     
-    locationHelper: function(component,event,helper){
+    /*locationHelper: function(component,event,helper){
         
         var location = component.get("v.selectedLocationRecord");
         
@@ -413,10 +423,10 @@
             
             locationArray=locationArray+location[i].Name+', ';
         }                  
-        component.set("v.candidateProfile.KTDO1__Preferred_Location__c",locationArray);          
+        component.set("v.candidateProfile.Preferred_Location__c",locationArray);          
         console.log(JSON.stringify(component.get("v.candidateProfile")));
         
-    },
+    },*/
     
     searchRollsAndResponsibilitiesHelper : function(component,event,getInputkeyWord) {
         
@@ -446,5 +456,105 @@
         $A.enqueueAction(action);        
     },
     
-    
+    handleOnSubmitHelper: function(component, event, helper, fields){
+        
+        var skillsList = component.get("v.skillsList");
+        console.log(skillsList);
+        var rolesAndRespo = component.get("v.rolesandRespoList");
+        console.log(rolesAndRespo);
+        var action = component.get("c.saveCandidateProfile");
+        action.setParams({
+            "candFields": fields,
+            "skills": skillsList,
+            "rolesAndResp": rolesAndRespo
+        });
+        action.setCallback(this, function(response) {
+            //get response status 
+            var state = response.getState();
+            if (state === "SUCCESS") { 
+                //set empty account list
+                //component.set("v.skillsList", []);
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "SUCCESS!",
+                    "message": "Candidate Profile Created.",
+                     type: "success"
+                });
+                toastEvent.fire();
+                var storeResponse = response.getReturnValue();
+                console.log(storeResponse);
+                
+                var jobList =component.set("v.jobApplicationList",storeResponse);
+                console.log(component.get("v.jobApplicationList"));
+                var getSelectedJob = component.find('select').get('v.value');
+                //alert('getSelectedJob>>'+getSelectedJob);
+                if(getSelectedJob){
+                    var jobApp = component.get("v.jobApplication");
+                    console.log(component.get("v.jobApplication"));
+                    var cand = component.get("v.jobApplicationList") ;
+                    console.log(component.get("v.jobApplicationList"));
+                    jobApp.push(cand[0].Candidate_Profile__c);
+                    
+                    jobApp.push(getSelectedJob);
+                    
+                    component.set("v.jobApplication",jobApp);
+                    console.log(component.get("v.jobApplication"));
+                }
+                else{
+                    component.set("v.showSpinner",true);
+                    window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/Home_Page");
+                }
+                var job = component.get("v.jobApplication"); 
+                
+                var jobPostAction = component.get("c.saveJobApplication");
+                
+                jobPostAction.setParams({ 
+                    
+                    "job": job
+                    
+                });
+                jobPostAction.setCallback(this, function(response) {
+                    var state = response.getState();
+                    if(state === 'SUCCESS'){
+                        
+                        if(response.getReturnValue()){
+                            console.log(response.getReturnValue());
+                            var toastEvent = $A.get("e.force:showToast");
+                            toastEvent.setParams({
+                                "title": "Success!",
+                                "message": "Job Application has been saved successfully.",
+                                type: "success"
+                            });
+                            toastEvent.fire();
+                        }
+                        //$A.get('e.force:refreshView').fire();
+                        //url redirect
+                        component.set("v.showSpinner",true);
+                        window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/Home_Page");
+                            }
+                    else if(state === 'ERROR'){
+                        var toastEvent = $A.get("e.force:showToast");
+                        toastEvent.setParams({
+                            "title": "Error!",
+                            "message": "Error Occured in Creating Job Application.",
+                            type: "error"
+                        });
+                        toastEvent.fire();
+                    }
+                })
+                $A.enqueueAction(jobPostAction);
+                
+            }
+            else if(state === 'ERROR'){
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Error!",
+                    "message": "Error Occured in creating Profile.",
+                    type: "error"
+                });
+                toastEvent.fire();
+            }
+        }); 
+        $A.enqueueAction(action);
+    }
 })

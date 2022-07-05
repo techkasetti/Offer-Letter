@@ -82,7 +82,7 @@
                     });
                     toastEvent.fire();
                     //url redirect
-                    window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/KTDO1__Home_Page");
+                    window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/Home_Page");
                 }
                 $A.get('e.force:refreshView').fire();
             }

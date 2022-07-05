@@ -1,10 +1,9 @@
 <aura:component controller="smartSearchController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
-    <aura:registerEvent name="candProfileEvent" type="c:CandidateProfile"/>
+    <!-- <aura:registerEvent name="candProfileEvent" type="c:CandidateProfile"/> -->
     <!--declare events handlers-->  
     <aura:handler name="oRetailerdataEvent" event="c:selectedSkillsdataEvent" action="{!c.handleComponentEvent}"/>
-    <aura:handler name="oRetailerdataEvent1" event="c:selectedLocationdataEvent" action="{!c.handleComponentEvent1}"/>
-    <aura:handler name="oRetailerdataEvent2" event="c:selectedCandidatedataEvent" action="{!c.handleComponentEvent2}"/>
+   
     <!--aura:attribute name="selectedTab" type="String"/-->
     <aura:attribute name="candidateProfile" type="sObject"/>
     <aura:attribute name="skillAndExp" type="List" default=""/>

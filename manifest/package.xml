@@ -2,6 +2,7 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
 		<members>AzureFileUpload</members>
+		<members>CandFieldSet</members>
 		<members>GoogleDriveController</members>
 		<members>GoogleDriveControllerTest</members>
 		<members>HomePageController</members>
@@ -12,7 +13,6 @@
 		<members>ZoomMetingSchedule</members>
 		<members>smartSearchController</members>
 		<members>smartSearchControllerTest</members>
-		<members>CandFieldSet</members>
 		<name>ApexClass</name>
 	</types>
 	<types>
@@ -22,15 +22,20 @@
 		<members>JobProfileChild</members>
 		<members>ProfileSearch</members>
 		<members>SaveSkillSet</members>
+		<members>SmartSearchUsingFS</members>
+		<members>ZoomMeetingShedule</members>
 		<members>jobPosting</members>
 		<members>showCandidateProfileSearch</members>
 		<members>xRaySearch</members>
-		<members>SmartSearchUsingFS</members>
 		<name>AuraDefinitionBundle</name>
 	</types>
 	<types>
 		<members>Offer_Letter</members>
 		<name>CustomApplication</name>
+	</types>
+	<types>
+		<members>Google_Drive_Token.lable_1</members>
+		<name>CustomMetadata</name>
 	</types>
 	<types>
 		<members>Candidate_Profile__c</members>
@@ -64,10 +69,6 @@
 		<members>Skill_Set__c</members>
 		<members>xRaySearch</members>
 		<name>CustomTab</name>
-	</types>
-	<types>
-		<members>Google_Drive_Token.lable_1</members>
-		<name>CustomMetadata</name>
 	</types>
 	<version>53.0</version>
 </Package>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CustomTeams__Do_not_change_Team_or_Team_Member</fullName>
+    <active>true</active>
+    <description>Do_not_change_Team_or_Team_Member</description>
+    <errorConditionFormula>OR (
+ISCHANGED ( CustomTeams__Team__c ) ,
+ISCHANGED (  CustomTeams__User__c )
+)</errorConditionFormula>
+    <errorMessage>Team or User cannot be changed on a Team Member record.</errorMessage>
+</ValidationRule>

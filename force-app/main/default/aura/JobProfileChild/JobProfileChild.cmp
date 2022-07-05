@@ -1,6 +1,7 @@
 <aura:component controller = "JobProfileCntrl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     <aura:attribute name="POList" type="Object"/>
+    <aura:attribute name="jobApplication" type="Object"/>
     <aura:attribute name="expanded" type="Boolean" default="false"/>
     <aura:attribute name="checkThis" type = "Boolean" default ="true" />
     <aura:attribute name="viewDocument" type="boolean" default="false"/>
@@ -10,6 +11,7 @@
     <aura:attribute name="ShowStatusAction" type="boolean" default="false"/>
     <aura:attribute name="ShowResubmissionButton" type="boolean" default="false"/>
     <aura:attribute name="ShowResumissionModal" type="boolean" default="false"/>
+    <aura:attribute name="ShowConfirmationMessage" type="boolean" default="false"/>
     <aura:attribute name="addComments" type="boolean" default="false"/>
     <aura:attribute name="viewComments" type="boolean" default="false"/>
     <aura:attribute name="disableButton" type="boolean" default="false" />
@@ -24,24 +26,26 @@
     <aura:attribute name="option" type="String" default="option1"/>
     <aura:attribute name="contactList" type="List" />
     <aura:attribute name="contactSelected" type="Object"/>
-    <aura:attribute name="comments" type="Comments__c" default="{'SObject':'KTDO1__Comments__c'}"/>
+    <!--aura:attribute name="comments" type="Comments__c" default="{'SObject':'Comments__c'}"/-->
     <aura:attribute name="fileName" type="String" default="No File Selected.." />
     <aura:attribute name="JobAppdetails" type="Object"/>    
     <aura:attribute name="OpenJobProfileChild" type="boolean" default="false"/>
     
-    <tr Style="Width:100%">
+    <tr class="slds-border_bottom" Style="Width:100%">
         <td></td>
-        <td><button class="slds-button slds-button_neutral" aura:id="toggle" onclick="{!c.toggle}" value="{!v.checkThis}"  style="padding:0 2px;"> 
+        <td ><button class="slds-button slds-button_neutral" aura:id="toggle" onclick="{!c.toggle}" value="{!v.checkThis}"  style="padding:0 2px;"> 
             <lightning:Icon aura:id="chevronright" iconName="utility:chevronright" size="x-small"/>
             <lightning:Icon  class="slds-hide" aura:id="chevrondown" iconName="utility:chevrondown" size="x-small"/>
             </button> </td>
         
-        <td><div class="slds-text-heading-large"><b>{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.Name}/{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Designation__c}</b></div></td>
-        <td><div class="slds-text-heading-large"><b>{!v.POList.JobAppication.KTDO1__Profile_Status__c}</b></div></td>
+        <td><div class="slds-text-heading-large"><b>{!v.jobApplication.Name}/{!v.jobApplication.Candidate_Profile__r.Designation__c}</b></div></td>
+        <!--td><div class="slds-text-heading-large"><b>{!v.POList.Name}/{!v.POList.JobAppication.Candidate_Profile__r.Designation__c}</b></div></td-->
+        <td><div class="slds-text-heading-large"><b>{!v.jobApplication.Profile_Status__c}</b></div></td>
         <td></td>
         <td></td>
     </tr>
     <aura:if isTrue="{!v.expanded}">   
+       
         <tr class="slds-text-title_caps slds-gray" style="background-color: #F3F3F3">
             
             <th style="width: 2.5%;"><div class="slds-truncate"></div></th>
@@ -55,31 +59,36 @@
             <th><div class="slds-truncate"><b>Next Step Action </b></div></th> 
             
         </tr> 
-        
-        <tr Style="Width:100%"> 
+      
+            
+        <tr class="slds-border_bottom" Style="Width:100%"> 
+          
             <td></td>
-            <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.Name}/{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Designation__c}</div></td>
-            <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Experience__c}</div></td>
-            <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Skills__c}</div></td>
-            <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Current_Location__c}</div></td>
-            <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Notice_Period__c}</div></td> 
-            <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Profile_Status__c}</div></td>
+            
+            <td><div class="slds-text-heading-large">{!v.jobApplication.Name}/{!v.jobApplication.Candidate_Profile__r.Designation__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.jobApplication.Candidate_Profile__r.Experience__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.jobApplication.Candidate_Profile__r.Skills__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.jobApplication.Candidate_Profile__r.Current_Location__c}</div></td>
+            <td><div class="slds-text-heading-large">{!v.jobApplication.Candidate_Profile__r.Notice_Period__c}</div></td> 
+            <td><div class="slds-text-heading-large">{!v.jobApplication.Profile_Status__c}</div></td>
             <td>
                 <aura:if isTrue="{!v.ShowStatusAction}">
-                    <aura:iteration items="{!v.POList.StatusButtons}" var="status" indexVar="index">
-                        <lightning:button label="{!status}" title="{!status}"  value="{!v.POList.JobAppication.Id}" variant="success" onclick="{! c.handleClick }" disabled="{!v.disableButton}"/>
+                    <aura:iteration items="{!v.jobApplication.StatusButtons}" var="status" indexVar="index">
+                        <lightning:button label="{!status}" title="{!status}"  value="{!v.jobApplication.Id}" variant="success" onclick="{! c.handleClick }" disabled="{!v.disableButton}"/>
                     </aura:iteration>
                 </aura:if>
             </td>   
             
         </tr>
-        <tr Style="Width:100%">
+              
+          
+        <tr class="slds-border_bottom" Style="Width:100%">
             <td></td>
             <td> <div>
                 
                 <lightning:button variant="Brand" label="Add Comments" title="Comments" value ="{!v.POList.JobAppication.Id}"  onclick="{!c.saveComments}"/>
                 <!--<lightning:button variant="Brand" label="Show Comments" title="Show Comments"  value="{!v.POList.JobAppication.Id}" onclick="{!c.showComments}"/>-->
-                <!--lightning:button variant="Brand" label="View Documents" title="View Documents"   value="{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.Id}" onclick="{!c.handleViewDocuments}"/-->
+                <!--lightning:button variant="Brand" label="View Documents" title="View Documents"   value="{!v.POList.JobAppication.Candidate_Profile__r.Id}" onclick="{!c.handleViewDocuments}"/-->
                 <aura:if isTrue="{!v.ShowUploadDocuments}">
                     <lightning:button variant="Brand" aura:id="profile" value ="{!v.POList}" type="submit" label="Upload Documents" onclick="{!c.handleUpload}"/>
                 </aura:if>
@@ -119,7 +128,7 @@
                                 <lightning:button variant="brand"
                                                   label="OK"
                                                   title="OK"
-                                                  value ="{!v.POList.JobAppication.KTDO1__Candidate_Profile__c}"
+                                                  value ="{!v.POList.JobAppication.Candidate_Profile__c}"
                                                   onclick="{!c.saveFile}"/>
                             </footer>
                         </div>
@@ -214,8 +223,8 @@
                                     </lightning:select>
                                     
                                     <lightning:input type="number" label="Contact Number" value="{!v.contactSelected.Phone}" placeholder="Contact Number" />
-                                    <lightning:input type="number" label="Skype Id" value="{!v.contactSelected.KTDO1__SkypeId__c}" placeholder="Skype Id"/>
-                                    <lightning:input type="text" label="Venue Details" value="{!v.contactSelected.KTDO1__Venue_Details__c}" placeholder="Venue Details"/>
+                                    <lightning:input type="number" label="Skype Id" value="{!v.contactSelected.SkypeId__c}" placeholder="Skype Id"/>
+                                    <lightning:input type="text" label="Venue Details" value="{!v.contactSelected.Venue_Details__c}" placeholder="Venue Details"/>
                                     <lightning:input type="text" label="Additional Information" placeholder="Add Extra Information"/>
                                     <lightning:input type="checkbox" label="Send email to candidate" name="input1"/>
                                     <lightning:input type="checkbox" label="Send calendar invite" name="input1"/>
@@ -259,15 +268,15 @@
                 </header>
                 <!--Modal/Popup Box Body Starts here-->
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                    <lightning:recordViewForm  objectApiName="KTDO1__Candidate_Profile__c" aura:id="myRecordForm" recordId="{!v.recordId}" density="{!v.profileStatus}" >
+                    <lightning:recordViewForm  objectApiName="Candidate_Profile__c" aura:id="myRecordForm" recordId="{!v.recordId}" density="{!v.profileStatus}" >
                         <div class="slds-box slds-box slds-theme_shade">
                             <b><lightning:outputField fieldName="Name" /></b>
-                            <lightning:outputField fieldName="KTDO1__Annual_CTC__c" />
-                            <lightning:outputField fieldName="KTDO1__Current_Location__c" />
-                            <lightning:outputField fieldName="KTDO1__Experience__c" />
-                            <lightning:outputField fieldName="KTDO1__Designation__c" />
-                            <lightning:outputField fieldName="KTDO1__Skills__c" />
-                            <lightning:outputField fieldName="KTDO1__Status__c" />
+                            <lightning:outputField fieldName="Annual_CTC__c" />
+                            <lightning:outputField fieldName="Current_Location__c" />
+                            <lightning:outputField fieldName="Experience__c" />
+                            <lightning:outputField fieldName="Designation__c" />
+                            <lightning:outputField fieldName="Skills__c" />
+                            <lightning:outputField fieldName="Status__c" />
                             
                         </div>
                     </lightning:recordViewForm>
@@ -294,12 +303,13 @@
                 </header>
                 <!--Modal/Popup Box Body Starts here-->
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    
+                    <lightning:input  type="text" value="{!v.comments.Name}" label="Enter your Feedback" placeholder="Enter Comments" style="width:600px;height:100px" required="true"/>
                     <aura:iteration items="{!v.commentsList}" var="com" indexVar="index">
                         <div class="slds-box slds-box_small">
-                            <p> {!com.KTDO1__Remarks__c}</p>
+                            <p> {!com.User__c} - {!com.Remarks__c}</p>
                         </div>
                     </aura:iteration>
-                    <lightning:input  type="text" value="{!v.comments.Name}" placeholder="Enter Comments" style="width:600px;height:100px"/>
                 </div>
                 <!--Modal/Popup Box Body Ends here-->
                 <!--Modal/Popup Box Footer Starts here-->
@@ -311,11 +321,41 @@
                     <lightning:button variant="brand"
                                       label="OK"
                                       title="OK"
+                                      value ="{!v.POList.JobAppication.Id}"
                                       onclick="{!c.handleSaveComment}"/>
                 </footer>
             </div>
         </section>
         <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.ShowConfirmationMessage}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" 
+                 aria-modal="true" aria-describedby="modal-content-id-1" 
+                 class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    
+                    <h1 class="slds-page-header__title slds-truncate " >Confirmation</h1>
+                </header>
+                
+                <div class="slds-modal__content slds-p-around--medium">
+                    <center><b>Are you sure you want to create Offer Letter?</b></center>
+                </div>
+                
+                <footer class="slds-modal__footer"> 
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{! c.hideModelOfferLetter }"/>
+                    <lightning:button variant="brand"
+                                      label="OK"
+                                      title="OK"
+                                      value ="{!v.POList.JobAppication.Id}"
+                                      onclick="{!c.createOffer}"/>
+                </footer>
+            </div>
+        </section>
     </aura:if>
     
 </aura:component>

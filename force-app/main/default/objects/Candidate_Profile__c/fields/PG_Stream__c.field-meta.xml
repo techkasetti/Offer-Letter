@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PG_Stream__c</fullName>
+    <externalId>false</externalId>
+    <label>PG Stream</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>M.Tech</fullName>
+                <default>false</default>
+                <label>M.Tech</label>
+            </value>
+            <value>
+                <fullName>M.Com</fullName>
+                <default>false</default>
+                <label>M.Com</label>
+            </value>
+            <value>
+                <fullName>MCA</fullName>
+                <default>false</default>
+                <label>MCA</label>
+            </value>
+            <value>
+                <fullName>MS</fullName>
+                <default>false</default>
+                <label>MS</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

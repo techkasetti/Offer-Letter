@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <externalId>false</externalId>
+    <label>Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Profile_Status__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Open</fullName>
+                <default>false</default>
+                <label>Open</label>
+            </value>
+            <value>
+                <fullName>Internal Submit</fullName>
+                <default>false</default>
+                <label>Internal Submit</label>
+            </value>
+            <value>
+                <fullName>Lead Approved</fullName>
+                <default>false</default>
+                <label>Lead Approved</label>
+            </value>
+            <value>
+                <fullName>Lead Rejected</fullName>
+                <default>false</default>
+                <label>Lead Rejected</label>
+            </value>
+            <value>
+                <fullName>New</fullName>
+                <default>false</default>
+                <label>New</label>
+            </value>
+            <value>
+                <fullName>Client Approved</fullName>
+                <default>false</default>
+                <label>Client Approved</label>
+            </value>
+            <value>
+                <fullName>Client Rejected</fullName>
+                <default>false</default>
+                <label>Client Rejected</label>
+            </value>
+            <value>
+                <fullName>On Interview Process</fullName>
+                <default>false</default>
+                <label>On Interview Process</label>
+            </value>
+            <value>
+                <fullName>Document Verified</fullName>
+                <default>false</default>
+                <label>Document Verified</label>
+            </value>
+            <value>
+                <fullName>Document Rejected</fullName>
+                <default>false</default>
+                <label>Document Rejected</label>
+            </value>
+            <value>
+                <fullName>Offer Letter</fullName>
+                <default>false</default>
+                <label>Offer Letter</label>
+            </value>
+            <value>
+                <fullName>Onboard</fullName>
+                <default>false</default>
+                <label>Onboard</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Offer Letter</controllingFieldValue>
+            <controllingFieldValue>New</controllingFieldValue>
+            <valueName>Onboard</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Onboard</controllingFieldValue>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Lead Rejected</controllingFieldValue>
+            <controllingFieldValue>Client Rejected</controllingFieldValue>
+            <controllingFieldValue>Document Rejected</controllingFieldValue>
+            <valueName>Open</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Interview Cleared</controllingFieldValue>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>On Interview Process</controllingFieldValue>
+            <valueName>Document Verified</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Interview Cleared</controllingFieldValue>
+            <controllingFieldValue>New</controllingFieldValue>
+            <valueName>Document Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Open</controllingFieldValue>
+            <valueName>Internal Submit</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Internal Submit</controllingFieldValue>
+            <valueName>Lead Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Internal Submit</controllingFieldValue>
+            <valueName>Lead Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <valueName>New</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Lead Approved</controllingFieldValue>
+            <valueName>Client Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Lead Approved</controllingFieldValue>
+            <valueName>Client Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Client Approved</controllingFieldValue>
+            <valueName>On Interview Process</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Document Verified</controllingFieldValue>
+            <valueName>Offer Letter</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

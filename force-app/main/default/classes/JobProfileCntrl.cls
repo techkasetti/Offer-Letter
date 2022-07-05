@@ -1,15 +1,16 @@
 public class JobProfileCntrl {
     @AuraEnabled
-    public static List<JobApplicantsWrap> toGetJobApplicants(String buttonType, String buttonTypeId)
+    public static List<JobApplicantsWrap> toGetJobApplicants(String buttonType, String buttonTypeId, String items)
     {
         system.debug('buttonType :>>>>>'+buttonType);
         system.debug('buttonTypeId :>>>>>'+buttonTypeId);
+        system.debug('items :>>>>>'+items);
         
         //Added by Dharshan
-        //if onboard,increment KTDO1__No_Of_Candidate_Selected__c
+        //if onboard,increment No_Of_Candidate_Selected__c
         if(buttonType == 'Onboard'){
-            KTDO1__Job_Application__c opp = [SELECT KTDO1__Job_Posting__r.Id FROM KTDO1__Job_Application__c where Id =: buttonTypeId];
-            KTDO1__Job_Posting__c opp1 = [SELECT KTDO1__No_Of_Candidate_Selected__c,KTDO1__No_Of_Positions__c,KTDO1__Posting_Due_Date__c,KTDO1__Job_OC_Status__c FROM KTDO1__Job_Posting__c where Id =: opp.KTDO1__Job_Posting__r.Id];
+            Job_Application__c opp = [SELECT Job_Posting__r.Id FROM Job_Application__c where Id =: buttonTypeId];
+            Job_Posting__c opp1 = [SELECT No_Of_Candidate_Selected__c,No_Of_Positions__c,Posting_Due_Date__c,Job_OC_Status__c FROM Job_Posting__c where Id =: opp.Job_Posting__r.Id];
             
             //Today date
             DateTime todaysDate = System.today();
@@ -17,22 +18,22 @@ public class JobProfileCntrl {
             System.debug('Today date>>'+todaysDateStr);
             
             //Due Date
-            DateTime dueDate = opp1.KTDO1__Posting_Due_Date__c;
+            DateTime dueDate = opp1.Posting_Due_Date__c;
             String dueDateStr1 = dueDate.format('yyyy-MM-dd');
-            Double count = opp1.KTDO1__No_Of_Candidate_Selected__c + 1;
+            Double count = opp1.No_Of_Candidate_Selected__c + 1;
             
             System.debug('Due Date>>'+dueDateStr1);
-            System.debug('opp1.KTDO1__No_Of_Positions__c>>'+opp1.KTDO1__No_Of_Positions__c);
-            System.debug('opp1.KTDO1__No_Of_Candidate_Selected__c+1>>'+count);
+            System.debug('opp1.No_Of_Positions__c>>'+opp1.No_Of_Positions__c);
+            System.debug('opp1.No_Of_Candidate_Selected__c+1>>'+count);
             
-            if(todaysDateStr > dueDateStr1 || opp1.KTDO1__No_Of_Positions__c >= count){
-                opp1.KTDO1__Job_OC_Status__c = 'Closed';
-                if(opp1.KTDO1__No_Of_Positions__c == count){
-                    opp1.KTDO1__No_Of_Candidate_Selected__c = opp1.KTDO1__No_Of_Candidate_Selected__c + 1;
+            if(todaysDateStr > dueDateStr1 || opp1.No_Of_Positions__c >= count){
+                opp1.Job_OC_Status__c = 'Closed';
+                if(opp1.No_Of_Positions__c == count){
+                    opp1.No_Of_Candidate_Selected__c = opp1.No_Of_Candidate_Selected__c + 1;
                 }
             }
             else {
-                opp1.KTDO1__No_Of_Candidate_Selected__c = opp1.KTDO1__No_Of_Candidate_Selected__c + 1;
+                opp1.No_Of_Candidate_Selected__c = opp1.No_Of_Candidate_Selected__c + 1;
             }
             update opp1;
         }
@@ -40,7 +41,7 @@ public class JobProfileCntrl {
         
         
         List<JobApplicantsWrap> JobApplicantsWrapList = new List<JobApplicantsWrap>();
-        Schema.sObjectField dependentField = KTDO1__Job_Application__c.KTDO1__Status__c;
+        Schema.sObjectField dependentField = Job_Application__c.Status__c;
         Map<Object,List<String>> dependentPicklistValues = new Map<Object,List<String>>();
         //Get dependent field result
         Schema.DescribeFieldResult dependentFieldResult = dependentField.getDescribe();
@@ -70,42 +71,48 @@ public class JobProfileCntrl {
                         continue;
                     } 
                     if (!dependentPicklistValues.containsKey(controllerValue)){
+                        system.debug('controllerValue>>'+controllerValue);
+                        
                         dependentPicklistValues.put(controllerValue, new List<String>());
+                        
                     }
                     dependentPicklistValues.get(controllerValue).add(entry.getLabel());
+                    system.debug('controllerValue>>'+entry.getLabel());
                 }
             }
         }
         system.debug('dependentPicklistValues ::'+dependentPicklistValues);
         
         if(buttonType != '' && buttonTypeId != ''){
-            KTDO1__Job_Application__c lstOfValues = [Select id ,Name,KTDO1__Candidate_Profile__c ,KTDO1__Candidate_Profile__r.Name, KTDO1__Candidate_Profile__r.KTDO1__Current_Location__c , KTDO1__Candidate_Profile__r.KTDO1__Designation__c, KTDO1__Candidate_Profile__r.KTDO1__Experience__c , KTDO1__Candidate_Profile__r.KTDO1__Skills__c , KTDO1__Candidate_Profile__r.KTDO1__Notice_Period__c , KTDO1__Profile_Status__c,KTDO1__Job_Posting__r.Name,KTDO1__Job_Posting__r.KTDO1__Posting_Due_Date__c,KTDO1__Job_Posting__r.KTDO1__Job_OC_Status__c  From KTDO1__Job_Application__c where Id =:buttonTypeId];
-            system.debug('KTDO1__Job_Application__c:'+lstOfValues);
-            lstOfValues.KTDO1__Profile_Status__c = buttonType; 
+            Job_Application__c lstOfValues = [Select id ,Name,Candidate_Profile__c ,Candidate_Profile__r.Name, Candidate_Profile__r.Current_Location__c , Candidate_Profile__r.Designation__c, Candidate_Profile__r.Experience__c , Candidate_Profile__r.Skills__c , Candidate_Profile__r.Notice_Period__c , Profile_Status__c,Job_Posting__r.Name,Job_Posting__r.Posting_Due_Date__c,Job_Posting__r.Job_OC_Status__c  From Job_Application__c where Id =:buttonTypeId];
+            system.debug('Job_Application__c:'+lstOfValues);
+            lstOfValues.Profile_Status__c = buttonType; 
             update lstOfValues;
             JobApplicantsWrap JobApplicantsWrapVal = new JobApplicantsWrap();
             JobApplicantsWrapVal.JobAppication = lstOfValues;
-            system.debug('dependentPicklistValues.get(lstOfValues.KTDO1__Profile_Status__c)   :::'+dependentPicklistValues.get(lstOfValues.KTDO1__Profile_Status__c));
-            JobApplicantsWrapVal.StatusButtons = dependentPicklistValues.get(lstOfValues.KTDO1__Profile_Status__c);
+            system.debug('dependentPicklistValues.get(lstOfValues.Profile_Status__c)   :::'+dependentPicklistValues.get(lstOfValues.Profile_Status__c));
+            JobApplicantsWrapVal.StatusButtons = dependentPicklistValues.get(lstOfValues.Profile_Status__c);
             JobApplicantsWrapList.add(JobApplicantsWrapVal);
             return JobApplicantsWrapList;
         }
         else{
-            List <KTDO1__Job_Application__c> lstOfValues = [Select id ,Name,KTDO1__Candidate_Profile__c ,KTDO1__Candidate_Profile__r.Name, KTDO1__Candidate_Profile__r.KTDO1__Current_Location__c , KTDO1__Candidate_Profile__r.KTDO1__Designation__c, KTDO1__Candidate_Profile__r.KTDO1__Experience__c , KTDO1__Candidate_Profile__r.KTDO1__Skills__c ,KTDO1__Candidate_Profile__r.KTDO1__Notice_Period__c , KTDO1__Profile_Status__c,KTDO1__Job_Posting__r.Name  From KTDO1__Job_Application__c];
-            system.debug('KTDO1__Job_Application__c:'+lstOfValues);
-            for(KTDO1__Job_Application__c values : lstOfValues){
+            List <Job_Application__c> lstOfValues = [Select id ,Name,Candidate_Profile__c ,Candidate_Profile__r.Name, Candidate_Profile__r.Current_Location__c , Candidate_Profile__r.Designation__c, Candidate_Profile__r.Experience__c , Candidate_Profile__r.Skills__c ,Candidate_Profile__r.Notice_Period__c , Profile_Status__c,Job_Posting__r.Name  From Job_Application__c];
+            system.debug('Job_Application__c:'+lstOfValues);
+            for(Job_Application__c values : lstOfValues){
                 JobApplicantsWrap JobApplicantsWrapVal = new JobApplicantsWrap();
                 system.debug('values ::'+values);
                 JobApplicantsWrapVal.JobAppication = values;
-                JobApplicantsWrapVal.StatusButtons = dependentPicklistValues.get(values.KTDO1__Profile_Status__c);
-                // String allstring = string.join(dependentPicklistValues.get(values.KTDO1__Profile_Status__c),',');
-                system.debug('dependentPicklistValues.get(values.KTDO1__Profile_Status__c)   :::'+dependentPicklistValues.get(values.KTDO1__Profile_Status__c));
+                JobApplicantsWrapVal.StatusButtons = dependentPicklistValues.get(values.Profile_Status__c);
+                // String allstring = string.join(dependentPicklistValues.get(values.Profile_Status__c),',');
+                system.debug('dependentPicklistValues.get(values.Profile_Status__c)   :::'+dependentPicklistValues.get(values.Profile_Status__c));
                 JobApplicantsWrapList.add(JobApplicantsWrapVal);
                 system.debug('JobApplicantsWrapList  Inside>>>'+JobApplicantsWrapList);
                 
             }
             system.debug('JobApplicantsWrapList >>>'+JobApplicantsWrapList);
+           
             return JobApplicantsWrapList;
+            
         }
         
     }
@@ -113,33 +120,33 @@ public class JobProfileCntrl {
     public class JobApplicantsWrap
     {
         @AuraEnabled public List<string> StatusButtons ;
-        @AuraEnabled public KTDO1__Job_Application__c JobAppication = new KTDO1__Job_Application__c();
+        @AuraEnabled public Job_Application__c JobAppication = new Job_Application__c();
     }
     
     /* @AuraEnabled
 public static String updateJobCandSelectedStatus(String buttonTypeId){
-KTDO1__Job_Application__c opp = [SELECT Id FROM KTDO1__Job_Application__c );
-opp.KTDO1__Job_Posting__c.
+Job_Application__c opp = [SELECT Id FROM Job_Application__c );
+opp.Job_Posting__c.
 }  */
     
     @AuraEnabled
     public static List<Contact> getContact(String jobId){
         system.debug('jobId>>>'+jobId);
-        KTDO1__Job_Posting__c con = [SELECT Id,Name,KTDO1__Account__c  FROM KTDO1__Job_Posting__c where Id =: jobId LIMIT 1];
+        Job_Posting__c con = [SELECT Id,Name,Account__c  FROM Job_Posting__c where Id =: jobId LIMIT 1];
         system.debug('con'+con);
-        Account a = [Select Id, Name,(Select Id,Name,Phone,Email,KTDO1__Venue_Details__c,KTDO1__SkypeId__c from Contacts) from Account where Id=:con.KTDO1__Account__c];
+        Account a = [Select Id, Name,(Select Id,Name,Phone,Email,Venue_Details__c,SkypeId__c from Contacts) from Account where Id=:con.Account__c];
         system.debug('a'+a);
         return a.Contacts;
         
     }
     
     @AuraEnabled
-    public static void getContactDetails(String jobAppId){
+    public static void setL1InterviewScheduled(String jobAppId){
         system.debug('jobAppId>>>'+jobAppId);
-        List <KTDO1__Job_Application__c> lstOfValues = [Select Id,Name,KTDO1__Profile_Status__c from KTDO1__Job_Application__c where Id=: jobAppId ];
-        system.debug('KTDO1__Job_Application__c:'+lstOfValues);
-        //KTDO1__Job_Application__c p =new KTDO1__Job_Application__c();
-        lstOfValues[0].KTDO1__Profile_Status__c='L1 Interview Scheduled';
+        List <Job_Application__c> lstOfValues = [Select Id,Name,Profile_Status__c from Job_Application__c where Id=: jobAppId ];
+        system.debug('Job_Application__c:'+lstOfValues);
+        //Job_Application__c p =new Job_Application__c();
+        lstOfValues[0].Profile_Status__c='L1 Interview Scheduled';
         update lstOfValues;
     }
     
@@ -158,28 +165,46 @@ opp.KTDO1__Job_Posting__c.
             return false;
         }
     }
-    
-    @AuraEnabled
-    public static List<KTDO1__Comments__c> saveComment(Id appId, String comment){
-        system.debug('appId>>>'+appId);
-        system.debug('comment>>>'+comment);
-        KTDO1__Comments__c commentValue = new KTDO1__Comments__c(KTDO1__Job_Application__c=appId,KTDO1__Remarks__c=comment);
-        insert commentValue;
-        List<KTDO1__Comments__c> updatedComments = getComments(appId);
-        system.debug('updatedComments>>>'+updatedComments);
-        return updatedComments;
+
+    /*@AuraEnabled
+    public static  List<Job_Posting__c> togetJobPostings(String items){
+        System.debug('items>>.'+items);
+        String currenUser = UserInfo.getUserId();
+        system.debug('currenUser>>>'+currenUser);
+
+        List<Account> userAccnts = new List<Account>();
+        userAccnts = [Select Name from Account where CreatedById =: currenUser];
+        system.debug('userAccnts>>'+userAccnts);
+
+        List<Job_Posting__c> jobPostings = [Select Id,Name,(Select Name,Job_Posting__c,Status__c from Job_Applications__r) from Job_Posting__c where  Account__c IN :userAccnts];
+        system.debug('jobPostings>>'+jobPostings);
+        return jobPostings;
     }
+    */
+    // @AuraEnabled
+    // public static List<Comments__c> saveComment(Id appId, String comment){
+    //     system.debug('appId>>>'+appId);
+    //     system.debug('comment>>>'+comment);
+    //     String userName = UserInfo.getName();
+    //     system.debug('userName>>>'+userName);
+                
+    //     Comments__c commentValue = new Comments__c(Job_Application__c=appId,Remarks__c=comment,User__c=userName);
+    //     insert commentValue;
+    //     List<Comments__c> updatedComments = getComments(appId);
+    //     system.debug('updatedComments>>>'+updatedComments);
+    //     return updatedComments;
+    // }
     
-    @AuraEnabled
-    public static List<KTDO1__Comments__c> getComments(Id appId){
-        system.debug('appId>>>'+appId);
-        List<KTDO1__Comments__c> comments = [Select KTDO1__Job_Application__c,KTDO1__Remarks__c from KTDO1__Comments__c where KTDO1__Job_Application__c =:appId ];
-        system.debug('comments>>>'+comments);
-        return comments;  
-    }
+    // @AuraEnabled
+    // public static List<Comments__c> getComments(Id appId){
+    //     system.debug('appId>>>'+appId);
+    //     List<Comments__c> comments = [Select Job_Application__c,Remarks__c,User__c from Comments__c where Job_Application__c =:appId ];
+    //     system.debug('comments>>>'+comments);
+    //     return comments;  
+    // }
     
     
-    @AuraEnabled
+   /* @AuraEnabled
     public static Boolean saveResubmitProfile(String candId,String fileName,String base64Data,String contentType,String fileId){
         system.debug('candId>>>'+candId);
         system.debug('fileName>>>'+fileName);
@@ -228,5 +253,7 @@ opp.KTDO1__Job_Posting__c.
             return false;
         }
         
-    }
+    }*/
+    
+   
 }

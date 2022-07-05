@@ -1,0 +1,65 @@
+.THIS .careerFilterContent{
+    background-color: white;
+    padding:2%;
+    width:100%;
+}
+.THIS .pillSize{
+    width:100%;
+}
+
+.THIS .marginBottom{
+    margin-bottom: -1rem;
+}
+
+.THIS .marginBottom1{
+    padding-bottom: 50px;
+}
+
+.THIS textarea{
+    height:10rem;
+    width:20rem;
+}
+
+.THIS .text{
+    font-size: 13px;
+    font-weight: 650;
+}
+.THIS .Display{
+    width:30%;
+    float: right;
+   
+}
+
+.THIS.c-container {
+    border: 1px solid rgb(247, 0, 0);
+    margin: 10px 0 20px 0;
+}
+.THIS .page-section {
+    border: solid 1px rgb(255, 255, 255);
+    padding: 1rem;
+}
+.THIS .page-footer {
+    border: solid 1px rgb(43, 23, 23);
+    padding: 1rem;
+}
+
+.THIS .page-header {
+    height: 50px;
+}
+.THIS .page-main {
+    background: #ffffff;
+}
+.THIS .page-left,
+.THIS .page-right {
+    background: #ffffff;
+}
+
+.THIS .modifTailleListe1 {
+    width:200%;
+}
+.THIS.exampleHolder{
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+}

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <externalId>false</externalId>
+    <label>Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Profile_Status__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>New</fullName>
+                <default>false</default>
+                <label>New</label>
+            </value>
+            <value>
+                <fullName>Open</fullName>
+                <default>false</default>
+                <label>Open</label>
+            </value>
+            <value>
+                <fullName>Internal Submit</fullName>
+                <default>false</default>
+                <label>Internal Submit</label>
+            </value>
+            <value>
+                <fullName>Rejected</fullName>
+                <default>false</default>
+                <label>Rejected</label>
+            </value>
+            <value>
+                <fullName>Lead Approved</fullName>
+                <default>false</default>
+                <label>Lead Approved</label>
+            </value>
+            <value>
+                <fullName>Lead Rejected</fullName>
+                <default>false</default>
+                <label>Lead Rejected</label>
+            </value>
+            <value>
+                <fullName>Client Approved</fullName>
+                <default>false</default>
+                <label>Client Approved</label>
+            </value>
+            <value>
+                <fullName>Client Rejected</fullName>
+                <default>false</default>
+                <label>Client Rejected</label>
+            </value>
+            <value>
+                <fullName>On Interview Process</fullName>
+                <default>false</default>
+                <label>On Interview Process</label>
+            </value>
+            <value>
+                <fullName>L1 Interview Scheduled</fullName>
+                <default>false</default>
+                <label>L1 Interview Scheduled</label>
+            </value>
+            <value>
+                <fullName>L1 Interview Approved</fullName>
+                <default>false</default>
+                <label>L1 Interview Approved</label>
+            </value>
+            <value>
+                <fullName>L1 Interview Rejected</fullName>
+                <default>false</default>
+                <label>L1 Interview Rejected</label>
+            </value>
+            <value>
+                <fullName>L2 Interview Scheduled</fullName>
+                <default>false</default>
+                <label>L2 Interview Scheduled</label>
+            </value>
+            <value>
+                <fullName>L2 Interview Approved</fullName>
+                <default>false</default>
+                <label>L2 Interview Approved</label>
+            </value>
+            <value>
+                <fullName>L2 Interview Rejected</fullName>
+                <default>false</default>
+                <label>L2 Interview Rejected</label>
+            </value>
+            <value>
+                <fullName>Manager Round Scheduled</fullName>
+                <default>false</default>
+                <label>Manager Round Scheduled</label>
+            </value>
+            <value>
+                <fullName>Manager Round Approved</fullName>
+                <default>false</default>
+                <label>Manager Round Approved</label>
+            </value>
+            <value>
+                <fullName>Manager Round Rejected</fullName>
+                <default>false</default>
+                <label>Manager Round Rejected</label>
+            </value>
+            <value>
+                <fullName>Interview Cleared</fullName>
+                <default>false</default>
+                <label>Interview Cleared</label>
+            </value>
+            <value>
+                <fullName>Interview Rejected</fullName>
+                <default>false</default>
+                <label>Interview Rejected</label>
+            </value>
+            <value>
+                <fullName>Document Verified</fullName>
+                <default>false</default>
+                <label>Document Verified</label>
+            </value>
+            <value>
+                <fullName>Document Rejected</fullName>
+                <default>false</default>
+                <label>Document Rejected</label>
+            </value>
+            <value>
+                <fullName>Offer Letter</fullName>
+                <default>false</default>
+                <label>Offer Letter</label>
+            </value>
+            <value>
+                <fullName>Onboard</fullName>
+                <default>false</default>
+                <label>Onboard</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>L1 Interview Rejected</controllingFieldValue>
+            <controllingFieldValue>L2 Interview Rejected</controllingFieldValue>
+            <controllingFieldValue>Manager Round Rejected</controllingFieldValue>
+            <valueName>Interview Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Offer Letter</controllingFieldValue>
+            <controllingFieldValue>Onboard</controllingFieldValue>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Document Verified</controllingFieldValue>
+            <valueName>Onboard</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>L2 Interview Scheduled</controllingFieldValue>
+            <valueName>L2 Interview Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>L2 Interview Scheduled</controllingFieldValue>
+            <valueName>L2 Interview Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>L2 Interview Approved</controllingFieldValue>
+            <valueName>Manager Round Scheduled</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Manager Round Scheduled</controllingFieldValue>
+            <valueName>Manager Round Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Manager Round Scheduled</controllingFieldValue>
+            <valueName>Manager Round Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Manager Round Approved</controllingFieldValue>
+            <valueName>Interview Cleared</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Interview Cleared</controllingFieldValue>
+            <controllingFieldValue>New</controllingFieldValue>
+            <valueName>Document Verified</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Interview Cleared</controllingFieldValue>
+            <controllingFieldValue>New</controllingFieldValue>
+            <valueName>Document Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Interview Rejected</controllingFieldValue>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Lead Rejected</controllingFieldValue>
+            <controllingFieldValue>Client Rejected</controllingFieldValue>
+            <controllingFieldValue>Document Rejected</controllingFieldValue>
+            <valueName>Open</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <valueName>New</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Open</controllingFieldValue>
+            <valueName>Internal Submit</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <valueName>Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Internal Submit</controllingFieldValue>
+            <valueName>Lead Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Internal Submit</controllingFieldValue>
+            <valueName>Lead Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Lead Approved</controllingFieldValue>
+            <valueName>Client Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Lead Approved</controllingFieldValue>
+            <valueName>Client Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Client Approved</controllingFieldValue>
+            <valueName>On Interview Process</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <controllingFieldValue>Document Verified</controllingFieldValue>
+            <valueName>Offer Letter</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>On Interview Process</controllingFieldValue>
+            <valueName>L1 Interview Scheduled</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>L1 Interview Scheduled</controllingFieldValue>
+            <valueName>L1 Interview Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>L1 Interview Scheduled</controllingFieldValue>
+            <valueName>L1 Interview Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>L1 Interview Approved</controllingFieldValue>
+            <valueName>L2 Interview Scheduled</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,149 @@
+<aura:component controller="ZoomMetingSchedule" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+
+<aura:attribute name="selectedTab" type="String"/>
+<aura:attribute name="ShowCandidateProfile" type="boolean" default="false"/>
+
+<aura:attribute name="jobTitle" type="String" />
+<aura:attribute name="location" type="String" />
+<aura:attribute name="experience" type="String" />
+
+    <!--aura:if isTrue="{!v.xRaySearch}"-->   
+        <!--aura:If isTrue="{!v.selectedTab!=''}"-->
+            <div >                        
+                <div class="slds-align_absolute-center slds-theme_alt-inverse slds-p-bottom_small slds-p-top_small">
+                   <h1><b>X-Ray Search</b></h1> 
+                </div>																
+            </div>
+        <!--/aura:If-->
+    <div class="slds-theme_default slds-p-top_xx-large slds-p-left_xx-large">
+    <lightning:tabset class="slds-p-bottom_x-large" aura:id="tabs" selectedTabId="{!v.selectedTab}">
+        
+        <!--Linkedin-->
+        <lightning:tab class="slds-theme_shade" label="Linkedin" id="Linkedin" onactive="" iconName="standard:stage_collection">   
+            <div class="slds-col slds-m-right_medium">
+                <h1 class="tab-header slds-text-heading_medium slds-p-left_small"><b>Linkedin</b></h1>
+                <div class="slds-text-align_center slds-text-heading_small slds-p-top_medium"><b>Easily use Google to Search profiles on Linkdin</b></div>
+            </div>
+            <div class="slds-box">
+                <div class=""><lightning:input aura:id="input1" name="input1" label="Job title" value="{! v.jobTitle }"/></div>
+                <br/>
+                <div class=""><lightning:input aura:id="input2" name="input2" label="Location or keywords to include" onchange="{!c.updateOtherReason}" value="{! v.location }"/></div>
+                <br/>
+                <div class=""><lightning:input class="" aura:id="input3" name="input3" label="Experience" value="{! v.experience }"/></div>
+
+                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchLinkedin}"/></div>
+            </div>
+        </lightning:tab>
+        
+        <!--Naukri-->
+        <lightning:tab class="slds-theme_shade" label="Naukri" id="Naukri" onactive="" iconName="standard:stage_collection">   
+            <div class="slds-col slds-m-right_medium">
+                <h1 class="tab-header slds-text-heading_medium slds-p-left_small"><b>Naukri</b></h1>
+                <div class="slds-text-align_center slds-text-heading_small slds-p-top_medium"><b>Easily use Google to Search profiles on Naukri</b></div>
+            </div>
+            <div class="slds-box">
+                <div class=""><lightning:input aura:id="naukri1" name="naukri1" label="Job title" value="{! v.jobTitle }"/></div>
+                <br/>
+                <div class=""><lightning:input aura:id="naukri2" name="naukri2" label="Location or keywords to include" value="{! v.location }"/></div>
+                <br/>
+                <div class=""><lightning:input class="" aura:id="naukri3" name="naukri3" label="Experience" value="{! v.experience }"/></div>
+
+                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchNaukri}"/></div>
+            </div>
+        </lightning:tab>
+        
+        <!--Indeed-->
+        <lightning:tab class="slds-theme_shade" label="Indeed" id="Indeed" onactive="" iconName="standard:stage_collection">   
+            <div class="slds-col slds-m-right_medium">
+                <h1 class="tab-header slds-text-heading_medium slds-p-left_small"><b>Indeed</b></h1>
+                <div class="slds-text-align_center slds-text-heading_small slds-p-top_medium"><b>Easily use Google to Search profiles on Indeed</b></div>
+            </div>
+            <div class="slds-box">
+                <div class=""><lightning:input aura:id="Indeed1" name="Indeed1" label="Job title" value="{! v.jobTitle }"/></div>
+                <br/>
+                <div class=""><lightning:input aura:id="Indeed2" name="Indeed2" label="Location or keywords to include" value="{! v.location }"/></div>
+                <br/>
+                <div class=""><lightning:input class="" aura:id="Indeed3" name="Indeed3" label="Experience" value="{! v.experience }"/></div>
+
+                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchIndeed}"/></div>
+            </div>
+        </lightning:tab>
+        
+        <!--Stack Overflow-->
+        <lightning:tab class="slds-theme_shade" label="Stack Overflow" id="Stack Overflow" onactive="" iconName="standard:stage_collection">   
+            <div class="slds-col slds-m-right_medium">
+                    <h1 class="tab-header slds-text-heading_medium slds-p-left_small"><b>Stack Overflow</b></h1>
+                    <div class="slds-align_absolute-center slds-text-heading_small slds-p-top_medium"><b>Easily use Google to Search profiles on Stack Overflow</b></div>
+            </div>
+            <div class="slds-box">
+                <div class=""><lightning:input name="input1" label="Job title" value="{! v.jobTitle }"/></div>
+                <br/>
+                <div class=""><lightning:input name="input2" label="Location or keywords to include" value="{! v.location }"/></div>
+                <div class="slds-align_absolute-center slds-p-top_medium "><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchStack}"/></div>
+            </div>
+        </lightning:tab>
+        
+        <!--Dribbble-->
+        <lightning:tab class="slds-theme_shade" label="Dribbble" id="Dribbble" onactive="" iconName="standard:stage_collection">   
+            <div class="slds-col slds-m-right_medium">
+                <h1 class="tab-header slds-text-heading_medium slds-p-left_small"><b>Dribbble</b></h1>
+                <div class="slds-align_absolute-center slds-text-heading_small slds-p-top_medium"><b>Easily use Google to Search profiles on Dribbble</b></div>
+            </div>
+            <div class="slds-box">
+                <div class=""><lightning:input name="input1" label="Job title" value="{! v.jobTitle }"/></div>
+                <br/>
+                <div class=""><lightning:input name="input2" label="Location or keywords to include" value="{! v.location }"/></div>
+
+                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchDribbble}"/></div>
+            </div>
+        </lightning:tab>
+        
+        <!--Github-->
+        <lightning:tab class="slds-theme_shade" label="Github" id="Github" onactive="" iconName="standard:stage_collection">   
+            <div class="slds-col slds-m-right_medium">
+                <h1 class="tab-header slds-text-heading_medium slds-p-left_small"><b>Github</b></h1>
+                <div class="slds-align_absolute-center slds-text-heading_small slds-p-top_medium"><b>Easily use Google to Search profiles on Github</b></div>
+            </div>
+            <div class="slds-box">
+                <div class=""><lightning:input name="input1" label="Job title" value="{! v.jobTitle }"/></div>
+                <br/>
+                <div class=""><lightning:input name="input2" label="Location or keywords to include" value="{! v.location }"/></div>
+
+                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchGithub}"/></div>
+            </div>
+        </lightning:tab>
+        
+        <!--Twitter-->
+        <lightning:tab class="slds-theme_shade" label="Twitter" id="Twitter" onactive="" iconName="standard:stage_collection">   
+            <div class="slds-col slds-m-right_medium">
+                <h1 class="tab-header slds-text-heading_medium slds-p-left_small"><b>Twitter</b></h1>
+                <div class="slds-align_absolute-center slds-text-heading_small slds-p-top_medium"><b>Easily use Google to Search profiles on Twitter</b></div>
+            </div>
+            <div class="slds-box">
+                <div class=""><lightning:input name="input1" label="Job title" value="{! v.jobTitle }"/></div>
+                <br/>
+                <div class=""><lightning:input name="input2" label="Location or keywords to include" value="{! v.location }"/></div>
+
+                <div class="slds-align_absolute-center slds-p-top_medium"><lightning:button class="slds-theme_default" aura:id="search" type="submit" label="Search" onclick="{!c.searchTwitter}"/></div>
+            </div>
+        </lightning:tab>
+
+        
+        
+    </lightning:tabset>
+    <div class="Display " >
+        <span>
+        <aura:if isTrue="{!v.ShowCandidateProfile}">
+            <lightning:button class="slds-theme_success slds-align_absolute-center" aura:id="profile" type="submit" label="Create Candidate Profile" onclick="{!c.handleProfile}"/>
+        </aura:if>
+            </span>
+    </div>
+    <div class="slds-border_top slds-text-align_left slds-p-top_small slds-p-bottom_x-small">
+        <lightning:button class="" type="search" label="Home Page" onclick="{!c.backToHP}" iconName="utility:chevronleft"/>
+        <lightning:button class="" type="search" label="Shedule Zoom" onclick="{!c.sheduleZoom}" iconName="utility:chevronleft"/>
+    </div>
+
+
+   </div>
+
+</aura:component>

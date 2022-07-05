@@ -1,0 +1,13 @@
+.THIS .text{
+    font-size: 15px;
+    font-weight: 600;
+    padding-left:2px;
+    padding-left:6px;
+}
+.THIS .verify{
+  float: right;
+    padding-right : 160px;
+}
+.THIS .verifyText{
+    padding-left : 30px;
+}

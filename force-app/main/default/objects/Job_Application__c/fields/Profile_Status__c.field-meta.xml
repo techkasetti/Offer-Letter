@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Profile_Status__c</fullName>
+    <externalId>false</externalId>
+    <label>Profile Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Client_Approval_Process__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetName>Profile_Status</valueSetName>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>New</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Open</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Internal Submit</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Lead Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Lead Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Client Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Client Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>On Interview Process</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>L1 Interview Scheduled</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>L1 Interview Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>L1 Interview Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>L2 Interview Scheduled</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>L2 Interview Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>L2 Interview Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Manager Round Scheduled</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Manager Round Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Manager Round Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Interview Cleared</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Interview Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Document Verified</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Document Rejected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Offer Letter</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Sony</controllingFieldValue>
+            <controllingFieldValue>Deloitte</controllingFieldValue>
+            <valueName>Onboard</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

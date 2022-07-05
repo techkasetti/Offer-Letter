@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Teams__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Teams</label>
+    <referenceTo>CustomTeams__Teams__c</referenceTo>
+    <relationshipLabel>Job Recruiter&apos;s</relationshipLabel>
+    <relationshipName>Job_Recruiting_Team</relationshipName>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

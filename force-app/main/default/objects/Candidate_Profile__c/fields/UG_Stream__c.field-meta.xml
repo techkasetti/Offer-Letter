@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>UG_Stream__c</fullName>
+    <externalId>false</externalId>
+    <label>UG Stream</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>BE/B.Tech</fullName>
+                <default>false</default>
+                <label>BE/B.Tech</label>
+            </value>
+            <value>
+                <fullName>B.Com</fullName>
+                <default>false</default>
+                <label>B.Com</label>
+            </value>
+            <value>
+                <fullName>BCA</fullName>
+                <default>false</default>
+                <label>BCA</label>
+            </value>
+            <value>
+                <fullName>BSC</fullName>
+                <default>false</default>
+                <label>BSC</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

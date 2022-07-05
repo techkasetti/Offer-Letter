@@ -41,7 +41,7 @@
                             <tr>
                                 
                                 <td class="body">Location :
-                                    {!lst.KTDO1__Current_Location__c}</td>
+                                    {!lst.Current_Location__c}</td>
                                 
                             </tr>
                             
@@ -50,8 +50,8 @@
                     <table class="display">
                         <tbody>
                             <tr>
-                                <td class="body">Email :{!lst.KTDO1__Email__c}</td>
-                                <td class="body" style="width:50%;float:right;">Phone :{!lst.KTDO1__Phone__c}</td>
+                                <td class="body">Email :{!lst.Email__c}</td>
+                                <td class="body" style="width:50%;float:right;">Phone :{!lst.Phone__c}</td>
                             </tr>
                             
                         </tbody>
@@ -61,19 +61,19 @@
                     <table class="display1" style="width:50%;float:left;">
                         <tbody>
                             <tr>
-                                <td class="body"><b>Designation :</b>{!lst.KTDO1__Designation__c}</td>
+                                <td class="body"><b>Designation :</b>{!lst.Designation__c}</td>
                             </tr>
                             <tr>
-                                <td class="body"><b>Current Employer :</b>{!lst.KTDO1__Employers__c}</td>
+                                <td class="body"><b>Current Employer :</b>{!lst.Employers__c}</td>
                             </tr>
                             <tr>
-                                <td class="body"><b>Current CTC :</b>{!lst.KTDO1__Annual_CTC__c}LPA</td>
+                                <td class="body"><b>Current CTC :</b>{!lst.Annual_CTC__c}LPA</td>
                             </tr>
                             <tr>
-                                <td class="body"><b>Expected CTC :</b>{!lst.KTDO1__Expected_CTC__c}LPA</td>
+                                <td class="body"><b>Expected CTC :</b>{!lst.Expected_CTC__c}LPA</td>
                             </tr>
                             <tr>
-                                <td class="body"><b>Preferred Location :</b>{!lst.KTDO1__Preferred_Location__c}</td>
+                                <td class="body"><b>Preferred Location :</b>{!lst.Preferred_Location__c}</td>
                             </tr>
                             
                         </tbody>
@@ -83,8 +83,8 @@
                             
                             <tr>
                                 <td class="body"><b>Key Skills :</b>
-                                    <aura:iteration items="{!lst.KTDO1__Skill_Set_Experiences__r}" var="skill" >
-                                        {!skill.Name} - {!skill.KTDO1__SkillSet_Experience__c},  </aura:iteration>
+                                    <aura:iteration items="{!lst.Skill_Set_Experiences__r}" var="skill" >
+                                        {!skill.Name} - {!skill.SkillSet_Experience__c},  </aura:iteration>
                                 </td>
                                 
                             </tr>
@@ -119,6 +119,7 @@
                                               alternativeText="close"
                                               variant="bare-inverse"
                                               class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Assign Job Posting</h2>
                         <!-- <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
                     Modal Box</h2>-->
                     </header>

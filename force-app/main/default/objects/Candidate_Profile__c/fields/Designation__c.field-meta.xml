@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Designation__c</fullName>
+    <externalId>false</externalId>
+    <label>Designation</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Salesforce Developer</fullName>
+                <default>false</default>
+                <label>Salesforce Developer</label>
+            </value>
+            <value>
+                <fullName>Java Developer</fullName>
+                <default>false</default>
+                <label>Java Developer</label>
+            </value>
+            <value>
+                <fullName>Web Developer</fullName>
+                <default>false</default>
+                <label>Web Developer</label>
+            </value>
+            <value>
+                <fullName>Tester</fullName>
+                <default>false</default>
+                <label>Tester</label>
+            </value>
+            <value>
+                <fullName>Help Desk Support</fullName>
+                <default>false</default>
+                <label>Help Desk Support</label>
+            </value>
+            <value>
+                <fullName>Network Administrator</fullName>
+                <default>false</default>
+                <label>Network Administrator</label>
+            </value>
+            <value>
+                <fullName>Cyber Security</fullName>
+                <default>false</default>
+                <label>Cyber Security</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

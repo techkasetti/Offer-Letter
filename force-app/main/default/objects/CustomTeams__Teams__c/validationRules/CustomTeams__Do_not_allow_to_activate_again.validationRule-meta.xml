@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CustomTeams__Do_not_allow_to_activate_again</fullName>
+    <active>true</active>
+    <description>Do not allow to activate again</description>
+    <errorConditionFormula>AND(
+ ISCHANGED(CustomTeams__Inactivate__c),
+ PRIORVALUE(CustomTeams__Inactivate__c) = true,
+NOT( $Profile.Name = &quot;Sys Admin&quot; )
+        )</errorConditionFormula>
+    <errorMessage>Cannot Activate an Inactivated team</errorMessage>
+</ValidationRule>
