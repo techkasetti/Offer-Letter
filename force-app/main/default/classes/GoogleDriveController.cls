@@ -48,7 +48,7 @@ Public class GoogleDriveController {
             //CHECKING Job_Application__c IS CREATED IN Job_Posting_Document__c STARTED
             List<Job_Posting_Document__c> docsCheckList = [select Id,Job_Application__c from Job_Posting_Document__c where Job_Application__c =: JobApplicationId AND Job_Posting__c=: JobPostingId limit 1];
             System.debug('docsCheckList>>>'+docsCheckList.size());
-             if(docsCheckList == null){
+             if(docsCheckList.size() == 0){
                 for(Job_Posting_Document__c doc : docs){
                     Job_Posting_Document__c document = new Job_Posting_Document__c(Name = doc.Name,Document_Master__c=doc.Document_Master__c,Job_Posting__c=doc.Job_Posting__c,Job_Application__c=JobApplicationId);
                     documentList.add(document);
