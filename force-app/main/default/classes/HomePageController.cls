@@ -190,12 +190,12 @@ System.debug('listOfValues'+listOfValues);*/
             {
                 JobPostingsWrap JobPostingsWrapVal = new JobPostingsWrap();
                 JobPostingsWrapVal.JobPosting = jobPostingValues;
-                JobApplicationWrap JobApplicationWrapVal = new JobApplicationWrap();
+                
                 List<JobApplicationWrap> JobApplicationWrapList1 = new List<JobApplicationWrap>() ;
                 system.debug('jobPostingValues>>'+jobPostingValues);
                 system.debug('jobPostingValues.Job_Applications__r>>'+jobPostingValues.Job_Applications__r);
                 for(Job_Application__c jobApplication : jobPostingValues.Job_Applications__r){
-                    
+                    JobApplicationWrap JobApplicationWrapVal = new JobApplicationWrap();
                     JobApplicationWrapVal.JobApplication = jobApplication;
                     JobApplicationWrapVal.StatusButtons = dependentPicklistValues.get(jobApplication.Profile_Status__c);
                     // String allstring = string.join(dependentPicklistValues.get(values.Profile_Status__c),',');
@@ -207,7 +207,7 @@ System.debug('listOfValues'+listOfValues);*/
                 }
                 JobPostingsWrapVal.JobApplicationWrapList = JobApplicationWrapList1;
                 system.debug('JobPostingsWrapVal>>'+JobPostingsWrapVal);
-               
+                
                 JobPostingsWrapList.add(JobPostingsWrapVal);
                 system.debug('JobPostingsWrapList>>'+JobPostingsWrapList);
                 // JobPostingsWrapVal.JobApplicationWrapList = JobPostingsWrapList;

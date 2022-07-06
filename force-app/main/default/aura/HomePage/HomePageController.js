@@ -6,7 +6,7 @@
         helper.setFilterbyCompanyList(component, event, helper);
     },
 
-    handleclick: function (component, event, helper) {
+    /*handleclick: function (component, event, helper) {
         var batchId = event.getSource().get("v.name");
         var evt = $A.get("e.force:navigateToComponent");
         evt.setParams({
@@ -14,6 +14,16 @@
             componentAttributes: {
                 batchId: batchId
             }
+        });
+        evt.fire();
+    },*/
+    
+    handleclick: function (component, event, helper) {
+        //var batchId = event.getSource().get("v.name");
+        var evt = $A.get("e.force:navigateToURL");
+        evt.setParams({
+            "url": "https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/r/Dashboard/01Z4x000000phvvEAA/view?queryScope=userFolders"
+            
         });
         evt.fire();
     },

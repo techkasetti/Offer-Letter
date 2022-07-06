@@ -29,7 +29,7 @@
 		<members>xRaySearch</members>
 		<name>AuraDefinitionBundle</name>
 	</types>
-	<types>
+	<!--<types>
 		<members>*</members>
 		<name>AuthProvider</name>
 	</types>
@@ -56,8 +56,8 @@
 		<members>Skill_Set_Experience__c</members>
 		<members>Skill_Set__c</members>
 		<name>CustomObject</name>
-	</types>
-	<types>
+	</types>-->
+	<!--<types>
 		<members>Candidate_Profile__c</members>
 		<members>Document_Master__c</members>
 		<members>Document_Upload</members>
@@ -76,6 +76,6 @@
 	<types>
 		<members>*</members>
 		<name>NamedCredential</name>
-	</types>
+	</types>-->
 	<version>53.0</version>
 </Package>

@@ -621,16 +621,16 @@
         var candSkills = component.get("v.skillsListName");
         console.log(JSON.stringify(candSkills));
 
-        var loc = component.find("locationForm").get("v.value");
-        console.log(JSON.stringify(loc));
+        /*var loc = component.find("locationForm").get("v.value");
+        console.log(JSON.stringify(loc));*/
 
         var fields = component.find("candiForm").get("v.value");
         console.log(JSON.stringify(fields));
-        alert(JSON.stringify(fields));
+        //alert(JSON.stringify(fields));
         
-        fields["Billing_Location__c"]= JSON.stringify(loc);
-        component.find('candiForm').set('v.value',fields);
-        console.log(JSON.stringify(fields));
+        // fields["Billing_Location__c"]= JSON.stringify(loc);
+        // component.find('candiForm').set('v.value',fields);
+        // console.log(JSON.stringify(fields));
 
         var action = component.get("c.getJobPostingValues");
         
@@ -957,15 +957,15 @@
     
     handleOnSubmit : function(component, event, helper) {
         
-        var loc = component.find("locationForm").get("v.value");
-        console.log(JSON.stringify(loc));
+       /* var loc = component.find("locationForm").get("v.value");
+        console.log(JSON.stringify(loc));*/
 
         var fields = component.find('accForm1').get('v.value');
         
         console.log(JSON.stringify(fields));
-        fields["Billing_Location__c"]= JSON.stringify(loc);
-        component.find('accForm1').set('v.value',fields);
-        console.log(JSON.stringify(fields));
+      //  fields["Billing_Location__c"]= JSON.stringify(loc);
+       // component.find('accForm1').set('v.value',fields);
+       // console.log(JSON.stringify(fields));
 
         
         

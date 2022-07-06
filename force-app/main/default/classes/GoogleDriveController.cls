@@ -182,11 +182,11 @@ Public class GoogleDriveController {
         // reqC.setTimeout(60*1000);
         // HttpResponse respC = httpC.send(reqC);
         // system.debug('resp create file response>>>'+respC.getBody());
-        Job_Posting_Document__c updateDocURL = [SELECT Name, GDrive_FileID__c, Id, GDrive_Doc_URL__c,GDrive_View_URL__c  FROM Job_Posting_Document__c WHERE Id =: uploadedDocId];
+        Job_Posting_Document__c updateDocURL = [SELECT Name, GDrive_FileID__c, Id, GDrive_Doc_URL__c,GDrive_View_URL__c  FROM Job_Posting_Document__c WHERE Id =: uploadedDocId LIMIT 1];
 
         String authorizationHeaders = 'Bearer ' + accessToken; 
         Job_Posting__c folderIdRecord = [SELECT Id ,Name, GDrive_Folder_ID__c, Account__r.GDrive_Folder_ID__c , Account__r.Name,(SELECT id ,Name, GDrive_Folder_ID__c FROM Job_Applications__r WHERE Id = :jobApplication) FROM Job_Posting__c WHERE Id = :jobPosting];
-
+        System.debug(LoggingLevel.INFO, updateDocURL);
         System.debug('Account GD Folder'+folderIdRecord.Account__r.GDrive_Folder_ID__c);
         System.debug('Account Name'+folderIdRecord.Account__r.Name);
         System.debug('Job Posting Folder'+folderIdRecord.GDrive_Folder_ID__c);
@@ -198,6 +198,8 @@ Public class GoogleDriveController {
         System.debug('attachmentId>>'+attachmentId);
         System.debug('accessToken>>'+accessToken);
         System.debug('uploadedDocId>>'+uploadedDocId);
+
+
         
         if(String.isBlank(folderIdRecord.Account__r.GDrive_Folder_ID__c)){
             String urlCreateFolder = 'https://www.googleapis.com/drive/v3/files';

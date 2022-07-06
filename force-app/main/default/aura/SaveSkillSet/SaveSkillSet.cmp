@@ -145,13 +145,13 @@
                     <!--div class="slds-col slds-size_1-of-3">  
                         <lightning:inputField fieldName="Billing_Location__c" />      
                     </div--> 
-                    <div>
+                    <!--div>
                     <lightning:recordEditForm objectApiName="Account" >
                         <div class="slds-col ">  
                             <lightning:inputField aura:id="locationForm" fieldName="BillingAddress" />      
                         </div> 
                     </lightning:recordEditForm>
-                </div>
+                </div-->
                      
                     
                 </div>
