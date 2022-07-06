@@ -140,13 +140,16 @@ Public class GoogleDriveController {
     
     
     @AuraEnabled
-    Public static string gdriveDocUpload(String attachmentId, String accessToken,String uploadedDocId, ID jobApplication, ID jobPosting) {
+    Public static string gdriveDocUpload(String attachmentId, String accessToken,String uploadedDocId, String jobApplication, String jobPosting) {
 
         
 
         String fileID;
         String webContentLink;
         String embedLink;
+        String accFolderId;
+        String jpFolderId;
+        String apFolderId;
         
         // List<ContentVersion> cvFile = [SELECT Title,VersionData,FileType,ContentDocumentId FROM ContentVersion WHERE ContentDocumentId =: attachmentId];
         // System.debug('cvFile>>'+cvFile);
@@ -185,7 +188,10 @@ Public class GoogleDriveController {
         Job_Posting_Document__c updateDocURL = [SELECT Name, GDrive_FileID__c, Id, GDrive_Doc_URL__c,GDrive_View_URL__c  FROM Job_Posting_Document__c WHERE Id =: uploadedDocId LIMIT 1];
 
         String authorizationHeaders = 'Bearer ' + accessToken; 
-        Job_Posting__c folderIdRecord = [SELECT Id ,Name, GDrive_Folder_ID__c, Account__r.GDrive_Folder_ID__c , Account__r.Name,(SELECT id ,Name, GDrive_Folder_ID__c FROM Job_Applications__r WHERE Id = :jobApplication) FROM Job_Posting__c WHERE Id = :jobPosting];
+        Job_Posting__c folderIdRecord = [SELECT Id ,Name, GDrive_Folder_ID__c, Account__c, Account__r.GDrive_Folder_ID__c , Account__r.Name,(SELECT id ,Name, GDrive_Folder_ID__c FROM Job_Applications__r WHERE Id = :jobApplication) FROM Job_Posting__c WHERE Id = :jobPosting];
+        Job_Application__c jobGDApplication = new Job_Application__c(Id=(folderIdRecord.Job_Applications__r).Id, Name=(folderIdRecord.Job_Applications__r).Name);
+        Account jobAccount = new Account(Id=folderIdRecord.Account__c, Name=folderIdRecord.Account__r.Name);
+        apFolderId = (folderIdRecord.Job_Applications__r).GDrive_Folder_ID__c;
         System.debug(LoggingLevel.INFO, updateDocURL);
         System.debug('Account GD Folder'+folderIdRecord.Account__r.GDrive_Folder_ID__c);
         System.debug('Account Name'+folderIdRecord.Account__r.Name);
@@ -199,36 +205,64 @@ Public class GoogleDriveController {
         System.debug('accessToken>>'+accessToken);
         System.debug('uploadedDocId>>'+uploadedDocId);
 
-
-        
+        //Acc f
         if(String.isBlank(folderIdRecord.Account__r.GDrive_Folder_ID__c)){
-            String urlCreateFolder = 'https://www.googleapis.com/drive/v3/files';
-            HttpRequest requestfolder = new HttpRequest();
-            requestfolder.setheader('Authorization',authorizationHeaders);
-            requestfolder.setheader('Content-Type','application/json');
-            requestfolder.setMethod('POST');  
-            requestfolder.setEndpoint(urlCreateFolder); 
-            String urlCreateFolderMetadata = '{"mimeType": "application/vnd.google-apps.folder", "name": "'+folderIdRecord.Account__r.Name+'"}';
-            requestfolder.setBody(urlCreateFolderMetadata);
-            Http fireFolderRequest = new Http(); 
-            Httpresponse responseCreateFolder = fireFolderRequest.send(requestfolder);
-            system.debug('Create Account Folder resp>>'+responseCreateFolder.getBody());
-            JSONParser getAccountFolderIdParser = JSON.createParser(responseCreateFolder.getBody());
+            String name = folderIdRecord.Account__r.Name;
+            Httpresponse response = googleDriveFunction(authorizationHeaders, name);
+            system.debug('Create Account Folder resp>>'+response.getBody());
+            JSONParser getAccountFolderIdParser = JSON.createParser(response.getBody());
             while (getAccountFolderIdParser.nextToken() != null) {
-            if ((getAccountFolderIdParser.getCurrentToken() == JSONToken.FIELD_NAME)) {
-                String fieldName = getAccountFolderIdParser.getText();
-                System.debug('Folder Creation Response'+fieldName);
-                getAccountFolderIdParser.nextToken();
-                if (fieldName == 'Id') {
-                    webContentLink = getAccountFolderIdParser.getText();
+                if ((getAccountFolderIdParser.getCurrentToken() == JSONToken.FIELD_NAME)) {
+                    String fieldName = getAccountFolderIdParser.getText();
+                    System.debug('Folder Creation Response'+fieldName);
+                    getAccountFolderIdParser.nextToken();
+                    if (fieldName == 'Id') {
+                        accFolderId = getAccountFolderIdParser.getText();
+                        folderIdRecord.Account__r.GDrive_Folder_ID__c = accFolderId;
+                        jobAccount.GDrive_Folder_ID__c = accFolderId;
+                    }
                 } 
-                if (fieldName == 'Id') {
-                    embedLink = getAccountFolderIdParser.getText();
+            }
+        }
+        if(String.isBlank(folderIdRecord.GDrive_Folder_ID__c) & String.isNotBlank(folderIdRecord.Account__r.GDrive_Folder_ID__c)){
+            String name = folderIdRecord.Name;
+            String inId = folderIdRecord.Account__r.GDrive_Folder_ID__c;
+            Httpresponse response = googleDriveFunction(authorizationHeaders, name, inId);
+            system.debug('Create Account Folder resp>>'+response.getBody());
+            JSONParser getAccountFolderIdParser = JSON.createParser(response.getBody());
+            while (getAccountFolderIdParser.nextToken() != null) {
+                if ((getAccountFolderIdParser.getCurrentToken() == JSONToken.FIELD_NAME)) {
+                    String fieldName = getAccountFolderIdParser.getText();
+                    System.debug('Folder Creation Response'+fieldName);
+                    getAccountFolderIdParser.nextToken();
+                    if (fieldName == 'Id') {
+                        jpFolderId = getAccountFolderIdParser.getText();
+                        folderIdRecord.GDrive_Folder_ID__c = jpFolderId;
+                   
+                    }
                 } 
-            } 
+            }
         }
-        
+        if(String.isBlank((folderIdRecord.Job_Applications__r).GDrive_Folder_ID__c) & String.isNotBlank(folderIdRecord.GDrive_Folder_ID__c)){
+            String name = (folderIdRecord.Job_Applications__r).Name;
+            String inId = folderIdRecord.GDrive_Folder_ID__c;
+            Httpresponse response = googleDriveFunction(authorizationHeaders, name, inId);
+            system.debug('Create Account Folder resp>>'+response.getBody());
+            JSONParser getAccountFolderIdParser = JSON.createParser(response.getBody());
+            while (getAccountFolderIdParser.nextToken() != null) {
+                if ((getAccountFolderIdParser.getCurrentToken() == JSONToken.FIELD_NAME)) {
+                    String fieldName = getAccountFolderIdParser.getText();
+                    System.debug('Folder Creation Response'+fieldName);
+                    getAccountFolderIdParser.nextToken();
+                    if (fieldName == 'Id') {
+                        apFolderId = getAccountFolderIdParser.getText();
+                        jobGDApplication.GDrive_Folder_ID__c = apFolderId;
+                    }
+                } 
+            }
         }
+
+       
         
         
         // //CREATE NEW FILE IN GOOGLE DRIVE ENDS
@@ -247,24 +281,22 @@ Public class GoogleDriveController {
         req.setEndpoint(url); 
         req.setBodyAsBlob(myBlob); 
         Http h = new Http(); 
-        
         Httpresponse resp = h.send(req);
         system.debug('resp>>'+resp.getBody());
-
         Map<String, Object> p = (Map<String, Object>) JSON.deserializeUntyped(resp.getBody());
         fileID=(String) p.get('id');
         System.debug('fileID>>'+fileID);
+        
         // Rename file
-
         String urlRename = 'https://www.googleapis.com/drive/v3/files/'+fileID+'?addParents=';
         HttpRequest request = new HttpRequest();
         request.setheader('Authorization',authorizationHeader);
         request.setheader('Content-Type','application/json');
         request.setMethod('PATCH');  
-        String folderId = '1LXWGc-IcE3bY17PEHyaD1BoHBtTNFngK';
+        String folderId = apFolderId;
         request.setEndpoint(urlRename+folderId); 
-
-        String renameBody = '{"name":"RenameFile2"}';
+        String fName= updateDocURL.Name+' '+(folderIdRecord.Job_Applications__r).Name;
+        String renameBody = '{"name":"'+fname+'"}';
         request.setBody(renameBody);
         Http fireRequest = new Http(); 
         Httpresponse response = fireRequest.send(request);
@@ -319,6 +351,13 @@ Public class GoogleDriveController {
           System.debug('webContentLink>>'+webContentLink);
         System.debug('embedLink>>'+embedLink);
         
+        if(folderIdRecord != null){
+            update folderIdRecord;
+            System.debug(jobAccount);
+            System.debug(jobGDApplication);
+            update jobAccount;
+            update jobGDApplication;
+        }
         
         if(uploadedDocId != null){
             //Query is on top 
@@ -334,6 +373,35 @@ Public class GoogleDriveController {
         // return 'null';
 
         return String.valueOf(resp.getStatuscode());
+    }
+
+    public static Httpresponse googleDriveFunction(String authorizationHeaders, String name) {
+        String urlCreateFolder = 'https://www.googleapis.com/drive/v3/files';
+            HttpRequest requestfolder = new HttpRequest();
+            requestfolder.setheader('Authorization',authorizationHeaders);
+            requestfolder.setheader('Content-Type','application/json');
+            requestfolder.setMethod('POST');  
+            requestfolder.setEndpoint(urlCreateFolder); 
+            String urlCreateFolderMetadata = '{"mimeType": "application/vnd.google-apps.folder", "name": "'+name+'"}';
+            requestfolder.setBody(urlCreateFolderMetadata);
+            Http fireFolderRequest = new Http(); 
+            Httpresponse responseCreateFolder = fireFolderRequest.send(requestfolder);
+            return responseCreateFolder;
+    }
+
+    public static Httpresponse googleDriveFunction(String authorizationHeaders, String name, String inId) {
+        
+        String urlCreateFolder = 'https://www.googleapis.com/drive/v3/files';
+            HttpRequest requestfolder = new HttpRequest();
+            requestfolder.setheader('Authorization',authorizationHeaders);
+            requestfolder.setheader('Content-Type','application/json');
+            requestfolder.setMethod('POST');  
+            requestfolder.setEndpoint(urlCreateFolder); 
+            String urlCreateFolderMetadata = '{"mimeType": "application/vnd.google-apps.folder", "name": "'+name+'", "parents":["'+inId+'"]}';
+            requestfolder.setBody(urlCreateFolderMetadata);
+            Http fireFolderRequest = new Http(); 
+            Httpresponse responseCreateFolder = fireFolderRequest.send(requestfolder);
+            return responseCreateFolder;
     }
     
     
@@ -380,7 +448,7 @@ Public class GoogleDriveController {
         System.debug('jobApplicationId>>'+jobApplicationId);
         Job_Application__c jobAppProfileStatus = [SELECT Profile_Status__c FROM Job_Application__c WHERE Id =: jobApplicationId];
         System.debug('jobAppProfileStatus>>'+jobAppProfileStatus);
-        jobAppProfileStatus.Profile_Status__c = 'Manager Round Approved';
+        jobAppProfileStatus.Profile_Status__c = 'L2 Interview Approved';
         update jobAppProfileStatus;
     }
     

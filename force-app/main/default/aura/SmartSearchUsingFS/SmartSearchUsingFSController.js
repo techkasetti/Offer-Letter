@@ -137,6 +137,8 @@
             //Call Apex method and pass account list as a parameters
             //  alert('helper object>>'+JSON.stringify(component.get('v.sObjectName')));
             var action = component.get("c.searchProfiles");
+            console.log('Data for search' + JSON.stringify(component.get('v.sObjectName')));
+            console.log('Data for search>>>>>' + JSON.stringify(component.get('v.accountList')));
             action.setParams({
                 "parentobjectData": JSON.stringify(component.get('v.sObjectName')),
                 "objectData": JSON.stringify(component.get("v.accountList"))
@@ -159,10 +161,5 @@
     },
     panelFour: function (component, event, helper) {
         helper.toggleAction(component, event, 'panelFour');
-    },
-    backToHP: function (component, event, helper) {
-        var urlString = window.location.href;
-        var CommunityBaseURL = urlString.substring(0, urlString.indexOf("/one/"));
-        window.location.replace(CommunityBaseURL + "/lightning/n/Home_Page");
     },
 })

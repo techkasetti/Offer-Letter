@@ -140,7 +140,7 @@
     </div>
     <div class="slds-border_top slds-text-align_left slds-p-top_small slds-p-bottom_x-small">
         <lightning:button class="" type="search" label="HOME PAGE" onclick="{!c.backToHP}" iconName="utility:chevronleft"/>
-        <lightning:button class="" type="search" label="SHEDULE ZOOM MEETING" onclick="{!c.sheduleZoom}" iconName="utility:chevronleft"/>
+        <!-- <lightning:button class="" type="search" label="SHEDULE ZOOM MEETING" onclick="{!c.sheduleZoom}" iconName="utility:chevronleft"/> -->
     </div>
 
 

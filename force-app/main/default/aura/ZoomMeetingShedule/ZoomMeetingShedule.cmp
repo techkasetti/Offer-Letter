@@ -9,6 +9,7 @@
     <aura:attribute name="startDatetime" type="Date" />
     <aura:attribute name="candEmail" type="String" />
     <aura:attribute name="hostEmail" type="String" />
+    <aura:attribute name="batchId" type="String" />
 
     <div class="slds-hide" aura:id="spinner">
         <lightning:spinner style="position: fixed" alternativeText="{Loading}" size="large" />
@@ -26,7 +27,7 @@
             <header class="slds-modal__header">
                 <lightning:buttonIcon class="slds-modal__close" alternativeText="Close" iconName="utility:close"
                     onclick="{!c.close}" variant="bare-inverse" size="large"></lightning:buttonIcon>
-                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Zoom Meeting Shedule</h2>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">ZOOM MEETING SHEDULE</h2>
             </header>
             
                         <!--content STARTS here-->
@@ -44,8 +45,8 @@
            
                 <!--Modal/Popup Box Footer Starts here-->
                 <footer class="slds-modal__footer">
-                    <lightning:button variant="neutral" label="Reject" onclick="{! c.rejected}" />
-                    <lightning:button variant="brand" disabled="{}" label="Zoom Shedule"
+                    <lightning:button class="slds-button slds-button_destructive" variant="neutral" label="Reject" onclick="{! c.rejected}" />
+                    <lightning:button class="slds-button slds-button_brand" variant="brand" disabled="{}" label="Shedule Meeting"
                         onclick="{!c.zoomShedule}" />
                 </footer>
             </div>

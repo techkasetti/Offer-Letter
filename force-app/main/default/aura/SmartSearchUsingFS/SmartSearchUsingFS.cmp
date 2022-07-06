@@ -154,11 +154,8 @@
                 </div>
             </lightning:card>
         </div>
-        <div class="slds-p-top_small slds-p-bottom_small slds-p-left_x-small">
-            <tr>
-            <td><lightning:button class="" type="search" label="Home Page" onclick="{!c.backToHP}" iconName="utility:chevronleft"/></td>
-            <td style="padding-left:550px"><lightning:button variant="brand" label="Search" title="Brand action" onclick="{!c.saveAccounts}"/></td>
-            </tr>
+        <div class="slds-align_absolute-center slds-p-top_small">
+            <lightning:button variant="brand" label="Search" title="Brand action" onclick="{!c.saveAccounts}" />
         </div>
         <aura:iteration items="{!v.candidateProfile}" var="lst">
             <div class="showCandidatesProfile slds-m-around_small">

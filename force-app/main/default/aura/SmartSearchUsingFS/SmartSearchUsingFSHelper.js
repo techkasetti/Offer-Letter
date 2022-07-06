@@ -9,7 +9,7 @@
         "string": {
             componentDef: "lightning:input",
             attributes: {
-                "class": "slds-input container",
+                "class": "",
             }
         },
         "checkbox": {
@@ -102,6 +102,7 @@
                         value: fieldsSetList[i].split('####')[0]
                     });
                 }
+                console.log('Brore Fielse' + JSON.stringify(listOptions));
                 component.set('v.fieldSetList', listOptions);
             } else if (state === 'INCOMPLETE') {
                 console.log('User is Offline System does not support drafts '
@@ -146,6 +147,8 @@
         //FiledSetMember.setStorable();
         $A.enqueueAction(FiledSetMember);
     },
+
+
     createForm: function (component, event, helper, fieldSetMember) {
         //  alert('createFormfieldSetMember>>'+JSON.stringify(fieldSetMember));
         // Create a map with availale inputs and according to this use the global map.
@@ -181,8 +184,8 @@
                 if (config) {
                     config.attributes.label = fieldSetMember[i].fieldLabel;
                     config.attributes.type = fieldSetMember[i].fieldType;
-                    config.attributes.required =
-                        fieldSetMember[i].isRequired || fieldSetMember[i].isDBRequired;
+                    // config.attributes.required =
+                    // fieldSetMember[i].isRequired || fieldSetMember[i].isDBRequired;
                     config.attributes.value =
                         component.getReference('v.sObjectName.' + fieldSetMember[i].fieldAPIName);
                     inputDesc.push([
@@ -197,8 +200,8 @@
                     );
                     config.attributes.label = fieldSetMember[i].fieldLabel;
                     config.attributes.type = 'number';
-                    config.attributes.required =
-                        fieldSetMember[i].isRequired || fieldSetMember[i].isDBRequired;
+                    // config.attributes.required =
+                    // fieldSetMember[i].isRequired || fieldSetMember[i].isDBRequired;
                     config.attributes.value =
                         component.getReference('v.sObjectName.' + fieldSetMember[i].fieldAPIName);
                     inputDesc.push([
@@ -211,8 +214,8 @@
                     );
                     config.attributes.label = fieldSetMember[i].fieldLabel;
                     config.attributes.type = 'tel';
-                    config.attributes.required =
-                        fieldSetMember[i].isRequired || fieldSetMember[i].isDBRequired;
+                    // config.attributes.required =
+                    // fieldSetMember[i].isRequired || fieldSetMember[i].isDBRequired;
                     config.attributes.value =
                         component.getReference('v.sObjectName.' + fieldSetMember[i].fieldAPIName);
 
@@ -227,8 +230,8 @@
                     config.attributes.label = fieldSetMember[i].fieldLabel;
                     config.attributes.name = fieldSetMember[i].fieldLabel;
 
-                    config.attributes.required =
-                        fieldSetMember[i].isRequired || fieldSetMember[i].isDBRequired;
+                    // config.attributes.required =
+                    // fieldSetMember[i].isRequired || fieldSetMember[i].isDBRequired;
                     config.attributes.value =
                         component.getReference('v.sObjectName.' + fieldSetMember[i].fieldAPIName);
 
@@ -244,6 +247,10 @@
                     config.attributes.name = fieldSetMember[i].fieldLabel;
                     var pickList = fieldSetMember[i].pickListValues;
                     var options = [];
+                    options.push({
+                        value: null,
+                        label: 'none'
+                    });
                     for (var k = 0; k < pickList.length; k++) {
                         if (pickList[k].active) {
                             options.push({
@@ -253,8 +260,8 @@
                         }
                     }
                     config.attributes.options = options;
-                    config.attributes.required =
-                        fieldSetMember[i].isRequired || fieldSetMember[i].isDBRequired;
+                    // config.attributes.required =
+                    // fieldSetMember[i].isRequired || fieldSetMember[i].isDBRequired;
                     config.attributes.value =
                         component.getReference('v.sObjectName.' + fieldSetMember[i].fieldAPIName);
 
@@ -279,8 +286,8 @@
                         }
                     }
                     config.attributes.options = options;
-                    config.attributes.required =
-                        fieldSetMember[i].isRequired || fieldSetMember[i].isDBRequired;
+                    // config.attributes.required =
+                    // fieldSetMember[i].isRequired || fieldSetMember[i].isDBRequired;
                     config.attributes.value =
                         component.getReference('v.sObjectName.' + fieldSetMember[i].fieldAPIName);
                     /*

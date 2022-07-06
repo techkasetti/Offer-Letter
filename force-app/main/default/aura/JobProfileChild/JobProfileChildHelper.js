@@ -28,7 +28,7 @@
         var action = component.get("c.getComments");
         //alert('applicationId>>'+applicationId);
         action.setParams({ 
-            'appId' : applicationId
+            'appId' : applicationId 
             
         });
         action.setCallback(this, function(response) {

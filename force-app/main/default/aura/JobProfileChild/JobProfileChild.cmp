@@ -10,6 +10,7 @@
     <aura:attribute name="ShowUploadDocuments" type="boolean" default="false"/>
     <aura:attribute name="ShowStatusAction" type="boolean" default="false"/>
     <aura:attribute name="ShowResubmissionButton" type="boolean" default="false"/>
+    <aura:attribute name="ShowScheduleInterviewButton" type="boolean" default="false"/>
     <aura:attribute name="ShowResumissionModal" type="boolean" default="false"/>
     <aura:attribute name="ShowConfirmationMessage" type="boolean" default="false"/>
     <aura:attribute name="addComments" type="boolean" default="false"/>
@@ -26,7 +27,7 @@
     <aura:attribute name="option" type="String" default="option1"/>
     <aura:attribute name="contactList" type="List" />
     <aura:attribute name="contactSelected" type="Object"/>
-    <!--aura:attribute name="comments" type="Comments__c" default="{'SObject':'Comments__c'}"/-->
+    <aura:attribute name="comments" type="Comment__c" default="{'SObject':'Comment__c'}"/>
     <aura:attribute name="fileName" type="String" default="No File Selected.." />
     <aura:attribute name="JobAppdetails" type="Object"/>    
     <aura:attribute name="OpenJobProfileChild" type="boolean" default="false"/>
@@ -72,11 +73,13 @@
             <td><div class="slds-text-heading-large">{!v.jobApplication.JobApplication.Candidate_Profile__r.Notice_Period__c}</div></td> 
             <td><div class="slds-text-heading-large">{!v.jobApplication.JobApplication.Profile_Status__c}</div></td>
             <td>
+                <div class="Status_Button">
                 <aura:if isTrue="{!v.ShowStatusAction}">
                     <aura:iteration items="{!v.jobApplication.StatusButtons}" var="status" indexVar="index">
                         <lightning:button label="{!status}" title="{!status}"  value="{!v.jobApplication.JobApplication.Id}" variant="success" onclick="{! c.handleClick }" disabled="{!v.disableButton}"/>
                     </aura:iteration>
                 </aura:if>
+            </div>
             </td>   
             
         </tr>
@@ -86,14 +89,17 @@
             <td></td>
             <td> <div>
                 
-                <lightning:button variant="Brand" label="Add Comments" title="Comments" value ="{!v.POList.JobAppication.Id}"  onclick="{!c.saveComments}"/>
+                <lightning:button variant="Brand" label="Add Comments" title="Comments" value ="{!v.jobApplication.JobApplication.Id}"  onclick="{!c.saveComments}"/>
                 <!--<lightning:button variant="Brand" label="Show Comments" title="Show Comments"  value="{!v.POList.JobAppication.Id}" onclick="{!c.showComments}"/>-->
                 <!--lightning:button variant="Brand" label="View Documents" title="View Documents"   value="{!v.POList.JobAppication.Candidate_Profile__r.Id}" onclick="{!c.handleViewDocuments}"/-->
                 <aura:if isTrue="{!v.ShowUploadDocuments}">
                     <lightning:button variant="Brand" aura:id="profile" value ="{!v.jobApplication.JobApplication}" type="submit" label="Upload Documents" onclick="{!c.handleUpload}"/>
                 </aura:if>
+                <aura:if isTrue="{!v.ShowScheduleInterviewButton}">
+                    <lightning:button variant="Brand" aura:id="scheduleInterview" value ="{!v.jobApplication.JobApplication.Id}" type="submit" label="Schedule Meeting" onclick="{!c.handleScheduleInterview}"/>
+                </aura:if>
                 <aura:if isTrue="{!v.ShowResubmissionButton}">
-                    <lightning:button variant="Brand" aura:id="candProfile" value ="{!v.POList}" type="submit" label="Re-Submit Profile" onclick="{!c.handleResubmit}"/>
+                    <lightning:button variant="Brand" aura:id="candProfile" value ="{!v.jobApplication}" type="submit" label="Re-Submit Profile" onclick="{!c.handleResubmit}"/>
                 </aura:if>
                 <aura:if isTrue="{!v.ShowResumissionModal}">
                     <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" 
@@ -321,7 +327,7 @@
                     <lightning:button variant="brand"
                                       label="OK"
                                       title="OK"
-                                      value ="{!v.POList.JobAppication.Id}"
+                                      value ="{!v.jobApplication.JobApplication.Id}"
                                       onclick="{!c.handleSaveComment}"/>
                 </footer>
             </div>
@@ -357,5 +363,6 @@
             </div>
         </section>
     </aura:if>
+    
     
 </aura:component>

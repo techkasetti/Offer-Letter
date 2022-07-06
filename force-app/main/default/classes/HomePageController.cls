@@ -112,9 +112,15 @@ System.debug('listOfValues'+listOfValues);*/
         System.debug('buttonTypeId>>.'+buttonTypeId);
         String currenUser = UserInfo.getUserId();
         system.debug('currenUser>>>'+currenUser);
-        
+        //List<CustomTeams__Team_Members__c> teammember = [Select CustomTeams__Team__c, from CustomTeams__Team_Members__c where Id =:currenUser  ];
+        //system.debug('teammember>>'+teammember);
+        List<CustomTeams__Teams__c> team = [Select Name,(Select Id from CustomTeams__Team_Members__r where Id =: currenUser) from CustomTeams__Teams__c];
+        system.debug('team>>'+team);
+
+
         List<Account> userAccnts = new List<Account>();
-        userAccnts = [Select Name from Account where CreatedById =: currenUser];
+       // userAccnts = [Select Name from Account where CreatedById =: currenUser];
+       userAccnts = [Select Name from Account ];
         system.debug('userAccnts>>'+userAccnts);
         
         

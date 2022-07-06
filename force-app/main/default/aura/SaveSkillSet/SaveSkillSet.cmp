@@ -99,7 +99,7 @@
     
     <aura:if isTrue="{!v.showSpinner}">    
         <lightning:spinner class="slds-is-fixed" variant="brand" alternativeText="Loading" size="large" />
-    </aura:if>
+    </aura:if> 
      <aura:attribute name="reloadForm" type="boolean" default="true" />
      <aura:attribute name="reloadForm1" type="boolean" default="true" />
      <lightning:notificationsLibrary aura:id="notificationsLibrary"/>

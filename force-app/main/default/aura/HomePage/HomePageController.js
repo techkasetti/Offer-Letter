@@ -22,7 +22,7 @@
         //var batchId = event.getSource().get("v.name");
         var evt = $A.get("e.force:navigateToURL");
         evt.setParams({
-            "url": "https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/r/Dashboard/01Z4x000000phvvEAA/view?queryScope=userFolders"
+            "url": "https://kasetti-dev-evironmet-dev-ed.lightning.force.com/lightning/r/Dashboard/01Z8Z0000010UgGUAU/view?queryScope=userFolders"
             
         });
         evt.fire();

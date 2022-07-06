@@ -681,12 +681,19 @@ public class smartSearchController {
         }
         system.debug('skillSet'+skillSet);
         List<Skill_Set__c> skillName = [Select Name from Skill_Set__c where Id IN : skillSet];
-        system.debug('skillName'+skillName);
-        for(Integer i=0; i<skillName.size(); i++){
-            skillsList[i].Name=(skillName[i].Name);
+        system.debug('skillName>>>'+skillName);
+        // for(Integer i=0; i<skillName.size(); i++){
+        //     skillsList[i].Name=(skillName[i].Name);
+        // }
+        // system.debug('skillsList>>'+skillsList);
+        for(Skill_Set_Experience__c skillsName : skillsList){
+            for(Skill_Set__c skillsetName :skillName )
+            if(skillsName.Skill_Set__c == skillsetName.Id){
+                skillsName.Name = skillsetName.Name;
+            }
+            
         }
         system.debug('skillsList>>'+skillsList);
-        
         return skillsList;
     }
 

@@ -14,7 +14,7 @@
         $A.enqueueAction(action);
         //v.batchId from JobProfileChild component
         var job = component.get("v.batchId");
-        // alert(job);
+         //alert(job);
         var jobApplication = JSON.parse(job);
         console.log(jobApplication);
         var action = component.get("c.fetchJobPostingDocList");
@@ -133,12 +133,13 @@
       */
 
     UploadGDriveFile: function (component, event, helper) {
-
+        var job = component.get("v.batchId");
+        var jobApplication = JSON.parse(job);
         var uploadedDocId = event.getSource().get("v.name");
+        console.log('uploadedFiles>>' + JSON.stringify(uploadedDocId));
         var uploadedFiles = event.getParam("files");
-        //console.log('uploadedFiles>>' + JSON.stringify(uploadedFiles));
         var attachmentId = uploadedFiles[0].documentId;
-
+        console.log('on iupload finish');
         var action = component.get("c.gdriveDocUpload");
         action.setParams({
             "attachmentId": attachmentId,
@@ -147,6 +148,7 @@
             "jobApplication": jobApplication.Id,
             "jobPosting": jobApplication.Job_Posting__c
         });
+        console.log('Param set');
         action.setCallback(this, function (response) {
             var status = response.getState();
             if (status === "SUCCESS") {
@@ -304,12 +306,16 @@
 
         var action = component.get("c.changeJobAppProfileStatusToRejected");
         action.setParams({
-            "jobApplicationId": jobApplication.JobAppication.Id
+            "jobApplicationId": jobApplication.Id
         });
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
                 var Response = response.getReturnValue();
+                //url redirect
+                var urlString = window.location.href;
+                var CommunityBaseURL = urlString.substring(0, urlString.indexOf("/one/"));
+                window.location.replace(CommunityBaseURL + "/lightning/n/Home_Page");
             }
             else {
                 var toastEvent = $A.get("e.force:showToast");
@@ -323,27 +329,27 @@
         });
         $A.enqueueAction(action);
 
-        //url redirect
-        window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/Home_Page");
-
     },
 
     documentVerified: function (component, event, helper) {
-        //component.set("v.isModalOpen",false);
 
         //v.batchId from JobProfileChild component
         var job = component.get("v.batchId");
         var jobApplication = JSON.parse(job);
-        //alert('jobApplicationId>>'+jobApplication.JobAppication.Id);
+        //alert('jobApplicationId>>'+jobApplication.Id);
 
         var action = component.get("c.changeJobAppProfileStatusToVerified");
         action.setParams({
-            "jobApplicationId": jobApplication.JobAppication.Id
+            "jobApplicationId": jobApplication.Id
         });
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
                 var Response = response.getReturnValue();
+                //url redirect
+                var urlString = window.location.href;
+                var CommunityBaseURL = urlString.substring(0, urlString.indexOf("/one/"));
+                window.location.replace(CommunityBaseURL + "/lightning/n/Home_Page");
             }
             else {
                 var toastEvent = $A.get("e.force:showToast");
@@ -376,6 +382,10 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var Response = response.getReturnValue();
+                //url redirect
+                var urlString = window.location.href;
+                var CommunityBaseURL = urlString.substring(0, urlString.indexOf("/one/"));
+                window.location.replace(CommunityBaseURL + "/lightning/n/Home_Page");
             }
             else {
                 var toastEvent = $A.get("e.force:showToast");

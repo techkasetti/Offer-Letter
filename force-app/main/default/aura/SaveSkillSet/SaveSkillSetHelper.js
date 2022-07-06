@@ -501,8 +501,9 @@
                     console.log(component.get("v.jobApplication"));
                 }
                 else{
-                    component.set("v.showSpinner",true);
-                    window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/Home_Page");
+                    var urlString = window.location.href;
+                            var CommunityBaseURL = urlString.substring(0,urlString.indexOf("/one/"));
+                            window.location.replace(CommunityBaseURL+"/lightning/n/Home_Page");
                 }
                 var job = component.get("v.jobApplication"); 
                 
@@ -526,12 +527,14 @@
                                 type: "success"
                             });
                             toastEvent.fire();
-                        }
+                            var urlString = window.location.href;
+                            var CommunityBaseURL = urlString.substring(0,urlString.indexOf("/one/"));
+                            window.location.replace(CommunityBaseURL+"/lightning/n/Home_Page");
+                            }
+                    }
                         //$A.get('e.force:refreshView').fire();
                         //url redirect
-                        component.set("v.showSpinner",true);
-                        window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/Home_Page");
-                            }
+                        
                     else if(state === 'ERROR'){
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({

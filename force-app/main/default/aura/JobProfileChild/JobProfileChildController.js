@@ -75,7 +75,13 @@
             component.set("v.ShowUploadDocuments", true);
 
 
-        }/* else if (buttonType == 'On Interview Process') {
+        }else if (buttonType == 'On Interview Process') {
+            //alert('Inside');
+            component.set("v.ShowScheduleInterviewButton", true);
+
+
+        }
+        /* else if (buttonType == 'On Interview Process') {
             var items = component.get("v.jobApplication");
             console.log(JSON.stringify(component.get("v.jobApplication")));
             var jobposting = JSON.stringify(component.get("v.jobApplication"));
@@ -109,6 +115,7 @@
         else if (buttonType == 'Lead Approved') {
 
             component.set("v.ShowResubmissionButton", true);
+            component.set("v.ShowScheduleInterviewButton", false);
         }
         else if (buttonType == 'Offer Letter') {
             component.set("v.ShowConfirmationMessage", true);
@@ -285,6 +292,7 @@
 
     saveComments: function (component, event, helper) {
         var applicationId = event.getSource().get("v.value");
+        //alert(applicationId);
         console.log(JSON.stringify(applicationId));
 
         helper.saveCommentsHelper(component, event, applicationId);
@@ -326,7 +334,7 @@
             });
             action.setCallback(this, function (response) {
                 var state = response.getState();
-                //alert('state>>'+state);
+                alert('state>>'+state);
                 if (state === 'SUCCESS') {
 
                     console.log(response.getReturnValue());
@@ -334,7 +342,7 @@
                     console.log(component.get("v.commentsList"));
 
                     component.set("v.viewComments", true);
-                    component.set("v.comments", '');
+                    //component.set("v.comments", '');
                     //url redirect
                     // window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/Home_Page");
                 }
@@ -398,5 +406,39 @@
         });
         evt.fire();*/
 
+    },
+    handleScheduleInterview: function (component, event, helper) {
+        var jobAppId = event.getSource().get("v.value");
+        //alert(jobAppId);
+        var batchId = event.getSource().get("v.name");
+        var evt = $A.get("e.force:navigateToComponent");
+        evt.setParams({
+            componentDef: "c:ZoomMeetingShedule",
+            componentAttributes: {
+                batchId: jobAppId
+            }
+        });
+        evt.fire();
+
+        //  var action = component.get("c.scheduleMeeting");
+        // action.setCallback(this, function (response) {
+        //     var state = response.getState();
+        //     if (state === 'SUCCESS') {
+
+        //         //var test = component.set("v.parentList", response.getReturnValue());
+        //         alert('sheduleZooomMeeting>>'+JSON.stringify(response.getReturnValue()));                
+        //     }
+        //     else if (state === 'ERROR') {
+
+        //         var toastEvent = $A.get("e.force:showToast");
+        //         toastEvent.setParams({
+        //             "title": "ERROR!",
+        //             "message": "Error Occured Shedule Zoom Meeting"
+        //         });
+        //         toastEvent.fire();
+        //     }
+        // })
+        // $A.enqueueAction(action);
     }
+
 })

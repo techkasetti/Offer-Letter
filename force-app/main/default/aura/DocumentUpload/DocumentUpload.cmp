@@ -52,7 +52,7 @@
                 <header class="slds-modal__header">
                     <lightning:buttonIcon class="slds-modal__close" alternativeText="Close" iconName="utility:close"
                         onclick="{!c.close}" variant="bare-inverse" size="large"></lightning:buttonIcon>
-                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Upload Documents</h2>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">UPLOAD DOCUMENTS</h2>
                 </header>
 
 
@@ -175,9 +175,8 @@
 
                 <!--Modal/Popup Box Footer Starts here-->
                 <footer class="slds-modal__footer">
-                    <lightning:button variant="neutral" label="Document Rejected" onclick="{! c.documentRejected}" />
-                    <lightning:button variant="brand" disabled="{!v.documentVerifiedCheckbox}" label="Document Verified"
-                        onclick="{!c.documentVerified}" />
+                    <lightning:button class="slds-button slds-button_destructive" variant="neutral" label="Document Rejected" onclick="{! c.documentRejected}"/>
+                    <lightning:button class="slds-button slds-button_brand" variant="brand" disabled="{!v.documentVerifiedCheckbox}"   label="Document Verified" onclick="{!c.documentVerified}"/>
                 </footer>
             </div>
         </section>

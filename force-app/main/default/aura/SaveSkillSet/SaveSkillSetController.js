@@ -254,8 +254,10 @@
     
     
     openModel: function(component, event, helper) {
-        // Set isModalOpen attribute to true       
+        // Set isModalOpen attribute to true    
+        component.set("v.showSpinner", true);   
         component.set("v.showModal", true);
+        component.set("v.showSpinner", false); 
         
         //To get the selected picklist value
         var candProfile = event.getSource().get("v.value");
@@ -270,7 +272,7 @@
         var skillsList = component.get("v.skillsList");
         console.log(skillsList);
         var action = component.get("c.getSkillName");      
-        
+         
         action.setParams({
           
             'skillsList': skillsList
