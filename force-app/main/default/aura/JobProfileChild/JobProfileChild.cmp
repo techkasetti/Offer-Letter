@@ -313,7 +313,7 @@
                     <lightning:input  type="text" value="{!v.comments.Name}" label="Enter your Feedback" placeholder="Enter Comments" style="width:600px;height:100px" required="true"/>
                     <aura:iteration items="{!v.commentsList}" var="com" indexVar="index">
                         <div class="slds-box slds-box_small">
-                            <p> {!com.User__c} - {!com.Remarks__c}</p>
+                            <p> <b>{!com.User__c}</b> - {!com.Remarks__c}</p>
                         </div>
                     </aura:iteration>
                 </div>

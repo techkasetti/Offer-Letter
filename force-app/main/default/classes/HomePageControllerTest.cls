@@ -65,7 +65,4 @@ public with sharing class HomePageControllerTest {
         Map<String,String> statusList = HomePageController.getPickListValuesIntoMap(statusfield);
         
     }
-    
-    
-    
 }

@@ -117,7 +117,8 @@
         <div  class=" slds-p-left_small slds-p-bottom_x-small slds-p-top_x-small" style="background-color: #F3F3F3">
             <h1><b>Information</b></h1> 
         </div> 
-      
+       <lightning:fileUpload name="" accept="" multiple="false" label="Upload Resume" recordId="" onuploadfinished="" />
+                             
         
         <lightning:recordEditForm objectApiName="Candidate_Profile__c"
                                   aura:id="candForm"
@@ -135,12 +136,18 @@
                         
                     </div>  
                     <div class="slds-col slds-size_1-of-3">  
-                        <lightning:inputField fieldName="Phone__c" value="{!v.candiProfile.Phone__c}"/>  
+                        <lightning:inputField fieldName="Phone__c" required="true" value="{!v.candiProfile.Phone__c}"/>  
                     </div>
                     <div class="slds-col slds-size_1-of-3">  
                         <lightning:inputField fieldName="Current_Location__c" value="{!v.candiProfile.Current_Location__c}"/>      
                     </div>  
-                    
+                    <div class="slds-col slds-size_1-of-3">  
+                        <lightning:inputField fieldName="Aadhaar_No__c" required="true" value="{!v.candiProfile.Aadhaar_No__c}"/>      
+                    </div> 
+                    <div class="slds-col slds-size_1-of-3">  
+                        <lightning:inputField fieldName="PAN_No__c" required="true" value="{!v.candiProfile.PAN_No__c}"/>      
+                    </div> 
+                     
                    
                     <!--div class="slds-col slds-size_1-of-3">  
                         <lightning:inputField fieldName="Billing_Location__c" />      
@@ -168,6 +175,10 @@
                     <div class="slds-col slds-size_1-of-3">  
                         <lightning:inputField fieldName="Designation__c" value="{!v.candiProfile.Designation__c}"/>  
                     </div>
+                    <div class="slds-col slds-size_1-of-3">  
+                        <lightning:inputField fieldName="Current_CTC__c" value="{!v.candiProfile.Expected_CTC__c}"/>  
+                        
+                    </div>  
                     <div class="slds-col slds-size_1-of-3">  
                         <lightning:inputField fieldName="Expected_CTC__c" value="{!v.candiProfile.Expected_CTC__c}"/>  
                         

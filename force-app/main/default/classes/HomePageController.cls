@@ -112,16 +112,26 @@ System.debug('listOfValues'+listOfValues);*/
         System.debug('buttonTypeId>>.'+buttonTypeId);
         String currenUser = UserInfo.getUserId();
         system.debug('currenUser>>>'+currenUser);
-        //List<CustomTeams__Team_Members__c> teammember = [Select CustomTeams__Team__c, from CustomTeams__Team_Members__c where Id =:currenUser  ];
-        //system.debug('teammember>>'+teammember);
-        List<CustomTeams__Teams__c> team = [Select Name,(Select Id from CustomTeams__Team_Members__r where Id =: currenUser) from CustomTeams__Teams__c];
+        List<CustomTeams__Team_Members__c> teammember = [Select Name,CustomTeams__Team__c from CustomTeams__Team_Members__c where CustomTeams__User__c =:currenUser  ];
+        system.debug('teammember>>'+teammember);
+        Set<Id> teamMemberId = new Set<Id>();
+        for(Integer i =0; i<teammember.size(); i++){
+            teamMemberId.add(teammember[i].CustomTeams__Team__c);
+            system.debug('teamMemberId>>>'+teamMemberId);
+        }
+        system.debug('teamMemberId>>>'+teamMemberId);
+        List<CustomTeams__Teams__c> team = [Select Name,Account__r.Name from CustomTeams__Teams__c where Id =: teamMemberId];
         system.debug('team>>'+team);
-
-
-        List<Account> userAccnts = new List<Account>();
-       // userAccnts = [Select Name from Account where CreatedById =: currenUser];
-       userAccnts = [Select Name from Account ];
-        system.debug('userAccnts>>'+userAccnts);
+        Set<Id> accountId = new Set<Id>();
+        for(Integer i =0; i<team.size(); i++){
+            accountId.add(team[i].Account__c);
+            system.debug('accountId>>>'+accountId);
+        }
+        system.debug('accountId>>>'+accountId);
+    //     List<Account> userAccnts = new List<Account>();
+    //    // userAccnts = [Select Name from Account where CreatedById =: currenUser];
+    //    userAccnts = [Select Name from Account ];
+    //     system.debug('userAccnts>>'+userAccnts);
         
         
         Schema.sObjectField dependentField = Job_Application__c.Status__c;
@@ -190,7 +200,10 @@ System.debug('listOfValues'+listOfValues);*/
             return JobPostingsWrapList; 
         }
         else{
-            List<Job_Posting__c> jobPostings = [Select Id,Name,Posting_Due_Date__c,No_Of_Candidate_Selected__c,Job_OC_Status__c,(Select Name,Candidate_Profile__r.Designation__c,Candidate_Profile__r.Experience__c,Candidate_Profile__r.Skills__c,Candidate_Profile__r.Current_Location__c,Candidate_Profile__r.Notice_Period__c,Profile_Status__c,Status__c from Job_Applications__r) from Job_Posting__c where  Account__c IN :userAccnts];
+            List<Job_Posting__c> jobPostings = [Select Id,Name,Posting_Due_Date__c,Teams__c  ,No_Of_Candidate_Selected__c,Job_OC_Status__c,
+                                                (Select Name,Candidate_Profile__r.Designation__c,Candidate_Profile__r.Experience__c,Candidate_Profile__r.Skills__c,
+                                                Candidate_Profile__r.Current_Location__c,Candidate_Profile__r.Notice_Period__c,Profile_Status__c,Status__c from Job_Applications__r) 
+                                                from Job_Posting__c where   Teams__c  IN :teamMemberId  ];
             system.debug('jobPostings>>'+jobPostings);
             for(Job_Posting__c jobPostingValues : jobPostings)
             {
@@ -266,5 +279,137 @@ System.debug('listOfValues'+listOfValues);*/
         
     }
     
+    @AuraEnabled
+    public static String scheduleMeeting(String timeDate,String hostEmail,String candEmail){
+
+        system.debug('timeDate>>>>'+timeDate);
+        system.debug('hostEmail>>>'+hostEmail);
+        system.debug('candEmail>>>>'+candEmail);
+        
+        String endpointURL = 'callout:Zoom_Offer_letter'; // Named Credential
+        HttpRequest request = new HttpRequest(); 
+        request.setMethod('POST');
+        request.setEndpoint('callout:Zoom_Offer_letter/');
+        request.setHeader('Content-type', 'application/json');    
+        request.setBody(jsonGenerator(timeDate));
+        System.debug('jsonGenerator(timeDate)>>'+jsonGenerator(timeDate));
+        Http http = new Http();
+      	HTTPResponse res = http.send(request);
+        System.debug('Request Sent');
+        system.debug('Body'+res.getBody());
+        System.debug('response1 ==>>'+res.getHeaderKeys());
+        System.debug('response1 ==>>'+res.getStatus());
+        System.debug('response1 ==>>'+res.getStatusCode());
+        JSONParser parser = JSON.createParser(res.getBody());
+        JSONParser parser1 = JSON.createParser(res.getBody());
+        String hostURL='';
+        String join_url='';
+        while (parser.nextToken() != null) {
+            if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (parser.getText() == 'start_url')) {
+                    // Get the value.
+                    parser.nextToken();
+                    
+                    // Compute the grand total price for all invoices.
+                    hostURL += parser.getText();
+                }
+        }
+        while (parser1.nextToken() != null) {
+            if ((parser1.getCurrentToken() == JSONToken.FIELD_NAME) && 
+                (parser1.getText() == 'join_url')) {
+                    // Get the value.
+                    parser1.nextToken();
+                    
+                    // Compute the grand total price for all invoices.
+                    join_url += parser1.getText();
+                }
+        }
+        system.debug('hostURL>>>>'+hostURL);
+        system.debug('join_url>>>'+join_url);
+
+        //SEND MAIL TO ADDRESS STARTS
+        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+        String[] toAddresses = new String[]{};
+        toAddresses.add(hostEmail);
+        toAddresses.add(candEmail);
+        mail.setToAddresses(toAddresses);
+        mail.setSenderDisplayName('Zoom Meeting');
+        mail.setSubject('Zoom Meeting Shedule');
+        mail.setPlainTextBody('Hello,\n\n Join the meeting ahead of schedule using a laptop/desktop and reliable internet connection using this link : \n'+hostURL+'\n\n Kindly acknowledge this mail by your acceptance  \n\n Warm Regards \n Admin');
+        Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail }); 
+        //SEND MAIL TO ADDRESS ENDS
+
+        return 'response';
+        
+    }
     
+    public static string jsonGenerator(String timeDate){
+        System.debug('timeDate>>'+timeDate);
+
+        JSONGenerator gen = JSON.createGenerator(true);
+        gen.writeStartObject();
+        gen.writeObjectField('agenda','Meeting Agenda Introduction');
+        gen.writeObjectField('default_password','false');
+        gen.writeObjectField('duration','60');
+        gen.writeObjectField('password','123456');
+       
+        // gen.writeObjectField('schedule_for','sdkulkarni15@gmail.com'); //  
+        gen.writeFieldName('settings');
+        gen.writeStartObject();
+        gen.writeObjectField('host_video',false);
+        gen.writeObjectField('allow_multiple_devices',false);
+        gen.writeObjectField('participant_video',false);
+        gen.writeObjectField('join_before_host',false);
+        gen.writeObjectField('mute_upon_entry',true);
+        gen.writeObjectField('use_pmi',false);
+        gen.writeObjectField('approval_type',0);
+        gen.writeEndObject();
+        gen.writeObjectField('start_time','2022-06-01T18:30:00Z'); // '2022-06-01T18:30:00Z'= 2022-07-06T13:30:00.000Z
+        
+        gen.writeObjectField('timezone','Asia/Calcutta'); // Time Zone
+        gen.writeObjectField('topic','Intrview with Sony');
+        gen.writeObjectField('type','2');
+        gen.writeEndObject();
+        string payload=gen.getAsString();
+        System.debug('payload body'+payload);
+        return payload;
+    }
+
+    @AuraEnabled
+    public static String getCandEmail(String candidateID) {
+        system.debug('candidateID>>>'+candidateID);
+        Candidate_Profile__c email = [Select Email__c from Candidate_Profile__c  where Id=:candidateID];
+        system.debug('email.Email__c>>>'+email.Email__c);
+        return email.Email__c;
+    }
+
+    @AuraEnabled
+    public static String getHostEmail(String hostID) {
+        system.debug('hostID>>>'+hostID);
+        Contact email = [Select Email from Contact where Id=: hostID];
+        system.debug('email>>>'+email.Email);
+        return email.Email;
+    }
+    
+    @AuraEnabled
+    public static List<Comment__c> saveComment(Id appId, String comment){
+        system.debug('appId>>>'+appId);
+        system.debug('comment>>>'+comment);
+        String userName = UserInfo.getName();
+        system.debug('userName>>>'+userName);
+                
+        Comment__c commentValue = new Comment__c(Job_Application__c=appId,Remarks__c=comment,User__c=userName);
+        insert commentValue;
+        List<Comment__c> updatedComments = getComments(appId);
+        system.debug('updatedComments>>>'+updatedComments);
+        return updatedComments;
+    }
+    
+    @AuraEnabled
+    public static List<Comment__c> getComments(Id appId){
+        system.debug('appId>>>'+appId);
+        List<Comment__c> comments = [Select Job_Application__c,Remarks__c,User__c from Comment__c where Job_Application__c =:appId ];
+        system.debug('comments>>>'+comments);
+        return comments;  
+    }
 }

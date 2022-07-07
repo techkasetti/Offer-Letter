@@ -33,7 +33,7 @@
         });
         action.setCallback(this, function(response) {
             var state = response.getState();
-            //alert('state>>'+state);
+           
             if(state === 'SUCCESS'){
                 console.log(response.getReturnValue());
                 component.set("v.commentsList",response.getReturnValue());
