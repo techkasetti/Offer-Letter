@@ -1,33 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>AzureFileUpload</members>
-		<members>CandFieldSet</members>
-		<members>GoogleDriveController</members>
-		<members>GoogleDriveControllerTest</members>
-		<members>HomePageController</members>
-		<members>HomePageControllerTest</members>
-		<members>JobProfileCntrl</members>
-		<members>JobProfileCntrlTest</members>
-		<members>MockGenerator</members>
-		<members>ZoomMetingSchedule</members>
-		<members>smartSearchController</members>
-		<members>smartSearchControllerTest</members>
-		<name>ApexClass</name>
-	</types>
-	<types>
-		<members>DocumentUpload</members>
-		<members>HomePage</members>
-		<members>HomePageChild</members>
-		<members>JobProfileChild</members>
-		<members>ProfileSearch</members>
-		<members>SaveSkillSet</members>
-		<members>SmartSearchUsingFS</members>
-		<members>ZoomMeetingShedule</members>
-		<members>jobPosting</members>
-		<members>showCandidateProfileSearch</members>
-		<members>xRaySearch</members>
-		<name>AuraDefinitionBundle</name>
+		<members>Public_Dashboards</members>
+		
+		<name>Dashboard</name>
 	</types>
 	<!--<types>
 		<members>*</members>

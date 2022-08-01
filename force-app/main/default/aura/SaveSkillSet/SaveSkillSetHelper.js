@@ -173,8 +173,8 @@
         //alert('startDate??'+startDate);
         //alert('endDate??'+endDate);
         //For skills and Exp
-        component.set("v.candidateProfile.From_Year_Of_Graduation__c",startDate);
-        component.set("v.candidateProfile.To_Year_Of_Graduation__c",endDate);
+        component.set("v.candidateProfile.KTDO1__From_Year_Of_Graduation__c",startDate);
+        component.set("v.candidateProfile.KTDO1__To_Year_Of_Graduation__c",endDate);
         console.log(JSON.stringify(component.get("v.candidateProfile")));
         var skillandexp = component.get("v.selectedUserRecordClone");
         
@@ -258,7 +258,7 @@
                 }
                 else{
                     //url redirect
-                    window.location.replace("https://kasetti-dev-evironmet-dev-ed.lightning.force.com/lightning/n/Home_Page");
+                    window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/KTDO1__Home_Page");
                 }
                 
                 var job = component.get("v.jobApplication"); 
@@ -286,7 +286,7 @@
                         //$A.get('e.force:refreshView').fire();
                         //url redirect
                         component.set("v.showSpinner",true);
-                        window.location.replace("https://kasetti-dev-evironmet-dev-ed.lightning.force.com/lightning/n/Home_Page");
+                        window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/KTDO1__Home_Page");
                         
                         
                         
@@ -493,7 +493,7 @@
                     console.log(component.get("v.jobApplication"));
                     var cand = component.get("v.jobApplicationList") ;
                     console.log(component.get("v.jobApplicationList"));
-                    jobApp.push(cand[0].Candidate_Profile__c);
+                    jobApp.push(cand[0].KTDO1__Candidate_Profile__c);
                     
                     jobApp.push(getSelectedJob);
                     
@@ -501,9 +501,8 @@
                     console.log(component.get("v.jobApplication"));
                 }
                 else{
-                    var urlString = window.location.href;
-                            var CommunityBaseURL = urlString.substring(0,urlString.indexOf("/one/"));
-                            window.location.replace(CommunityBaseURL+"/lightning/n/Home_Page");
+                    component.set("v.showSpinner",true);
+                    window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/KTDO1__Home_Page");
                 }
                 var job = component.get("v.jobApplication"); 
                 
@@ -527,14 +526,12 @@
                                 type: "success"
                             });
                             toastEvent.fire();
-                            var urlString = window.location.href;
-                            var CommunityBaseURL = urlString.substring(0,urlString.indexOf("/one/"));
-                            window.location.replace(CommunityBaseURL+"/lightning/n/Home_Page");
-                            }
-                    }
+                        }
                         //$A.get('e.force:refreshView').fire();
                         //url redirect
-                        
+                        component.set("v.showSpinner",true);
+                        window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/KTDO1__Home_Page");
+                            }
                     else if(state === 'ERROR'){
                         var toastEvent = $A.get("e.force:showToast");
                         toastEvent.setParams({

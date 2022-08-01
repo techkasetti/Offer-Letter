@@ -60,10 +60,8 @@
             <th><div class="slds-truncate"><b>Next Step Action </b></div></th> 
             
         </tr> 
-      
-            
+        
         <tr class="slds-border_bottom" Style="Width:100%"> 
-          
             <td></td>
             
             <td><div class="slds-text-heading-large">{!v.jobApplication.JobApplication.Name}/{!v.jobApplication.JobApplication.Candidate_Profile__r.Designation__c}</div></td>
@@ -83,8 +81,6 @@
             </td>   
             
         </tr>
-              
-          
         <tr class="slds-border_bottom" Style="Width:100%">
             <td></td>
             <td> <div>
@@ -313,7 +309,7 @@
                     <lightning:input  type="text" value="{!v.comments.Name}" label="Enter your Feedback" placeholder="Enter Comments" style="width:600px;height:100px" required="true"/>
                     <aura:iteration items="{!v.commentsList}" var="com" indexVar="index">
                         <div class="slds-box slds-box_small">
-                            <p> <b>{!com.User__c}</b> - {!com.Remarks__c}</p>
+                            <p> {!com.KTDO1__User__c} - {!com.KTDO1__Remarks__c}</p>
                         </div>
                     </aura:iteration>
                 </div>
@@ -327,7 +323,7 @@
                     <lightning:button variant="brand"
                                       label="OK"
                                       title="OK"
-                                      value ="{!v.jobApplication.JobApplication.Id}"
+                                      value ="{!v.POList.JobAppication.Id}"
                                       onclick="{!c.handleSaveComment}"/>
                 </footer>
             </div>
@@ -363,6 +359,5 @@
             </div>
         </section>
     </aura:if>
-    
     
 </aura:component>

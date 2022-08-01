@@ -174,7 +174,7 @@
             console.log(result);
             if(state === 'SUCCESS'){
                 for(let i=0; i<result.length;i++){
-                    clients.push({"value":result[i].Account__r.Id, "label":result[i].Account__r.Name});
+                    clients.push({"value":result[i].KTDO1__Account__r.Id, "label":result[i].KTDO1__Account__r.Name});
                 }
                 component.set("v.clientList",clients);
                 
@@ -254,10 +254,8 @@
     
     
     openModel: function(component, event, helper) {
-        // Set isModalOpen attribute to true    
-        component.set("v.showSpinner", true);   
+        // Set isModalOpen attribute to true       
         component.set("v.showModal", true);
-        component.set("v.showSpinner", false); 
         
         //To get the selected picklist value
         var candProfile = event.getSource().get("v.value");
@@ -272,7 +270,7 @@
         var skillsList = component.get("v.skillsList");
         console.log(skillsList);
         var action = component.get("c.getSkillName");      
-         
+        
         action.setParams({
           
             'skillsList': skillsList
@@ -623,16 +621,15 @@
         var candSkills = component.get("v.skillsListName");
         console.log(JSON.stringify(candSkills));
 
-        /*var loc = component.find("locationForm").get("v.value");
-        console.log(JSON.stringify(loc));*/
+        var loc = component.find("locationForm").get("v.value");
+        console.log(JSON.stringify(loc));
 
         var fields = component.find("candiForm").get("v.value");
         console.log(JSON.stringify(fields));
-        //alert(JSON.stringify(fields));
         
-        // fields["Billing_Location__c"]= JSON.stringify(loc);
-        // component.find('candiForm').set('v.value',fields);
-        // console.log(JSON.stringify(fields));
+        fields["KTDO1__Billing_Location__c"]= JSON.stringify(loc);
+        component.find('candiForm').set('v.value',fields);
+        console.log(JSON.stringify(fields));
 
         var action = component.get("c.getJobPostingValues");
         
@@ -665,7 +662,7 @@
                     //alert('Inside for>>'+Object.keys(mapValue).includes(storeResponse[i].Name));
                     //alert('Inside for>>'+Object.values(mapValue).includes(storeResponse[i].SkillSet_Experience__c));
                     
-                    /*if(Object.keys(mapValue).includes(storeResponse[i].Name) && Object.values(mapValue).includes(storeResponse[i].Skill_Experience_Level__c))
+                    /*if(Object.keys(mapValue).includes(storeResponse[i].Name) && Object.values(mapValue).includes(storeResponse[i].KTDO1__Skill_Experience_Level__c))
                     {
                         skillMatch = true;     
                     }
@@ -940,9 +937,9 @@
         var action = component.get("v.selectedEdType");
         //alert('action'+action);
         
-        var Type = component.get("v.candidateProfile.UG_Education_Type__c");
+        var Type = component.get("v.candidateProfile.KTDO1__UG_Education_Type__c");
         
-        component.set("v.candidateProfile.UG_Education_Type__c",action);
+        component.set("v.candidateProfile.KTDO1__UG_Education_Type__c",action);
         //console.log(JSON.stringify(component.get("v.candidateProfile")));
     },
     
@@ -951,29 +948,25 @@
         var action = component.get("v.selectedPGEdType");
         //alert('action'+action);
         
-        var Type = component.get("v.candidateProfile.PG_Education_Type__c");
+        var Type = component.get("v.candidateProfile.KTDO1__PG_Education_Type__c");
         
-        component.set("v.candidateProfile.PG_Education_Type__c",action);
+        component.set("v.candidateProfile.KTDO1__PG_Education_Type__c",action);
         //console.log(JSON.stringify(component.get("v.candidateProfile")));
     },
     
     handleOnSubmit : function(component, event, helper) {
         
-       /* var loc = component.find("locationForm").get("v.value");
-        console.log(JSON.stringify(loc));*/
+        var loc = component.find("locationForm").get("v.value");
+        console.log(JSON.stringify(loc));
 
         var fields = component.find('accForm1').get('v.value');
         
         console.log(JSON.stringify(fields));
-      //  fields["Billing_Location__c"]= JSON.stringify(loc);
-       // component.find('accForm1').set('v.value',fields);
-       // console.log(JSON.stringify(fields));
+        fields["KTDO1__Billing_Location__c"]= JSON.stringify(loc);
+        component.find('accForm1').set('v.value',fields);
+        console.log(JSON.stringify(fields));
 
-        
-        
-       
-             helper.handleOnSubmitHelper(component, event, helper,fields);
-             
+        helper.handleOnSubmitHelper(component, event, helper,fields);
         //event.preventDefault();
         
         
@@ -998,10 +991,10 @@
         var skillsList = component.get("v.skillsList");
         //Add New Account Record
         skillsList.push({
-            'sobjectType': 'Skill_Set_Experience__c',
-            'Skill_Set__c': '',
-            'Skill_Experience_Level__c': '',
-            'Ratings__c': '',
+            'sobjectType': 'KTDO1__Skill_Set_Experience__c',
+            'KTDO1__Skill_Set__c': '',
+            'KTDO1__Skill_Experience_Level__c': '',
+            'KTDO1__Ratings__c': '',
             
         });
         component.set("v.skillsList", skillsList);
@@ -1026,9 +1019,9 @@
         var rolesAndRespo = component.get("v.rolesandRespoList");
         //Add New Account Record
         rolesAndRespo.push({
-            'sobjectType': 'Roll_and_Responsibilities__c',
-            'Type__c': '',
-            'Rolls_and_Responsibilities_Master__c': '',
+            'sobjectType': 'KTDO1__Roll_and_Responsibilities__c',
+            'KTDO1__Type__c': '',
+            'KTDO1__Rolls_and_Responsibilities_Master__c': '',
             
             
         });

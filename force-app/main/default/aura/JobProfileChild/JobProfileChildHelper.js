@@ -1,9 +1,7 @@
 ({
     handleClickHelper : function(component, event, helper,buttonType,buttonTypeId) {
-        var save_action = component.get("c.togetJobPostings");
-        save_action.setParams({"companyFilter":'',
-                               "postStatus":'',
-                               "buttonType":buttonType,
+        var save_action = component.get("c.toGetJobApplicants");
+        save_action.setParams({"buttonType":buttonType,
                                "buttonTypeId":buttonTypeId});
         save_action.setCallback(this, function(response) {
             $A.util.removeClass(component.find("mySpinner"), "slds-show");
@@ -13,9 +11,9 @@
                 var storeResponse = response.getReturnValue();
                 // $A.get('e.force:refreshView').fire();
                 // set searchResult list with return value from server.
-                console.log('storeResponse >>>>'+JSON.stringify(storeResponse[0].JobApplicationWrapList[0]));
-                component.set("v.jobApplication", storeResponse[0].JobApplicationWrapList[0]);
-                console.log('storeResponse>>>'+JSON.stringify(component.get("v.jobApplication")));
+                console.log('storeResponse >>>>'+JSON.stringify(storeResponse[0]));
+                component.set("v.POList", storeResponse[0]);
+                console.log('storeResponse>>>'+JSON.stringify(component.get("v.POList")));
                 
                 
             }
@@ -33,7 +31,7 @@
         });
         action.setCallback(this, function(response) {
             var state = response.getState();
-           
+            //alert('state>>'+state);
             if(state === 'SUCCESS'){
                 console.log(response.getReturnValue());
                 component.set("v.commentsList",response.getReturnValue());

@@ -1,47 +1,47 @@
-<aura:component
-    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
-    access="global" controller="CandFieldSet">
-
-    <!-- define the attributes to be used in the component -->
-    <aura:attribute name="accountList" type="Skill_Set_Experience__c[]" />
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"  access="global" controller="CandFieldSet">
+    
+    <!-- define the attributes to be used in the component --> 
+    <aura:attribute name="accountList" type="Skill_Set_Experience__c[]"/>
     <aura:attribute name="theObject" type="Aura.Component[]" />
     <aura:attribute name="fieldSetmemberList1" type="String[]" />
-    <aura:attribute name="sObjectName" type="Candidate_Profile__c" default="{'sobjectType' : 'Candidate_Profile__c'}" />
+    <aura:attribute name="sObjectName" type="Candidate_Profile__c" default="{'sobjectType' : 'Candidate_Profile__c'}" /> 
     <aura:attribute name="sObjectList" type="String[]" />
     <aura:attribute name="fieldSetList" type="String[]" />
     <aura:attribute name="fieldSetmemberList" type="String[]" />
     <aura:attribute name="theForm" type="Aura.Component[]" />
-    <aura:attribute name="minval" type="Integer" default="0" />
-    <aura:attribute name="maxval" type="Integer" default="1" />
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:attribute name="options" type="List" />
-    <aura:attribute name="departmentpicklist" type="List" />
-    <aura:attribute name="venList" type="List" />
-    <aura:attribute name="value" type="List" default="" />
-    <aura:attribute name="candidateProfile" type="sObject" />
+    <aura:attribute name="minval" type="Integer" default="0"/>
+    <aura:attribute name="maxval" type="Integer" default="1"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="options" type="List"/>
+    <aura:attribute name="departmentpicklist" type="List"/>
+    <aura:attribute name="venList" type="List"/> 
+    <aura:attribute name="value" type="List" default=""/>
+    <aura:attribute name="candidateProfile" type="sObject"/>
     <aura:attribute name="SkillSetList" type="String" />
-    <aura:attribute name="selectedValue" type="String" />
-    <aura:attribute name="displaySkillSet" type="Boolean" default="false" />
-    <aura:attribute name="Name" type="String" default="AND" />
-    <aura:attribute name="text" type="String" />
-    <aura:attribute name="indexVal" type="Integer" default="0" />
-
+    <aura:attribute name="selectedValue" type="String"/>
+    <aura:attribute name="displaySkillSet" type="Boolean" default="false"/>
+    <aura:attribute name="Name" type="String" default="AND"/>
+    <aura:attribute name="text" type="String"/>
+    <aura:attribute name="indexVal" type="Integer" default="0"/>
+    
     <!-- page header -->
-    <div class="slds-page-header" style="background-color: #9a9da1;">
+    <div class="slds-page-header" style="background-color: #9a9da1;" >
         <div class="slds-media">
             <div class="slds-media__figure">
-                <span class="slds-icon_container" title="Using Fieldset in Lightning Dynamic for All Object">
-                    <lightning:icon iconName="utility:adduser" size="small" alternativeText="Indicates FieldSet" />
+                <span class="slds-icon_container" 
+                      title="Using Fieldset in Lightning Dynamic for All Object">
+                    <lightning:icon iconName="utility:adduser" size="small" 
+                                    alternativeText="Indicates FieldSet"/>
                 </span>
             </div>
             <div class="slds-media__body">
-                <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="FieldSets in Lightning">
-                    Search Profiles</h1>
+                <h1 class="slds-page-header__title slds-truncate slds-align-middle" 
+                    title="FieldSets in Lightning">Search Profiles</h1>
             </div>
         </div>
     </div>
     <div class="c-container" style="background-color:white">
-        <!--   <lightning:layoutItem size="2.5" padding="around-small">
+         <!--   <lightning:layoutItem size="2.5" padding="around-small">
               <div class="slds-col" style="border-style: groove;height:120px;">
                     <aura:if isTrue="{!v.fieldSetList.length>0}" >
                         <aura:iteration items="{!v.fieldSetList}" var="fs" >
@@ -50,195 +50,181 @@
                     </aura:if>
                 </div>
             </lightning:layoutItem>-->
-        <div class="slds-page-header" style="cursor: pointer;" onclick="{!c.basicSearch}">
+         <div class="slds-page-header"  style="cursor: pointer;" onclick="{!c.basicSearch}">
             <section class="slds-clearfix">
-                <div class="slds-float--left">
-                    <lightning:icon class="slds-show" aura:id="BasicSearch" iconName="utility:add" size="x-small"
-                        alternativeText="Indicates add" />
-                    <lightning:icon class="slds-hide" aura:id="BasicSearch" iconName="utility:dash" size="x-small"
-                        alternativeText="Indicates dash" />
+                <div class="slds-float--left"> 
+                    <lightning:icon class="slds-show" aura:id="BasicSearch" iconName="utility:add" size="x-small" alternativeText="Indicates add"/>
+                    <lightning:icon class="slds-hide" aura:id="BasicSearch" iconName="utility:dash" size="x-small" alternativeText="Indicates dash"/>
                 </div>
                 <div class="slds-m-left--large"> Basic Search</div>
             </section>
         </div>
-        <div aura:id="BasicSearch" class="slds-hide slds-p-around--medium">
-            <div class="slds-m-around--xx-large">
-                <h1 class="slds-page-header__title">Basic Search </h1>
-                <div class="slds-grid slds-wrap">
-                    <aura:iteration items="{!v.theForm}" var="facet">
-                        <div class="slds-size_1-of-3">
-                            <div class="slds-m-around_x-small">
-                                {!facet}
+             <div aura:id="BasicSearch" class="slds-hide slds-p-around--medium">
+                <div class="slds-m-around--xx-large">
+                    <h1 class="slds-page-header__title">Basic Search </h1>
+                    <div class="slds-grid slds-wrap">
+                        <aura:iteration items="{!v.theForm}" var="facet" >
+                            <div class="slds-size_1-of-3">
+                                <div class="slds-m-around_x-small">
+                                    {!facet}
+                                </div>
                             </div>
-                        </div>
-                    </aura:iteration>
+                        </aura:iteration>
+                    </div>
                 </div>
-            </div>
         </div>
-        <div class="slds-page-header" style="cursor: pointer;" onclick="{!c.panelFour}">
+             <div class="slds-page-header"  style="cursor: pointer;" onclick="{!c.panelFour}">
             <section class="slds-clearfix">
-                <div class="slds-float--left">
-                    <lightning:icon class="slds-show" aura:id="panelFour" iconName="utility:add" size="x-small"
-                        alternativeText="Indicates add" />
-                    <lightning:icon class="slds-hide" aura:id="panelFour" iconName="utility:dash" size="x-small"
-                        alternativeText="Indicates dash" />
+                <div class="slds-float--left"> 
+                    <lightning:icon class="slds-show" aura:id="panelFour" iconName="utility:add" size="x-small" alternativeText="Indicates add"/>
+                    <lightning:icon class="slds-hide" aura:id="panelFour" iconName="utility:dash" size="x-small" alternativeText="Indicates dash"/>
                 </div>
                 <div class="slds-m-left--large"> Advanced Search</div>
             </section>
         </div>
-
+         
         <div aura:id="panelFour" class="slds-hide slds-p-around--medium">
-            <h1 class="slds-page-header__title">Advanced Search </h1>
-            <lightning:card>
-                <div class="slds-m-around--xx-large">
-                    <div class="slds-float_right slds-p-bottom_small">
-                        <h1 class="slds-page-header__title">Add Skills
-                            <lightning:buttonIcon iconName="utility:add" size="large" variant="bare"
-                                alternativeText="Add" onclick="{!c.addRow}" />
-                        </h1>
-                    </div>
-                    <div class="container-fluid">
-                        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
-                            <thead>
-                                <tr class="slds-text-title_caps">
-                                    <th scope="col">
-                                        <div class="slds-truncate"></div>
-                                    </th>
-
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <aura:iteration items="{!v.accountList}" var="acc" indexVar="index">
-                                    <tr>
-
-                                        <lightning:recordEditForm objectApiName="Skill_Set_Experience__c"
-                                            aura:id="editForm" onsuccess="{!c.handleSuccess}">
-                                            <td>
-                                                {!index + 1}
-                                            </td>
-                                            <td>
-                                                <lightning:inputField fieldName="Skill_Set__c"
-                                                    value="{!acc.Skill_Set__c}" />
-                                            </td>
-                                            <td>
-                                                <lightning:inputField fieldName="Max_Experiance__c"
-                                                    value="{!acc.Max_Experiance__c}" />
-                                            </td>
-                                            <td>
-                                                <lightning:inputField fieldName="Min_Experiance__c"
-                                                    value="{!acc.Min_Experiance__c}" />
-                                            </td>
-                                            <td>
-                                                <lightning:inputField fieldName="Ratings__c"
-                                                    value="{!acc.Ratings__c}" />
-                                            </td>
-                                            <td>
-                                                <lightning:inputField fieldName="Logic__c" value="{!acc.Logic__c}" />
-                                            </td>
-                                            <td>
-                                                <a onclick="{!c.removeRecord}" data-record="{!index}">
-                                                    <lightning:icon iconName="utility:delete" size="small"
-                                                        alternativeText="Delete" />
-                                                    <span class="slds-assistive-text">Delete</span>
-                                                </a>
-                                            </td>
-                                        </lightning:recordEditForm>
-
+                <h1 class="slds-page-header__title">Advanced Search </h1>
+                <lightning:card>
+                    <div class="slds-m-around--xx-large">
+                        <div class="slds-float_right slds-p-bottom_small">
+                            <h1 class="slds-page-header__title">Add Skills 
+                                <lightning:buttonIcon iconName="utility:add"  size="large" variant="bare" alternativeText="Add" onclick="{!c.addRow}"/>
+                            </h1>
+                        </div>
+                        <div class="container-fluid">        
+                            <table class="slds-table slds-table_bordered slds-table_cell-buffer"> 
+                                <thead>
+                                    <tr class="slds-text-title_caps">
+                                        <th scope="col">
+                                            <div class="slds-truncate"></div>
+                                        </th>
+                                        
+                                        
                                     </tr>
-                                </aura:iteration>
-                            </tbody>
-                        </table>
-
+                                </thead>   
+                                <tbody>      
+                                    <aura:iteration items="{!v.accountList}" var="acc" indexVar="index">
+                                        <tr>
+                                            
+                                            <lightning:recordEditForm objectApiName="KTDO1__Skill_Set_Experience__c" aura:id="editForm" onsuccess="{!c.handleSuccess}">
+                                                <td>
+                                                    {!index + 1}
+                                                </td>
+                                                <td>
+                                                    <lightning:inputField  fieldName="KTDO1__Skill_Set__c" value="{!acc.KTDO1__Skill_Set__c}" />
+                                                </td>
+                                                <td>
+                                                    <lightning:inputField  fieldName="KTDO1__Max_Experiance__c" value="{!acc.KTDO1__Max_Experiance__c}" />
+                                                </td>
+                                                <td>
+                                                    <lightning:inputField  fieldName="KTDO1__Min_Experiance__c" value="{!acc.KTDO1__Min_Experiance__c}" />
+                                                </td>
+                                                <td>
+                                                    <lightning:inputField  fieldName="KTDO1__Ratings__c" value="{!acc.KTDO1__Ratings__c}" />
+                                                </td>
+                                                <td>
+                                                    <lightning:inputField  fieldName="KTDO1__Logic__c" value="{!acc.KTDO1__Logic__c}" />
+                                                </td>
+                                                <td>
+                                                    <a onclick="{!c.removeRecord}" data-record="{!index}">
+                                                        <lightning:icon iconName="utility:delete" size="small" alternativeText="Delete"/>
+                                                        <span class="slds-assistive-text">Delete</span>
+                                                    </a>
+                                                </td> 
+                                            </lightning:recordEditForm>
+                                            
+                                        </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>
+                            <div class="slds-align_absolute-center slds-p-top_small">
+                                <lightning:button variant="brand" label="Search" title="Brand action" onclick="{!c.saveAccounts}" />
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </lightning:card>
-        </div>
-        <div class="slds-align_absolute-center slds-p-top_small">
-            <lightning:button variant="brand" label="Search" title="Brand action" onclick="{!c.saveAccounts}" />
-        </div>
-        <aura:iteration items="{!v.candidateProfile}" var="lst">
+                </lightning:card>
+            </div>  
+ <aura:iteration items="{!v.candidateProfile}" var="lst" >                                        
             <div class="showCandidatesProfile slds-m-around_small">
                 <fieldset class="candidatesProfile">
                     <div class="slds-theme_alt-inverse slds-p-bottom_small slds-p-top_small">
                         <table class="display">
-                            <tbody>
+                            <tbody> 
                                 <tr>
                                     <td class="slds-align_absolute-center">
-                                        <h1><b>Candidate Profile</b></h1> <br />
-
+                                        <h1><b>Candidate Profile</b></h1> <br/>
+                                        
                                     </td>
                                 </tr>
-
-                            </tbody>
-                        </table>
+                                
+                            </tbody></table>
                         <table class="display">
-                            <tbody>
-
+                            <tbody> 
+                                
                                 <tr>
-                                    <td class="body">Name :
+                                    <td class="body">Name : 
                                         {!lst.Name}</td>
-                                    <td class="body slds-float_right slds-p-right_xx-large">
-                                        <lightning:button variant="brand" label="View Document" value="{!lst}"
-                                            onclick="{!c.viewDocument}" />
+                                    <td  class="body slds-float_right slds-p-right_xx-large">
+                                        <lightning:button variant="brand" label="View Document" value="{!lst}" onclick="{!c.viewDocument}" />       
                                     </td>
                                 </tr>
                                 <tr>
-
+                                    
                                     <td class="body">Location :
-                                        {!lst.Current_Location__c}</td>
-
+                                        {!lst.KTDO1__Current_Location__c}</td>
+                                    
                                 </tr>
-
+                                
                             </tbody>
-                        </table>
+                        </table> 
                         <table class="display">
                             <tbody>
                                 <tr>
-                                    <td class="body">Email :{!lst.Email__c}</td>
-                                    <td class="body" style="width:50%;float:right;">Phone :{!lst.Phone__c}</td>
+                                    <td class="body">Email :{!lst.KTDO1__Email__c}</td>
+                                    <td class="body" style="width:50%;float:right;">Phone :{!lst.KTDO1__Phone__c}</td>
                                 </tr>
-
+                                
                             </tbody>
-                        </table>
-                    </div>
+                        </table> 
+                    </div> 
                     <div>
                         <table class="display1" style="width:50%;float:left;">
                             <tbody>
                                 <tr>
-                                    <td class="body"><b>Designation :</b>{!lst.Designation__c}</td>
+                                    <td class="body"><b>Designation :</b>{!lst.KTDO1__Designation__c}</td>
                                 </tr>
                                 <tr>
-                                    <td class="body"><b>Current Employer :</b>{!lst.Employers__c}</td>
+                                    <td class="body"><b>Current Employer :</b>{!lst.KTDO1__Employers__c}</td>
                                 </tr>
                                 <tr>
-                                    <td class="body"><b>Current CTC :</b>{!lst.Annual_CTC__c}LPA</td>
+                                    <td class="body"><b>Current CTC :</b>{!lst.KTDO1__Annual_CTC__c}LPA</td>
                                 </tr>
                                 <tr>
-                                    <td class="body"><b>Expected CTC :</b>{!lst.Expected_CTC__c}LPA</td>
+                                    <td class="body"><b>Expected CTC :</b>{!lst.KTDO1__Expected_CTC__c}LPA</td>
                                 </tr>
                                 <tr>
-                                    <td class="body"><b>Preferred Location :</b>{!lst.Preferred_Location__c}</td>
+                                    <td class="body"><b>Preferred Location :</b>{!lst.KTDO1__Preferred_Location__c}</td>
                                 </tr>
-
+                                
                             </tbody>
-                        </table>
+                        </table> 
                         <table class="display2" style="width:50%;float:left;">
                             <tbody>
-
+                                
                                 <tr>
                                     <td class="body"><b>Key Skills :</b>
-                                        <aura:iteration items="{!lst.Skill_Set_Experiences__r}" var="skill">
-                                            {!skill.Name} - {!skill.SkillSet_Experience__c}, </aura:iteration>
+                                        <aura:iteration items="{!lst.KTDO1__Skill_Set_Experiences__r}" var="skill" >
+                                            {!skill.Name} - {!skill.KTDO1__SkillSet_Experience__c},  </aura:iteration>
                                     </td>
-
+                                    
                                 </tr>
-
-
+                                
+                                
                             </tbody>
                         </table>
-                    </div>
-
+                    </div>       
+                    
                 </fieldset>
                 <!--   <div class="slds-m-around_xx-small slds-float_left" >
                 <lightning:button variant="brand"
@@ -247,7 +233,7 @@
                                   title="Create Job Application"
                                   onclick="{! c.openModel }" />
             </div>  -->
-
+                
             </div>
         </aura:iteration>
     </div>

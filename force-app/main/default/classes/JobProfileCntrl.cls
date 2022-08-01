@@ -165,20 +165,19 @@ opp.Job_Posting__c.
             return false;
         }
     }
-
-    /*@AuraEnabled
-    public static  List<Job_Posting__c> togetJobPostings(String items){
-        System.debug('items>>.'+items);
-        String currenUser = UserInfo.getUserId();
-        system.debug('currenUser>>>'+currenUser);
-
-        List<Account> userAccnts = new List<Account>();
-        userAccnts = [Select Name from Account where CreatedById =: currenUser];
-        system.debug('userAccnts>>'+userAccnts);
-
-        List<Job_Posting__c> jobPostings = [Select Id,Name,(Select Name,Job_Posting__c,Status__c from Job_Applications__r) from Job_Posting__c where  Account__c IN :userAccnts];
-        system.debug('jobPostings>>'+jobPostings);
-        return jobPostings;
+    
+    @AuraEnabled
+    public static List<KTDO1__Comments__c> saveComment(Id appId, String comment){
+        system.debug('appId>>>'+appId);
+        system.debug('comment>>>'+comment);
+        String userName = UserInfo.getName();
+        system.debug('userName>>>'+userName);
+                
+        KTDO1__Comments__c commentValue = new KTDO1__Comments__c(KTDO1__Job_Application__c=appId,KTDO1__Remarks__c=comment,KTDO1__User__c=userName);
+        insert commentValue;
+        List<KTDO1__Comments__c> updatedComments = getComments(appId);
+        system.debug('updatedComments>>>'+updatedComments);
+        return updatedComments;
     }
     */
     // @AuraEnabled
@@ -195,13 +194,13 @@ opp.Job_Posting__c.
     //     return updatedComments;
     // }
     
-    // @AuraEnabled
-    // public static List<Comments__c> getComments(Id appId){
-    //     system.debug('appId>>>'+appId);
-    //     List<Comments__c> comments = [Select Job_Application__c,Remarks__c,User__c from Comments__c where Job_Application__c =:appId ];
-    //     system.debug('comments>>>'+comments);
-    //     return comments;  
-    // }
+    @AuraEnabled
+    public static List<KTDO1__Comments__c> getComments(Id appId){
+        system.debug('appId>>>'+appId);
+        List<KTDO1__Comments__c> comments = [Select KTDO1__Job_Application__c,KTDO1__Remarks__c,KTDO1__User__c from KTDO1__Comments__c where KTDO1__Job_Application__c =:appId ];
+        system.debug('comments>>>'+comments);
+        return comments;  
+    }
     
     
    /* @AuraEnabled
