@@ -4,7 +4,7 @@
     
     <!--aura:registerEvent name="candProfileEvent" type="c:CandidateProfile"/-->
     <!--declare events handlers-->  
-
+    
     <!--record edit form starts--> 
     <aura:attribute name="jobPost" type="Job_Posting__c" default="{'SObject':'Job_Posting__c'}"/>
     <aura:attribute name="skillsList" type="Skill_Set_Experience__c[]"/>
@@ -20,7 +20,7 @@
     <aura:attribute name="jobPostSkillRecordId" type="String"/>
     <aura:attribute name="jobPostDocRecordId" type="String"/>
     <!--record edit form  ends--> 
-
+    
     <!--Skillset year starts--> 
     <aura:attribute name="selectedDepartmentList" type="String"/>
     <aura:attribute name="departmentList" type="list" default="[]" description=""/>
@@ -37,11 +37,11 @@
     <!-- <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     <aura:handler name="oUserdataEvent" event="c:jobPostingSelectedUser" action="{!c.handleUserEvent}"/>
     <aura:handler name="oDocumentdataEvent" event="c:jobPostingSelectedUser" action="{!c.handleDocumentEvent}"/> -->
-
+    
     <aura:attribute name="listOfProfileUserSearchRecords" type="List" description="Use,for store the list of search records which returns from apex class"/>
     <aura:attribute name="selectedProfileUserRecord" type="List" description="Use,for store SELECTED sObject Record"/>
     <aura:attribute name="SearchProfileUserKeyWord" type="string"/>
-
+    
     <!--Document search-->
     <aura:attribute name="SearchDocumentKeyWord" type="string"/>
     <aura:attribute name="listOfDocumentRecords" type="List" description="Use,for store the list of search records which returns from apex class"/>
@@ -58,7 +58,7 @@
     <aura:attribute name="selectedUserRecordClone" type="List" description="Use,for store SELECTED sObject Record" default="[]"/>
     <aura:attribute name="selectedCandidateRecord" type="List" description="Use,for store SELECTED sObject Record" default="[]"/>
     <aura:attribute name="skillAndExpObjList" type="List" />
-       
+    
     
     <aura:attribute name="listOfJoiningIn" type="List"/>
     <aura:attribute name="selectedJoiningIn" type="String"/>
@@ -74,7 +74,7 @@
     
     <aura:attribute name="ShowSmartSearchComponent" type="boolean" default="false"/> 
     <aura:attribute name="candidateProfile" type="sObject"/>
-
+    
     <!--claender-->
     <aura:attribute name="selectedDate" type="Date" />
     
@@ -82,284 +82,297 @@
     <aura:attribute name="teamOptions" type="List"/>
     <aura:attribute name="teamName" type="String"/>
     <aura:attribute name="teamMembersOptions" type="List"/>
-
+    
     <aura:attribute name="usersList" type="List" default=""/>
     <aura:attribute name="client" type="String"/>
     <aura:attribute name="jobReqType" type="String"/>
-
-
+    
+    
     <div class="slds-hide" aura:id="spinner">
         <lightning:spinner style="position: fixed" alternativeText="{Loading}" size="large" />
     </div>
-
     
-
+    
+    
     <lightning:messages />
-
-            <div class="slds-theme_shade " style="border:1px solid black;background-color: white;">
-                <lightning:button class="" type="search" label="HOME PAGE" onclick="{!c.backToHP}" iconName="utility:chevronleft"/>
-                <div class="slds-text-font_monospace slds-text-heading_medium slds-box slds-align_absolute-center slds-var-p-bottom_small slds-p-top_small slds-theme_alt-inverse">
-                    <h2><b>POST NEW JOB</b></h2> 
-                </div> 
-
-                <!--div>
+    
+    <div class="slds-theme_shade " style="border:1px solid black;background-color: white;">
+        <lightning:button class="" type="search" label="HOME PAGE" onclick="{!c.backToHP}" iconName="utility:chevronleft"/>
+        <div class="slds-text-font_monospace slds-text-heading_medium slds-box slds-align_absolute-center slds-var-p-bottom_small slds-p-top_small slds-theme_alt-inverse">
+            <h2><b>POST NEW JOB</b></h2> 
+        </div> 
+        
+        <!--div>
                     <iframe src="https://techkasetti-dev-org-dev-ed.my.salesforce.com/apex/pageTest" width="100%" height="500px;" frameBorder="0"/>
                 </div-->
-
-<!--section information starts-->
-                <div class="slds-box" style="background-color: #F3F3F3">
-                    <h1><b>INFORMATION</b></h1> 
+        
+        <!--section information starts-->
+        <div class="slds-box" style="background-color: #F3F3F3">
+            <h1><b>Information</b></h1> 
+        </div>
+        <lightning:recordEditForm objectApiName="Job_Posting__c" onsuccess="{!c.handleSuccess}" recordId="{!v.jobPostRecordId}">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Name" value="{!v.jobPost.Name}" required="true"/>
                 </div>
-                <lightning:recordEditForm objectApiName="Job_Posting__c" onsuccess="{!c.handleSuccess}" recordId="{!v.jobPostRecordId}">
-                            <div class="slds-grid slds-wrap">
-                                <div class="slds-col slds-size_1-of-4">
-                                    <lightning:inputField fieldName="Name" value="{!v.jobPost.Name}" required="true"/>
-                                </div>
-                                <div class="slds-col slds-size_1-of-4">
-                                    <lightning:inputField fieldName="Account__c" value="{!v.jobPost.Account__c}" onchange="{!c.handleAccountChange}" required="true"/>
-                                </div>
-                                <div class="slds-col slds-size_1-of-4">
-                                    <lightning:inputField fieldName="Designation__c" value="{!v.jobPost.Designation__c}" required="true"/>
-                                </div>
-                                <div class="slds-col slds-size_1-of-4">
-                                    <lightning:inputField fieldName="Location__c" value="{!v.jobPost.Location__c}" required="true"/>
-                                </div>
-                                </div>
-
-                            <div class="slds-grid">
-                                <div class="slds-col slds-size_1-of-4">
-                                    <lightning:inputField fieldName="No_Of_Positions__c" value="{!v.jobPost.No_Of_Positions__c}"/>
-                                </div>
-                                <div class="slds-col slds-size_1-of-4">
-                                    <lightning:inputField fieldName="Posting_Due_Date__c" value="{!v.jobPost.Posting_Due_Date__c}"/>
-                                </div>
-                                <div class="slds-col slds-size_1-of-4">
-                                    <lightning:inputField fieldName="Min_CTC__c" value="{!v.jobPost.Min_CTC__c}" required="true"/>
-                                </div>
-                                <div class="slds-col slds-size_1-of-4">
-                                    <lightning:inputField fieldName="Max_CTC__c" value="{!v.jobPost.Max_CTC__c}" required="true"/>
-                                </div>
-                            </div>
-
-                            <div class="slds-grid">
-                                <div class="slds-col slds-size_1-of-4">
-                                    <lightning:inputField fieldName="Expected_Submission_Per_Day__c" value="{!v.jobPost.Expected_Submission_Per_Day__c}"/>
-                                </div>
-                                <div class="slds-col slds-size_1-of-4">
-                                    <lightning:inputField fieldName="Referral_Amount__c" value="{!v.jobPost.Referral_Amount__c}"/>
-                                </div>
-                                <div class="slds-col slds-size_1-of-4">
-                                    <lightning:inputField fieldName="Job_Requirement_Type__c" value="{!v.jobPost.Job_Requirement_Type__c}"/>
-                                </div>
-                                <div class="slds-col slds-size_1-of-4">
-                                    <lightning:inputField fieldName="Document_Stoarge__c" value="{!v.jobPost.Document_Stoarge__c}" required="true"/>
-                                </div>
-                            </div>
-                            <br/>
-<!--section information ends-->
-
-                        <div class="slds-box" style="background-color: #F3F3F3">
-                            <h1>
-                                <b>SELECT SKILL</b>
-                                <lightning:buttonIcon class="slds-p-left_x-small" iconName="utility:add"  size="large" variant="bare" alternativeText="Add" onclick="{!c.addSkillRow}"/>
-                            </h1> 
-                        </div> 
-<!--section select skills starts-->
-                        <br/>
-                        <!--SKILL SECTION FOR UPDATE STARTS-->
-                        <aura:if isTrue="{!not(empty(v.jobPostSkillRecordId))}">
-                            <aura:iteration items="{!v.jobPostSkillRecordId}" var="recordId">
-                                <lightning:recordEditForm objectApiName="Skill_Set_Experience__c" aura:id="skillEditForm" onsuccess="{!c.handleOnSuccess}" recordId="{!recordId}">
-                                    <div class="slds-grid">
-                                        <div class="slds-col slds-size_1-of-4">
-                                            <lightning:inputField  fieldName="Skill_Set__c"  value="{!Skill_Set__c}" />
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-4">
-                                            <lightning:inputField  fieldName="Skill_Experience_Level__c" value="{!Skill_Experience_Level__c}"/>
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-4 slds-p-top_large slds-p-left_small">
-                                                <a onclick="{!c.removeSkillEditRecord}" data-record="{!index}">
-                                                    <lightning:icon iconName="utility:delete" size="small" alternativeText="Delete"/>
-                                                    <span class="slds-assistive-text">Delete</span>
-                                                </a>
-                                        </div>
-                                    </div>
-                                </lightning:recordEditForm>
-                            </aura:iteration>
-                        </aura:if>
-                        <!--SKILL SECTION FOR UPDATE ENDS-->
-
-                        <aura:iteration items="{!v.skillsList}" var="skills" indexVar="index">
-                            <lightning:recordEditForm objectApiName="Skill_Set_Experience__c" aura:id="skillForm" onsuccess="{!c.handleOnSuccess}" >
-                                <div class="slds-grid">
-                                    <div class="slds-col slds-size_1-of-4">
-                                        <lightning:inputField  fieldName="Skill_Set__c"  value="{!skills.Skill_Set__c}" />
-                                    </div>
-                                    <div class="slds-col slds-size_1-of-4">
-                                        <lightning:inputField  fieldName="Skill_Experience_Level__c" value="{!skills.Skill_Experience_Level__c}"/>
-                                    </div>
-                                    <div class="slds-col slds-size_1-of-4 slds-p-top_large slds-p-left_small">
-                                            <a onclick="{!c.removeSkillRecord}" data-record="{!index}">
-                                                <lightning:icon iconName="utility:delete" size="small" alternativeText="Delete"/>
-                                                <span class="slds-assistive-text">Delete</span>
-                                            </a>
-                                    </div>
-                                </div>
-                            </lightning:recordEditForm>
-                        </aura:iteration>
-<!--section select skills ends-->
-
-                    <div class="slds-box" style="background-color: #F3F3F3">
-                        <h1>
-                            <b>DOCUMENTS TO BE SUBMITTED</b>
-                            <lightning:buttonIcon class="slds-p-left_x-small" iconName="utility:add"  size="large" variant="bare" alternativeText="Add" onclick="{!c.addDocRow}"/>
-                        </h1> 
-                    </div> 
-<!--section Documents to be submitted starts-->
-                            <br/>
-                            <!--DOCUMENT MASTER SECTION FOR UPDATE STARTS-->
-                            <aura:if isTrue="{!not(empty(v.jobPostDocRecordId))}">
-                             <aura:iteration items="{!v.jobPostDocRecordId}" var="recordId">
-                                <lightning:recordEditForm objectApiName="Job_Posting_Document__c" aura:id="docForm" onsuccess="{!c.handleOnSuccess}" recordId="{!recordId}">
-                                    <div class="slds-grid">
-                                        <div class="slds-col slds-size_1-of-4">
-                                            <lightning:inputField  fieldName="Document_Master__c" value="{Document_Master__c}"/>
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-4 slds-p-top_large slds-p-left_small">
-                                            <a onclick="{!c.removeDocEditRecord}" data-record="{!index}">
-                                                <lightning:icon iconName="utility:delete" size="small" alternativeText="Delete"/>
-                                                <span class="slds-assistive-text">Delete</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </lightning:recordEditForm>
-                             </aura:iteration>
-                            </aura:if>
-                            <!--DOCUMENT MASTER SECTION FOR UPDATE ENDS-->
-
-                            <aura:iteration items="{!v.docMasterList}" var="doc" indexVar="index">
-                                <lightning:recordEditForm objectApiName="Job_Posting_Document__c" aura:id="docForm" onsuccess="{!c.handleOnSuccess}" recordId="{!v.jobPostDocRecordId}">
-                                    <div class="slds-grid">
-                                        <div class="slds-col slds-size_1-of-4">
-                                            <lightning:inputField  fieldName="Document_Master__c"  value="{!doc.Document_Master__c}" />
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-4 slds-p-top_large slds-p-left_small">
-                                            <a onclick="{!c.removeDocRecord}" data-record="{!index}">
-                                                <lightning:icon iconName="utility:delete" size="small" alternativeText="Delete"/>
-                                                <span class="slds-assistive-text">Delete</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </lightning:recordEditForm>
-                            </aura:iteration>
-<!--section Documents to be submitted ends-->
-
-
-
-                        <div class="slds-box" style="background-color: #F3F3F3">
-                            <h1>
-                                <b>ASSIGN TEAM MEMBERS</b>
-                                <lightning:buttonIcon class="slds-p-left_x-small" iconName="utility:add"  size="large" variant="bare" alternativeText="Add" onclick="{!c.addUserRow}"/>
-                            </h1>
-                        </div>
-<!--section Assign Team Members starts-->
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Account__c" value="{!v.jobPost.Account__c}" onchange="{!c.handleAccountChange}" required="true"/>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Designation__c" value="{!v.jobPost.Designation__c}" required="true"/>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Location__c" value="{!v.jobPost.Location__c}" required="true"/>
+                </div>
+            </div>
+            
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="No_Of_Positions__c" value="{!v.jobPost.No_Of_Positions__c}"/>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Posting_Start_Date__c" value="{!v.jobPost.Posting_Start_Date__c}"/>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Posting_Due_Date__c" value="{!v.jobPost.Posting_Due_Date__c}"/>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Min_CTC__c" value="{!v.jobPost.Min_CTC__c}" required="true"/>
+                </div>
+                
+            </div>
+            
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Max_CTC__c" value="{!v.jobPost.Max_CTC__c}" required="true"/>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Expected_Submission_Per_Day__c" value="{!v.jobPost.Expected_Submission_Per_Day__c}"/>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Referral_Amount__c" value="{!v.jobPost.Referral_Amount__c}"/>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Job_Requirement_Type__c" value="{!v.jobPost.Job_Requirement_Type__c}"/>
+                </div>
+                
+            </div>
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Document_Stoarge__c" value="{!v.jobPost.Document_Stoarge__c}" required="true"/>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="PayRoll_Company__c" value="{!v.jobPost.PayRoll_Company__c}"/>
+                </div>
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning:inputField fieldName="Client_Company__c" value="{!v.jobPost.Client_Company__c}" />
+                </div>
+            </div>
+            <br/>
+            <!--section information ends-->
+            
+            <div class="slds-box" style="background-color: #F3F3F3">
+                <h1>
+                    <b>Select Skill</b>
+                    <lightning:buttonIcon class="slds-p-left_x-small" iconName="utility:add"  size="large" variant="bare" alternativeText="Add" onclick="{!c.addSkillRow}"/>
+                </h1> 
+            </div> 
+            <!--section select skills starts-->
+            <br/>
+            <!--SKILL SECTION FOR UPDATE STARTS-->
+            <aura:if isTrue="{!not(empty(v.jobPostSkillRecordId))}">
+                <aura:iteration items="{!v.jobPostSkillRecordId}" var="recordId">
+                    <lightning:recordEditForm objectApiName="Skill_Set_Experience__c" aura:id="skillEditForm" onsuccess="{!c.handleOnSuccess}" recordId="{!recordId}">
                         <div class="slds-grid">
-                                <div class="slds-col slds-size_1-of-4 slds-p-bottom_small slds-p-left_xx-small">
-                                    <aura:if isTrue="{!not(empty(v.jobPostRecordId))}">
-                                        <lightning:select label="Teams" aura:id="select" required="true" value="{!v.selectedTeam}" onchange="{! c.handleTeamChange }">
-                                            <aura:iteration items="{!v.teamList}" var="option">
-                                                <option text="{!option.Name}" value="{!option.Id}" selected="{!option.selected}"/>
-                                            </aura:iteration>
-                                        </lightning:select>
-                                    <aura:set attribute="else">
-                                        <lightning:select label="Teams" aura:id="select" required="true" value="{!v.selectedTeam}" onchange="{! c.handleTeamChange }">
-                                            <option value="">-- Please Select --</option>
-                                            <aura:iteration items="{!v.teamList}" var="option">
-                                                <option text="{!option.Name}" value="{!option.Id}" selected="{!option.selected}"/>
-                                            </aura:iteration>
-                                        </lightning:select>
-                                    </aura:set>
-                                </aura:if>
-                                </div>
-
-                            <!--TEAM MEMBERS(Users) DISPLAY BY USING LOOKUP TEAM ID STARTS-->
-                            <aura:if isTrue="{!not(empty(v.teamID))}">
-                                <div class="slds-col slds-size_1-of-4">
-                                <aura:iteration items="{!v.teamMemberList}" var="teamMember" indexVar="index">
-                                        <tr>
-                                        <lightning:recordEditForm aura:id="form" recordId="{!teamMember.Id}" objectApiName="CustomTeams__Team_Members__c" recordTypeId= "">
-                                            <lightning:inputField fieldName="CustomTeams__User__c"  value="{!teamMember.CustomTeams__User__c}"/>
-                                        </lightning:recordEditForm>
-                                        </tr>
+                            <div class="slds-col slds-size_1-of-4">
+                                <lightning:inputField  fieldName="Skill_Set__c"  value="{!Skill_Set__c}" />
+                            </div>
+                            <div class="slds-col slds-size_1-of-4">
+                                <lightning:inputField  fieldName="Skill_Experience_Level__c" value="{!Skill_Experience_Level__c}"/>
+                            </div>
+                            <div class="slds-col slds-size_1-of-4 slds-p-top_large slds-p-left_small">
+                                <a onclick="{!c.removeSkillEditRecord}" data-record="{!index}">
+                                    <lightning:icon iconName="utility:delete" size="small" alternativeText="Delete"/>
+                                    <span class="slds-assistive-text">Delete</span>
+                                </a>
+                            </div>
+                        </div>
+                    </lightning:recordEditForm>
+                </aura:iteration>
+            </aura:if>
+            <!--SKILL SECTION FOR UPDATE ENDS-->
+            
+            <aura:iteration items="{!v.skillsList}" var="skills" indexVar="index">
+                <lightning:recordEditForm objectApiName="Skill_Set_Experience__c" aura:id="skillForm" onsuccess="{!c.handleOnSuccess}" >
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-4">
+                            <lightning:inputField  fieldName="Skill_Set__c"  value="{!skills.Skill_Set__c}" />
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                            <lightning:inputField  fieldName="Skill_Experience_Level__c" value="{!skills.Skill_Experience_Level__c}"/>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4 slds-p-top_large slds-p-left_small">
+                            <a onclick="{!c.removeSkillRecord}" data-record="{!index}">
+                                <lightning:icon iconName="utility:delete" size="small" alternativeText="Delete"/>
+                                <span class="slds-assistive-text">Delete</span>
+                            </a>
+                        </div>
+                    </div>
+                </lightning:recordEditForm>
+            </aura:iteration>
+            <!--section select skills ends-->
+            
+            <div class="slds-box" style="background-color: #F3F3F3">
+                <h1>
+                    <b>Documents To Be Submitted</b>
+                    <lightning:buttonIcon class="slds-p-left_x-small" iconName="utility:add"  size="large" variant="bare" alternativeText="Add" onclick="{!c.addDocRow}"/>
+                </h1> 
+            </div> 
+            <!--section Documents to be submitted starts-->
+            <br/>
+            <!--DOCUMENT MASTER SECTION FOR UPDATE STARTS-->
+            <aura:if isTrue="{!not(empty(v.jobPostDocRecordId))}">
+                <aura:iteration items="{!v.jobPostDocRecordId}" var="recordId">
+                    <lightning:recordEditForm objectApiName="Job_Posting_Document__c" aura:id="docForm" onsuccess="{!c.handleOnSuccess}" recordId="{!recordId}">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_1-of-4">
+                                <lightning:inputField  fieldName="Document_Master__c" value="{Document_Master__c}"/>
+                            </div>
+                            <div class="slds-col slds-size_1-of-4 slds-p-top_large slds-p-left_small">
+                                <a onclick="{!c.removeDocEditRecord}" data-record="{!index}">
+                                    <lightning:icon iconName="utility:delete" size="small" alternativeText="Delete"/>
+                                    <span class="slds-assistive-text">Delete</span>
+                                </a>
+                            </div>
+                        </div>
+                    </lightning:recordEditForm>
+                </aura:iteration>
+            </aura:if>
+            <!--DOCUMENT MASTER SECTION FOR UPDATE ENDS-->
+            
+            <aura:iteration items="{!v.docMasterList}" var="doc" indexVar="index">
+                <lightning:recordEditForm objectApiName="Job_Posting_Document__c" aura:id="docForm" onsuccess="{!c.handleOnSuccess}" recordId="{!v.jobPostDocRecordId}">
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_1-of-4">
+                            <lightning:inputField  fieldName="Document_Master__c"  value="{!doc.Document_Master__c}" />
+                        </div>
+                        <div class="slds-col slds-size_1-of-4 slds-p-top_large slds-p-left_small">
+                            <a onclick="{!c.removeDocRecord}" data-record="{!index}">
+                                <lightning:icon iconName="utility:delete" size="small" alternativeText="Delete"/>
+                                <span class="slds-assistive-text">Delete</span>
+                            </a>
+                        </div>
+                    </div>
+                </lightning:recordEditForm>
+            </aura:iteration>
+            <!--section Documents to be submitted ends-->
+            
+            
+            
+            <div class="slds-box" style="background-color: #F3F3F3">
+                <h1>
+                    <b>Assign Team Members</b>
+                    <lightning:buttonIcon class="slds-p-left_x-small" iconName="utility:add"  size="large" variant="bare" alternativeText="Add" onclick="{!c.addUserRow}"/>
+                </h1>
+            </div>
+            <!--section Assign Team Members starts-->
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-4 slds-p-bottom_small slds-p-left_xx-small">
+                    <aura:if isTrue="{!not(empty(v.jobPostRecordId))}">
+                        <lightning:select label="Teams" aura:id="select" required="true" value="{!v.selectedTeam}" onchange="{! c.handleTeamChange }">
+                            <aura:iteration items="{!v.teamList}" var="option">
+                                <option text="{!option.Name}" value="{!option.Id}" selected="{!option.selected}"/>
+                            </aura:iteration>
+                        </lightning:select>
+                        <aura:set attribute="else">
+                            <lightning:select label="Teams" aura:id="select" required="true" value="{!v.selectedTeam}" onchange="{! c.handleTeamChange }">
+                                <option value="">-- Please Select --</option>
+                                <aura:iteration items="{!v.teamList}" var="option">
+                                    <option text="{!option.Name}" value="{!option.Id}" selected="{!option.selected}"/>
                                 </aura:iteration>
-                                </div>
-                            </aura:if>
-                            <!--TEAM MEMBERS(Users) DISPLAY BY USING LOOKUP TEAM ID ENDS-->
-
-                            <!--ASSIGN EXTRA USERS STARTS-->
-                            <div class="slds-col slds-size_2-of-4">
-                                <aura:iteration items="{!v.userList}" var="user" indexVar="index">
-                                <lightning:recordEditForm objectApiName="CustomTeams__Team_Members__c" aura:id="userForm" onsuccess="{!c.handleOnSuccess}">
-                                    <tr>
-                                         <td class="slds-col slds-size_1-of-4">
-                                            <lightning:inputField  fieldName="CustomTeams__User__c"  value="{!user.CustomTeams__User__c}"/></td>
-                                         <td class="slds-col slds-size_1-of-4 slds-p-left_small">
-                                            <a onclick="{!c.removeUserRecord}" data-record="{!index}">
-                                                <lightning:icon iconName="utility:delete" size="small" alternativeText="Delete"/>
-                                                <span class="slds-assistive-text">Delete</span>
-                                            </a>
-                                         </td>
-                                    </tr>
-                                </lightning:recordEditForm>
-                            </aura:iteration>
-                            </div>
-                            <!--ASSIGN EXTRA USERS ENDS-->
-
-
-                        </div>
-<!--section Assign Team Members ends-->
-
-
-                        <div class="slds-box" style="background-color: #F3F3F3">
-                            <h1>
-                                <b>REFERENCE ATTACHMENT</b>
-                            </h1>
-                        </div>
-<!--section Reference Attachment starts-->
-                        <div class="slds-grid">
-                            <div class="slds-col slds-size_1-of-4 slds-p-left_xx-small">
-                                <lightning:fileUpload name="Document"
-                                                                accept="{!v.filetype}" multiple="false" label=""
-                                                                recordId="{!v.recordId}"
-                                                                onuploadfinished="{!c.UploadGDriveFile}" />
-                            </div>
-                        </div>
-<!--section Reference Attachment ends-->
-
-
-<!--Footer starts-->
-                     <center>
-                     <lightning:layoutItem flexibility="auto" padding="around-small" size="12">
-                        <div class="page-footer">
+                            </lightning:select>
+                        </aura:set>
+                    </aura:if>
+                </div>
+                
+                <!--TEAM MEMBERS(Users) DISPLAY BY USING LOOKUP TEAM ID STARTS-->
+                <aura:if isTrue="{!not(empty(v.teamID))}">
+                    <div class="slds-col slds-size_1-of-4">
+                        <aura:iteration items="{!v.teamMemberList}" var="teamMember" indexVar="index">
                             <tr>
-                                <aura:if isTrue="{!not(empty(v.jobPostRecordId))}">
-                                    <td class=""><lightning:button class="slds-theme_inverse slds-align_absolute-center" aura:id="updateJobPostingFields" type="submit" label="UPDATE JOB" onclick="{!c.UpdateJob}" value="{!v.jobPost}"/></td>
+                                <lightning:recordEditForm aura:id="form" recordId="{!teamMember.Id}" objectApiName="CustomTeams__Team_Members__c" recordTypeId= "">
+                                    <lightning:inputField fieldName="CustomTeams__User__c"  value="{!teamMember.CustomTeams__User__c}"/>
+                                </lightning:recordEditForm>
+                            </tr>
+                        </aura:iteration>
+                    </div>
+                </aura:if>
+                <!--TEAM MEMBERS(Users) DISPLAY BY USING LOOKUP TEAM ID ENDS-->
+                
+                <!--ASSIGN EXTRA USERS STARTS-->
+                <div class="slds-col slds-size_2-of-4">
+                    <aura:iteration items="{!v.userList}" var="user" indexVar="index">
+                        <lightning:recordEditForm objectApiName="CustomTeams__Team_Members__c" aura:id="userForm" onsuccess="{!c.handleOnSuccess}">
+                            <tr>
+                                <td class="slds-col slds-size_1-of-4">
+                                    <lightning:inputField  fieldName="CustomTeams__User__c"  value="{!user.CustomTeams__User__c}"/></td>
+                                <td class="slds-col slds-size_1-of-4 slds-p-left_small">
+                                    <a onclick="{!c.removeUserRecord}" data-record="{!index}">
+                                        <lightning:icon iconName="utility:delete" size="small" alternativeText="Delete"/>
+                                        <span class="slds-assistive-text">Delete</span>
+                                    </a>
+                                </td>
+                            </tr>
+                        </lightning:recordEditForm>
+                    </aura:iteration>
+                </div>
+                <!--ASSIGN EXTRA USERS ENDS-->
+                
+                
+            </div>
+            <!--section Assign Team Members ends-->
+            
+            
+            <div class="slds-box" style="background-color: #F3F3F3">
+                <h1>
+                    <b>Reference Attachment</b>
+                </h1>
+            </div>
+            <!--section Reference Attachment starts-->
+            <div class="slds-grid">
+                <div class="slds-col slds-size_1-of-4 slds-p-left_xx-small">
+                    <lightning:fileUpload name="Document"
+                                          accept="{!v.filetype}" multiple="false" label=""
+                                          recordId="{!v.recordId}"
+                                          onuploadfinished="{!c.UploadGDriveFile}" />
+                </div>
+            </div>
+            <!--section Reference Attachment ends-->
+            
+            
+            <!--Footer starts-->
+            <center>
+                <lightning:layoutItem flexibility="auto" padding="around-small" size="12">
+                    <div class="page-footer">
+                        <tr>
+                            <aura:if isTrue="{!not(empty(v.jobPostRecordId))}">
+                                <td class=""><lightning:button class="slds-theme_inverse slds-align_absolute-center" aura:id="updateJobPostingFields" type="submit" label="UPDATE JOB" onclick="{!c.UpdateJob}" value="{!v.jobPost}"/></td>
                                 <aura:set attribute="else">
                                     <td class="slds-p-right_x-large"><lightning:button class="slds-button slds-button_destructive slds-align_absolute-center" aura:id="search" type="submit" label="+ ADD ANOTHER JOB" onclick="{!c.addAnotherJob}"/></td>
                                     <td></td>
                                     <td class="slds-p-left_x-large"><lightning:button class="slds-button slds-button_brand slds-align_absolute-center"  aura:id="jobPostingFields" type="" label="POST NEW JOB" onclick="{!c.postNewJob}" value="{!v.jobPost}" /></td>
                                     <!--td class="slds-p-left_x-large"><lightning:button class="slds-theme_inverse slds-align_absolute-center" aura:id="ZOOM" type="submit" label="connect zoom" onclick="{!c.zoom}"/></td-->
                                 </aura:set>
-                                </aura:if>
-                            </tr>
-                        </div>
-                    </lightning:layoutItem>
-                    </center>
-                </lightning:recordEditForm>
-            </div>
-<!--Footer ends-->
-
-
+                            </aura:if>
+                        </tr>
+                    </div>
+                </lightning:layoutItem>
+            </center>
+        </lightning:recordEditForm>
+    </div>
+    <!--Footer ends-->
+    
+    
     <div class="Display" >
         <span>
             <aura:if isTrue="{!v.ShowSmartSearchComponent}">
@@ -367,5 +380,5 @@
             </aura:if>
         </span>
     </div>
-
+    
 </aura:component>

@@ -43,7 +43,7 @@ public with sharing class smartSearchControllerTest {
         candidate1.Skills__c = 'Java';
         candidate1.Designation__c = 'Salesforce Developer';
         candidate1.Annual_CTC__c = 47;
-        candidate1.Preferred_Location__c = 'Bangalore';
+        //candidate1.Preferred_Location__c = 'Bangalore';
         candidate1.Email__c = 'ram123@gmail.com';
         candidate1.Phone__c = '1234567891';
         candidateList.add(candidate1);
@@ -57,7 +57,7 @@ public with sharing class smartSearchControllerTest {
         candidate2.Skills__c = 'Java';
         candidate2.Designation__c = 'Tester';
         candidate2.Annual_CTC__c = 67;
-        candidate2.Preferred_Location__c = 'Bangalore';
+       // candidate2.Preferred_Location__c = 'Bangalore';
         candidate2.Email__c = 'raj123@gmail.com';
         candidate2.Phone__c = '1234567891';
         candidateList.add(candidate2);

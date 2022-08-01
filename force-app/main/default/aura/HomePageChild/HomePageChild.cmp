@@ -17,8 +17,8 @@
         <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.JobPosting.Posting_Due_Date__c}</b></div></td>
         <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b class="status">{!v.JobList.JobPosting.Job_OC_Status__c}</b></div>
         </td>
-        <td><lightning:button name="{!v.JobList.Id}" label="Edit" iconName="utility:edit" iconPosition="right" variant="brand" onclick="{! c.editJobPosting }"/></td>
-        <td></td>
+        <td><lightning:button name="{!v.JobList.Id}"  iconName="utility:edit" iconPosition="right"  onclick="{! c.editJobPosting }"/></td>
+        <td><lightning:button name="{!v.JobList.JobPosting.Id}"  label="Add Profile" variant="Brand" iconPosition="right"  onclick="{! c.navigateToSmartSearch }"/></td>
         
     </tr>
     <!--<tr>       

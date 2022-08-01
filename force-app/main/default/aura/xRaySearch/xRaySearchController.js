@@ -73,7 +73,7 @@
         var batchId = event.getSource().get("v.name");
         var evt = $A.get("e.force:navigateToComponent");
         evt.setParams({
-            componentDef : "c:SaveSkillSet",
+            componentDef : "c:fileUpload",
             
             componentAttributes: {
                 batchId : batchId

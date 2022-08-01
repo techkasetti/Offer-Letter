@@ -1,4 +1,4 @@
-public with sharing class AzureFileUpload {
+public with sharing class AzureFileUpload { 
 
     //modified on 08 June 2022 Akhilesh
     String azureStorageName; 
@@ -7,13 +7,26 @@ public with sharing class AzureFileUpload {
     String azureStorageKey;
     String storageUrl;
     public AzureFileUpload() {
-        azureStorageName = 'azurefileaccountsfdx'; //it will be the storage name in the portal. Storage name will be something like this
-        azureContainer = 'offerletterfilecontainer';	//it will be directory name where you need to upload the files
-        azureURL = '.blob.core.windows.net/';	//it will be URL of the azure
-        azureStorageKey = 'S/sL/l8NEQxkxk5Wmy2+Tv/eZgS+sCQJDJY+xY59CBouNIQrpOG9OS++/sIGEPRDeMqg5LJAKxZy+AStSglo/w==';
-        storageUrl ='https://azurefileaccountsfdx.blob.core.windows.net';
+        List<Azure_File_Upload__mdt> azureFileUpload = Azure_File_Upload__mdt.getAll().values();
+        system.debug('azureFileUpload>>'+azureFileUpload);
+        Map<String, String> azureDetails = new Map<String, String>(); 
+        for (Azure_File_Upload__mdt variable : azureFileUpload) {
+            azureDetails.put(variable.MasterLabel,variable.Value__c);
+        }
+        azureStorageName = 'sfdxstorage'; 
+        azureStorageName = azureDetails.get('Azure Storage Name'); //it will be the storage name in the portal. Storage name will be something like this       
+        // azureContainer = 'offerletterfilecontainer';
+        System.debug(azureStorageName);
+        azureContainer = azureDetails.get('Azure Storage Container');
+        //it will be directory name where you need to upload the files
+        // azureStorageKey = 'Mx6jfc/vzV7byKVAQIWtFEfjEtDIC4qI0JTF/rHEQkTBVrQF8a4bvwTEAVszKjNOkg9IocW0LFce+ASteq3y2w==';
+        System.debug(azureContainer);
+        azureStorageKey = azureDetails.get('Azure Storage Key');
+        System.debug(azureStorageKey);
+        // azureURL = '.blob.core.windows.net/';	//it will be URL of the azure
+        // storageUrl ='https://sfdxstorage.blob.core.windows.net'; // replaced with namedcrediential
     }
-    public String fileUpload(String attachmentId ,String uploadedDocId, String fileUploadName){
+    public String fileUpload(String attachmentId ,String uploadedDocId, String fplink, String fileUploadName){
         system.debug('attachmentId>>'+attachmentId);
         system.debug('uploadedDocId>>'+uploadedDocId);
         
@@ -22,7 +35,8 @@ public with sharing class AzureFileUpload {
 
         String strGMTDate = DateTime.now().formatGMT('EEE, dd MMM yyyy HH:mm:ss z');
         // String azureFileId = EncodingUtil.urlEncode(cvFile[0].Title, 'UTF-8'); //To retain original file name
-        String azureFileId = EncodingUtil.urlEncode(fileUploadName, 'UTF-8');
+        String finalPath = (fplink+fileUploadName+'.'+cvFile[0].FileType);
+        String azureFileId = EncodingUtil.urlEncode(finalPath, 'UTF-8');
         system.debug('azureFileId>>>'+azureFileId);
 
         Blob bodyAsBlob = cvFile[0].VersionData;
@@ -33,8 +47,8 @@ public with sharing class AzureFileUpload {
 
         String fileLength = String.valueof(fileLength1);
         system.debug('fileLength>>>'+fileLength);
-
-        String fileType = 'image/jpg';
+        String cvFileType = cvFile[0].FileType;
+        String fileType = 'image/'+cvFile[0].FileType;
         String canonicalHeader = 'x-ms-blob-type:BlockBlob\nx-ms-date:'+strGMTDate+'\nx-ms-version:2015-12-11\n';
         String canonRes = '/' + azureStorageName + '/' + azureContainer + '/' + azureFileId;
         String stringToSign = 'PUT\n\n\n'+fileLength+'\n\n'+fileType+'\n\n\n\n\n\n\n'+canonicalHeader+canonRes;
@@ -42,8 +56,10 @@ public with sharing class AzureFileUpload {
         Blob decodedAccountSharedKey = EncodingUtil.base64Decode(accountSharedKey);
         String authToken = EncodingUtil.base64Encode(crypto.generateMac('HmacSHA256',Blob.valueOf(stringToSign), decodedAccountSharedKey));
         String authHeader = 'SharedKey ' + azureStorageName + ':' + authToken;
-        String strEndpoint = 'https://' + azureStorageName	+ azureURL + azureContainer + '/' + azureFileId;
-
+       	// request.setEndpoint('callout:MyAzure/');
+        //  String strEndpoint = 'https://' + azureStorageName	+ azureURL + azureContainer + '/' + azureFileId;
+        String strEndpoint = 'callout:MyAzure' + '/'+ azureContainer + '/' + azureFileId;
+        //System.debug(strEndpoint);
         HttpRequest req = new HttpRequest();
         req.setMethod('PUT');
         req.setHeader('x-ms-blob-type', 'BlockBlob');
@@ -61,10 +77,8 @@ public with sharing class AzureFileUpload {
 
 
         if(res.getStatus() == 'Created'){
-            Job_Posting_Document__c updateAzureDocURL = [SELECT Azure_Document_URL__c  FROM Job_Posting_Document__c WHERE Id =: uploadedDocId];
-            updateAzureDocURL.Azure_FileID__c = fileUploadName;
-            update updateAzureDocURL;
-            return 'Success';
+           
+            return finalPath;
         }
         else {
             return 'Failure';
@@ -83,7 +97,7 @@ public with sharing class AzureFileUpload {
     String signedstart = sasStart.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
     string signedexpiry = sasExpiry.formatGMT('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
     string signedservice = 'b';
-    String canonicalizedresource = '/blob/azurefileaccountsfdx/offerletterfilecontainer/'+azureFileId;
+    String canonicalizedresource = '/blob/sfdxstorage/offerletterfilecontainer/'+azureFileId;
     string signedidentifier = '';
     string signedIP = '';
     string signedProtocol = '';

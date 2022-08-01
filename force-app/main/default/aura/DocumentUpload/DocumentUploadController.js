@@ -14,7 +14,7 @@
         $A.enqueueAction(action);
         //v.batchId from JobProfileChild component
         var job = component.get("v.batchId");
-         //alert(job);
+        //alert(job);
         var jobApplication = JSON.parse(job);
         console.log(jobApplication);
         var action = component.get("c.fetchJobPostingDocList");
@@ -408,6 +408,8 @@
 
     UploadAzureFile: function (component, event, helper) {
         //alert('iNSIDE CONTOLLER');
+        var job = component.get("v.batchId");
+        var jobApplication = JSON.parse(job);
         var uploadedDocId = event.getSource().get("v.name");
         var uploadedFiles = event.getParam("files");
         var attachmentId = uploadedFiles[0].documentId;
@@ -418,7 +420,9 @@
         var action = component.get("c.azureDocUpload");
         action.setParams({
             "attachmentId": attachmentId,
-            "uploadedDocId": uploadedDocId
+            "uploadedDocId": uploadedDocId,
+            "jobApplication": jobApplication.Id,
+            "jobPosting": jobApplication.Job_Posting__c
         });
         action.setCallback(this, function (response) {
             var status = response.getState();

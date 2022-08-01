@@ -115,4 +115,17 @@
         });
         evt.fire();
     },
+    
+    navigateToSmartSearch : function(component, event, helper) {
+        //alert("You clicked>>>" + event.getSource().get("v.name"));
+        var jobPostRecordId = event.getSource().get("v.name");
+        var evt = $A.get("e.force:navigateToComponent");
+        evt.setParams({
+            componentDef : "c:SmartSearchUsingFS",
+            componentAttributes: {
+                jobPostRecordId : jobPostRecordId
+            }
+        });
+        evt.fire();
+    },
 })

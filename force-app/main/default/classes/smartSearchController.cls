@@ -30,7 +30,7 @@ public class smartSearchController {
         system.debug('noticePer>>>'+noticePer);
         system.debug('skills>>>'+skills);
         
-        String qryPbProDetails='select id,name,Current_Location__c,Expected_CTC__c, Experience__c, Notice_Period__c, Skills__c, Designation__c, Annual_CTC__c,  Preferred_Location__c, Gmail__c, Phone__c from Candidate_Profile__c'; 
+        String qryPbProDetails='select id,name,Current_Location__c,Expected_CTC__c, Experience__c, Notice_Period__c, Skills__c, Designation__c, Annual_CTC__c, Gmail__c, Phone__c from Candidate_Profile__c'; 
         String qryPbProWhereClause=' where Notice_Period__c =\''+noticePer+'\'';
         
         //expectedCTC
@@ -254,7 +254,7 @@ public class smartSearchController {
     public static List<Candidate_Profile__c> getCandidateProfile(List<String> skillexp, boolean buttonSelected) {
         system.debug('skillexp>>>'+skillexp);
         system.debug('SelectedButton>>>'+buttonSelected);
-        String qryPbProDetails='select name,SkillSet_Experience__c,Candidate_Profile__c, Skill_Set_Experience__c.Candidate_Profile__r.Name, Skill_Set_Experience__c.Candidate_Profile__r.Email__c, Skill_Set_Experience__c.Candidate_Profile__r.Phone__c, Skill_Set_Experience__c.Candidate_Profile__r.Current_Location__c,Skill_Set_Experience__c.Candidate_Profile__r.Designation__c,Skill_Set_Experience__c.Candidate_Profile__r.Employers__c,Skill_Set_Experience__c.Candidate_Profile__r.Annual_CTC__c,Skill_Set_Experience__c.Candidate_Profile__r.Expected_CTC__c,Skill_Set_Experience__c.Candidate_Profile__r.Preferred_Location__c from Skill_Set_Experience__c where '; 
+        String qryPbProDetails='select name,SkillSet_Experience__c,Candidate_Profile__c, Skill_Set_Experience__c.Candidate_Profile__r.Name, Skill_Set_Experience__c.Candidate_Profile__r.Email__c, Skill_Set_Experience__c.Candidate_Profile__r.Phone__c, Skill_Set_Experience__c.Candidate_Profile__r.Current_Location__c,Skill_Set_Experience__c.Candidate_Profile__r.Designation__c,Skill_Set_Experience__c.Candidate_Profile__r.Employers__c,Skill_Set_Experience__c.Candidate_Profile__r.Annual_CTC__c,Skill_Set_Experience__c.Candidate_Profile__r.Expected_CTC__c from Skill_Set_Experience__c where '; 
         
         String qryPbProWhereClause = ' ' ;
         system.debug('qryPbProDetails'+qryPbProDetails);
@@ -292,7 +292,7 @@ public class smartSearchController {
             } 
         }
         
-        List<Candidate_Profile__c> candProfile = [select Name,Email__c,Phone__c,Current_Location__c,Designation__c,Employers__c,Expected_CTC__c,Annual_CTC__c,Preferred_Location__c,(select Name,SkillSet_Experience__c from Skill_Set_Experiences__r) from Candidate_Profile__c where Id  IN : skills];
+        List<Candidate_Profile__c> candProfile = [select Name,Email__c,Phone__c,Current_Location__c,Designation__c,Employers__c,Expected_CTC__c,Annual_CTC__c,(select Name,SkillSet_Experience__c from Skill_Set_Experiences__r) from Candidate_Profile__c where Id  IN : skills];
         
         system.debug('candProfile>'+candProfile);
         
@@ -370,7 +370,8 @@ public class smartSearchController {
         system.debug('CustomTeams__Teams__c>>>'+lstOfTeam);
         return lstOfTeam;
     }
-    
+
+
     @AuraEnabled        
     public static List<String> getSkillSetRatingPickList() {
         List<String> pickListValuesList = new List<String>();
@@ -390,12 +391,12 @@ public class smartSearchController {
         system.debug('candSkills>>>'+candSkills);
 
         //Querying skills from job posting
-        List <KTDO1__Skill_Set_Experience__c> lstOfValues = new  List <KTDO1__Skill_Set_Experience__c>();
-        List <KTDO1__Job_Posting__c> pauseCheck = [select Id from KTDO1__Job_Posting__c where Id =: jobId AND KTDO1__Job_OC_Status__c <> 'Pause'];
+        List <Skill_Set_Experience__c> lstOfValues = new  List <Skill_Set_Experience__c>();
+        List <Job_Posting__c> pauseCheck = [select Id from Job_Posting__c where Id =: jobId AND Job_OC_Status__c <> 'Pause'];
 
         if(pauseCheck.size() <> 0){
-        lstOfValues = [select Name,KTDO1__Skill_Experience_Level__c from KTDO1__Skill_Set_Experience__c where KTDO1__Job_Posting__c =: jobId];
-        system.debug('KTDO1__Skill_Set_Experience__c>>>'+lstOfValues);
+        lstOfValues = [select Name,Skill_Experience_Level__c from Skill_Set_Experience__c where Job_Posting__c =: jobId];
+        system.debug('Skill_Set_Experience__c>>>'+lstOfValues);
         }
 
         //Deserializing JSON Response
@@ -405,8 +406,8 @@ public class smartSearchController {
 
         //Assigning jobposting skill values to Map
         Map<String,String> jobSkillsMap = new Map<String,String>();
-        for(KTDO1__Skill_Set_Experience__c skillsName : lstOfValues){
-            jobSkillsMap.put(skillsName.Name, skillsName.KTDO1__Skill_Experience_Level__c);
+        for(Skill_Set_Experience__c skillsName : lstOfValues){
+            jobSkillsMap.put(skillsName.Name, skillsName.Skill_Experience_Level__c);
             system.debug('jobSkillsMap>>>'+jobSkillsMap);
         }
         Boolean skillsValues = false;
@@ -415,7 +416,7 @@ public class smartSearchController {
         for(Skill_Set_Experience__c skillsCompare : deserializeSkill){
             system.debug('skillsCompare>>'+skillsCompare);
             if(jobSkillsMap.containsKey(skillsCompare.Name) ){
-                if(jobSkillsMap.get(skillsCompare.Name) == skillsCompare.KTDO1__Skill_Experience_Level__c){
+                if(jobSkillsMap.get(skillsCompare.Name) == skillsCompare.Skill_Experience_Level__c){
                     skillsValues = true;
                 }
                 
@@ -429,11 +430,19 @@ public class smartSearchController {
     }
     
     @AuraEnabled        
-    public static List<Job_Posting__c> getClientPicklistValues() {
+    public static List<Account> getClientPicklistValues() {
         List <Job_Posting__c> lstOfValues = [Select Account__r.Name from Job_Posting__c ];
         system.debug('Job_Posting__c>>>'+lstOfValues);
-        return lstOfValues;
-    }    
+        Set<Id> accountSetId = new Set<Id>();
+        for(Integer i =0; i<lstOfValues.size(); i++){
+            accountSetId.add(lstOfValues[i].Account__c);
+           
+            system.debug('accountSetId>>>'+accountSetId);
+        }
+       List<Account> accountName = [Select Name from Account where Id IN : accountSetId];
+       system.debug('accountName>>>'+accountName);
+        return accountName;
+    }  
 
     @AuraEnabled        
     public static List<String> getJobTypePickListValues() {
@@ -471,13 +480,58 @@ public class smartSearchController {
         return pickListValuesList;
     }
 
+    @AuraEnabled        
+    public static List<String> getJobPostingDocList(String jobPostingId) {
+        System.debug('jobPostingId>>>'+jobPostingId);
+        List<String> jobPostingDocList = new List<String>();
+        List<Job_Posting_Document__c> lstOfValues = [Select Id from Job_Posting_Document__c where Job_Posting__c =: jobPostingId];
+        for(Job_Posting_Document__c values : lstOfValues){
+            jobPostingDocList.add(values.Id);
+        }
+        System.debug('jobPostingDocList>>>'+jobPostingDocList);
+        return jobPostingDocList;
+    }
+
+    @AuraEnabled        
+    public static List<String> getJobPostingSkillExpList(String jobPostingId) {
+        System.debug('jobPostingId>>>'+jobPostingId);
+        List<String> jobPostingSkillExpList = new List<String>();
+        List<Skill_Set_Experience__c> lstOfValues = [Select Id from Skill_Set_Experience__c where Job_Posting__c =: jobPostingId];
+        for(Skill_Set_Experience__c values : lstOfValues){
+            jobPostingSkillExpList.add(values.Id);
+        }
+        System.debug('jobPostingSkillExpList>>>'+jobPostingSkillExpList);
+        return jobPostingSkillExpList;
+    }
+
+    @AuraEnabled        
+    public static CustomTeams__Teams__c getTeamBasedOnAccEdit(String jobPostingId) {
+        system.debug('jobPostingId>>>'+jobPostingId);
+        Job_Posting__c team = [Select Teams__c from Job_Posting__c where Id =: jobPostingId];
+        CustomTeams__Teams__c lstOfTeam = [Select Id,Name from CustomTeams__Teams__c where Id =: team.Teams__c];
+        system.debug('CustomTeams__Teams__c>>>'+lstOfTeam);
+        return lstOfTeam;
+    }
+
+
     @AuraEnabled
     public static List<Skill_Set_Experience__c> saveCandidateProfile(Candidate_Profile__c candFields, List<Skill_Set_Experience__c> skills, List<Roll_and_Responsibilities__c> rolesAndResp){
         system.debug('candFields>>'+candFields);
         system.debug('skills>>'+skills);
         system.debug('rolesAndResp>>'+rolesAndResp);
-        insert candFields; 
+       
+        String candId = candFields.Id;
+        system.debug('candId>>'+candId);
+
+        //If candidate Id is present then update the existing record else create new
+        if(candId != null){
+            update candFields; 
+        }else{
+            insert candFields;
+        }
+        //insert candFields;
         system.debug('candFields>>'+candFields);
+        //Removing duplicate skill id
         Set<Id> skillSet = new Set<Id>();
         
         for(Integer i =0; i<skills.size(); i++){
@@ -486,13 +540,16 @@ public class smartSearchController {
 
         }
         system.debug('skillSet'+skillSet);
+
+        //Getting Skill name with skill id
         List<Skill_Set__c> skillName = [Select Name from Skill_Set__c where Id IN : skillSet];
         system.debug('skillName'+skillName);
+        //Pushing skill name to skills object
         for(Integer i=0; i<skillName.size(); i++){
             skills[i].Name=(skillName[i].Name);
         }
         system.debug('skills>>'+skills);
-        
+        //Removing Duplicate id
         Set<Id> rolesSet = new Set<Id>();
         
         for(Integer i =0; i<rolesAndResp.size(); i++){
@@ -501,6 +558,7 @@ public class smartSearchController {
 
         }
         system.debug('rolesSet>>'+rolesSet);
+        //Querying Roles and Resp  name with filtered Master id
         List<Rolls_and_Responsibilities_Master__c> rolesAndRespName = [Select Name from Rolls_and_Responsibilities_Master__c where Id IN : rolesSet];
         system.debug('rolesAndRespName>>>'+rolesAndRespName);
         for(Integer i=0; i<rolesAndRespName.size(); i++){
@@ -564,7 +622,7 @@ public class smartSearchController {
             docMasterList[i].Document_Master__c=(docMasterNameId[i].Id);
             docMasterList[i].Name=(docMasterNameId[i].Name);
             docMasterList[i].Job_Posting__c=jobPostingfields.Id;
-            system.debug('docMasterList 1097>>'+docMasterList);
+            system.debug('docMasterList>>'+docMasterList);
         }
 
         system.debug('docMasterList>>'+docMasterList);
@@ -575,27 +633,114 @@ public class smartSearchController {
     }
 
     @AuraEnabled
+    public static void updateJobPosting(Job_Posting__c jobPostingfields,List<Skill_Set_Experience__c> skillsList, List<Job_Posting_Document__c> docMasterList,String updateJobPosId){
+        system.debug('jobPostingfields>>>'+jobPostingfields);
+        system.debug('skillsList>>>'+skillsList);
+        system.debug('docMasterList>>>'+docMasterList);
+        system.debug('updateJobPosId>>>'+updateJobPosId);
+        
+        //UPDATE TEAM START
+        if(jobPostingfields.Teams__c != null){
+            Job_Posting__c updateValues = new Job_Posting__c(Id=updateJobPosId); 
+            updateValues.Teams__c = jobPostingfields.Teams__c;
+            update updateValues;
+        }
+        //UPDATE TEAM ENDS
+        
+        //INSERT SKILL LIST START
+        if(skillsList.size() <> 0){
+            Set<Id> skillSet = new Set<Id>();
+            for(Integer i =0; i<skillsList.size(); i++){
+                skillSet.add(skillsList[i].Skill_Set__c);
+            }
+            List<Skill_Set__c> skillName = [Select Name from Skill_Set__c where Id IN : skillSet];
+            system.debug('skillName'+skillName);
+            for(Integer i=0; i<skillName.size(); i++){
+                skillsList[i].Name=(skillName[i].Name);
+            }
+            system.debug('skillsList>>'+skillsList);
+            
+            for(Skill_Set_Experience__c skills : skillsList){
+                skills.Job_Posting__c = updateJobPosId;
+                system.debug('skills>>'+skills);
+            }
+            insert skillsList;
+        }
+        //INSERT SKILL LIST ENDS
+      
+        //INSERT DOCUMENT MASTER LIST START
+        if(docMasterList.size() <> 0){
+        Set<Id> docMasterSet = new Set<Id>();
+        for(Integer i =0; i<docMasterList.size(); i++){
+            docMasterSet.add(docMasterList[i].Document_Master__c);
+            system.debug('docMasterSet>>'+docMasterSet);
+        }
+        List<Document_Master__c> docMasterNameId = [Select Id,Name from Document_Master__c where Id IN : docMasterSet];
+        for(Integer i=0; i<docMasterNameId.size(); i++){
+            docMasterList[i].Document_Master__c=(docMasterNameId[i].Id);
+            docMasterList[i].Name=(docMasterNameId[i].Name);
+            docMasterList[i].Job_Posting__c=updateJobPosId;
+            system.debug('docMasterList 1097>>'+docMasterList);
+        }
+
+        system.debug('docMasterList>>'+docMasterList);
+        insert docMasterList;
+        }
+        //INSERT DOCUMENT MASTER LIST ENDS
+    }
+    
+    @AuraEnabled
     public static List<Skill_Set_Experience__c> getSkillName( List<Skill_Set_Experience__c> skillsList){
         
         system.debug('skillsList>>'+skillsList);
-      
-      
+        
+        
         Set<Id> skillSet = new Set<Id>();
         
         for(Integer i =0; i<skillsList.size(); i++){
             system.debug(skillsList[i].Skill_Set__c);
             skillSet.add(skillsList[i].Skill_Set__c);
-
+            
         }
         system.debug('skillSet'+skillSet);
         List<Skill_Set__c> skillName = [Select Name from Skill_Set__c where Id IN : skillSet];
-        system.debug('skillName'+skillName);
-        for(Integer i=0; i<skillName.size(); i++){
-            skillsList[i].Name=(skillName[i].Name);
+        system.debug('skillName>>>'+skillName);
+        // for(Integer i=0; i<skillName.size(); i++){
+        //     skillsList[i].Name=(skillName[i].Name);
+        // }
+        // system.debug('skillsList>>'+skillsList);
+        for(Skill_Set_Experience__c skillsName : skillsList){
+            for(Skill_Set__c skillsetName :skillName )
+            if(skillsName.Skill_Set__c == skillsetName.Id){
+                skillsName.Name = skillsetName.Name;
+            }
+            
         }
         system.debug('skillsList>>'+skillsList);
-        
         return skillsList;
+    }
+
+    //Resume Upload
+
+    @AuraEnabled
+    public static string getAccessToken(){
+        try {
+            return GoogleDriveController.getAccessToken();
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+    
+    @AuraEnabled
+    public static string gdriveDocUpload(String candidateName, String attachmentId,String uploadedDocId){
+        try {
+            System.debug(candidateName+'##'+attachmentId+'###'+uploadedDocId);
+             
+            String returnResponse = GoogleDriveController.gDriveResumeUpload(candidateName, attachmentId, uploadedDocId);
+            return returnResponse;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
     }
 
 }

@@ -1,5 +1,7 @@
 ({
     doInit: function (component, event, helper, page) {
+        var jobPost = component.get("v.jobApplication");
+        console.log(jobPost);
         var action = component.get("v.JobAppdetails");
         console.log(component.get("v.JobAppdetails"));
 
@@ -33,9 +35,9 @@
     },
 
     toggle: function (component, event, helper) {
-        //alert('toggle');
+        // alert('toggle');
 
-        var items = component.get("v.POList");
+        var items = component.get("v.jobApplication");
         //alert('items ::'+JSON.stringify(items));
         console.log(JSON.stringify(items));
         var chevronright = component.find('chevronright');
@@ -61,28 +63,37 @@
             items.expanded = false;
             component.set("v.tablesize", false);
         }
-        component.set("v.POList", items);
+        component.set("v.jobApplication", items);
+        // alert(JSON.stringify(component.get('v.jobApplication')));
     },
     handleClick: function (component, event, helper) {
+
         var buttonType = event.getSource().get("v.label");
         //alert('buttonType ::'+buttonType);
         if (buttonType == 'Interview Cleared') {
+            //alert('Inside');
             component.set("v.ShowUploadDocuments", true);
 
 
         } else if (buttonType == 'On Interview Process') {
-            var items = component.get("v.POList");
-            console.log(JSON.stringify(component.get("v.POList")));
-            var jobposting = JSON.stringify(component.get("v.POList"));
+            //alert('Inside');
+            component.set("v.ShowScheduleInterviewButton", true);
+
+
+        }
+        /* else if (buttonType == 'On Interview Process') {
+            var items = component.get("v.jobApplication");
+            console.log(JSON.stringify(component.get("v.jobApplication")));
+            var jobposting = JSON.stringify(component.get("v.jobApplication"));
             //alert(jobposting);
 
             var obj = JSON.parse(jobposting);
             console.log(obj);
-            console.log(obj.JobAppication.KTDO1__Job_Posting__c);
+            console.log(obj.JobAppication.Job_Posting__c);
             component.set("v.ShowInterviewScheduled", true);
             var pickvar = component.get("c.getContact");
             pickvar.setParams({
-                'jobId': obj.JobAppication.KTDO1__Job_Posting__c
+                'jobId': obj.JobAppication.Job_Posting__c
 
 
             });
@@ -106,17 +117,13 @@
             component.set("v.ShowResubmissionButton", true);
             component.set("v.ShowScheduleInterviewButton", false);
         }
-        else if (buttonType == 'Lead Approved') {
-
-            component.set("v.ShowResubmissionButton", true);
-        }
         else if (buttonType == 'Offer Letter') {
             component.set("v.ShowConfirmationMessage", true);
 
         }
 
         var buttonTypeId = event.getSource().get("v.value");
-        // alert('buttonTypeId ::'+buttonTypeId);
+        //alert('buttonTypeId ::'+buttonTypeId);
         helper.handleClickHelper(component, event, helper, buttonType, buttonTypeId);
     },
     handleViewDocuments: function (component, event, helper) {
@@ -304,7 +311,7 @@
         console.log(JSON.stringify(applicationId));
 
         //var appId = component.get("v.commentsList");
-        //console.log(JSON.stringify(appId[0].KTDO1__Job_Application__c));
+        //console.log(JSON.stringify(appId[0].Job_Application__c));
         //alert(candName.JobAppication.Id);
         var comment = component.get("v.comments");
         console.log(JSON.stringify(component.get("v.comments")));
@@ -327,7 +334,7 @@
             });
             action.setCallback(this, function (response) {
                 var state = response.getState();
-                //alert('state>>'+state);
+                alert('state>>' + state);
                 if (state === 'SUCCESS') {
 
                     console.log(response.getReturnValue());
@@ -335,9 +342,9 @@
                     console.log(component.get("v.commentsList"));
 
                     component.set("v.viewComments", true);
-                    component.set("v.comments", '');
+                    //component.set("v.comments", '');
                     //url redirect
-                    // window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/KTDO1__Home_Page");
+                    // window.location.replace("https://techkasetti-dev-org-dev-ed.lightning.force.com/lightning/n/Home_Page");
                 }
                 else if (state === 'ERROR') {
                     //var list = response.getReturnValue();
@@ -387,18 +394,57 @@
     createOffer: function (component, event, helper) {
         var jobAppId = event.getSource().get("v.value");
         console.log('jobAppId' + jobAppId);
+        jobAppId = jobAppId.slice(0, -3); //Important
+        let urlbase = new URL('https://' + (window.location.hostname));
+        urlbase = new URL('/one/one.app', urlbase);
+        const uri = (window.location.hostname).split(".");
+        console.log(uri);
+        let path = new URL('https://' + uri[0] + '--sdoc.vf.force.com')
+        console.log(path);
+        path = new URL('/apex/SDCreate1', path);
+        console.log(path);
+        path.searchParams.set('id', String(jobAppId));
+        path.searchParams.set('Object', 'Job_Application__c');
+        console.log('Final Ptah' + path);
+        const sdoc = { componentDef: "one:alohaPage", attributes: { address: path }, state: {} };
+        console.log(urlbase);
+        urlbase.hash = '#' + window.btoa((JSON.stringify(sdoc)).replaceAll(/\s/g, ''));
+        console.log(urlbase);
+        window.open(urlbase);
 
-        window.open('/apex/SDOC__SDCreate1?Id=' + jobAppId);
-
-        /*var evt = $A.get("e.force:navigateToComponent");
+    },
+    handleScheduleInterview: function (component, event, helper) {
+        var jobAppId = event.getSource().get("v.value");
+        //alert(jobAppId);
+        var batchId = event.getSource().get("v.name");
+        var evt = $A.get("e.force:navigateToComponent");
         evt.setParams({
-            componentDef : "SDTemplateCSSComponent	",
+            componentDef: "c:ZoomMeetingShedule",
             componentAttributes: {
-                jobAppId : jobAppId
+                batchId: jobAppId
             }
         });
-        evt.fire();*/
+        evt.fire();
 
+        //  var action = component.get("c.scheduleMeeting");
+        // action.setCallback(this, function (response) {
+        //     var state = response.getState();
+        //     if (state === 'SUCCESS') {
+
+        //         //var test = component.set("v.parentList", response.getReturnValue());
+        //         alert('sheduleZooomMeeting>>'+JSON.stringify(response.getReturnValue()));                
+        //     }
+        //     else if (state === 'ERROR') {
+
+        //         var toastEvent = $A.get("e.force:showToast");
+        //         toastEvent.setParams({
+        //             "title": "ERROR!",
+        //             "message": "Error Occured Shedule Zoom Meeting"
+        //         });
+        //         toastEvent.fire();
+        //     }
+        // })
+        // $A.enqueueAction(action);
     }
 
 })

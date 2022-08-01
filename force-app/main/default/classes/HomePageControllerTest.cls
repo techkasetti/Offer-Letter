@@ -5,7 +5,6 @@ public with sharing class HomePageControllerTest {
     {
         Account account = new Account();
         account.Name = 'Burlingt sew';
-        account.KTDO1__Billing_City__c = 'pune';
         insert account;
         
         Contact con = new Contact();
@@ -35,38 +34,35 @@ public with sharing class HomePageControllerTest {
         
               
         //HomePageController homePageContrl = new HomePageController();
-        KTDO1__Job_Posting__c jobPost = new KTDO1__Job_Posting__c();
+        Job_Posting__c jobPost = new Job_Posting__c();
         jobPost.Name = 'Job Sony';
-        jobPost.KTDO1__Posting_Due_Date__c =  Date.newInstance(2022, 06, 30);
-        jobPost.KTDO1__Job_OC_Status__c = 'Open';
-        jobPost.KTDO1__No_Of_Candidate_Selected__c = 10;
-        //jobPost.KTDO1__Contact__c= con.Id;
-        jobPost.KTDO1__Teams__c = team.Id;
-        jobPost.KTDO1__Account__c = account.Id;
+        jobPost.Posting_Due_Date__c =  Date.newInstance(2022, 06, 30);
+        jobPost.Job_OC_Status__c = 'Open';
+        jobPost.No_Of_Candidate_Selected__c = 10;
+        //jobPost.Contact__c= con.Id;
+        jobPost.Teams__c = team.Id;
+        jobPost.Account__c = account.Id;
         insert jobPost;
         
-        KTDO1__Job_Posting__c jobPost2 = new KTDO1__Job_Posting__c();
+        Job_Posting__c jobPost2 = new Job_Posting__c();
         jobPost2.Name = 'Job Sony';
-        jobPost2.KTDO1__Posting_Due_Date__c =  Date.newInstance(2022, 06, 07);
-        jobPost2.KTDO1__Job_OC_Status__c = 'Open';
-        jobPost2.KTDO1__No_Of_Candidate_Selected__c = 10;
-        //jobPost2.KTDO1__Contact__c= con.Id;
-        jobPost2.KTDO1__Teams__c = team.Id;
+        jobPost2.Posting_Due_Date__c =  Date.newInstance(2022, 06, 07);
+        jobPost2.Job_OC_Status__c = 'Open';
+        jobPost2.No_Of_Candidate_Selected__c = 10;
+        //jobPost2.Contact__c= con.Id;
+        jobPost2.Teams__c = team.Id;
         
         insert jobPost2;
        
         //String companyFilter = 'Sony India';
         //String postStatus = 'Open';
-        HomePageController.getJobPosting(account.Name,jobPost.KTDO1__Job_OC_Status__c);
+        HomePageController.getJobPosting(account.Name,jobPost.Job_OC_Status__c);
         HomePageController.getClientList();
         HomePageController.getStatusList();
         
        //HomePageController homePageContrl = new HomePageController();
-        Schema.DescribeFieldResult statusfield = KTDO1__Job_Posting__c.KTDO1__Job_OC_Status__c.getDescribe();
+        Schema.DescribeFieldResult statusfield = Job_Posting__c.Job_OC_Status__c.getDescribe();
         Map<String,String> statusList = HomePageController.getPickListValuesIntoMap(statusfield);
         
     }
-    
-    
-    
 }

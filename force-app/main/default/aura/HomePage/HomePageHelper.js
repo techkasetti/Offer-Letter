@@ -54,11 +54,14 @@
 	getRecords: function (component, event, helper) {
 		var companyFilter = component.get("v.selectedClient");
 		var postStatus = component.get("v.selectedStatus");
-		var action = component.get("c.getJobPosting");
+		//var action = component.get("c.getJobPosting");
+		var action = component.get("c.togetJobPostings");
 		console.log(companyFilter + '' + postStatus);
 		action.setParams({
 			companyFilter: companyFilter,
-			postStatus: postStatus
+			postStatus: postStatus,
+            buttonType:'',
+            buttonTypeId:'',
 		});
 
 		action.setCallback(this, function (response) {
@@ -75,7 +78,11 @@
 				storeResponseList = JSON.stringify(storeResponse);
 				console.log('storeResponseList ::: ' + storeResponseList);
 				component.set("v.jobPostings", storeResponse);
-				// alert(JSON.stringify(component.get("v.jobPostings")));
+                var jobPostingName = component.get("v.jobPostings");
+				console.log(jobPostingName);
+                /*component.set("v.jobApplications", storeResponseList);
+                var jobApplicationName = component.get("v.jobApplications");
+                console.log(jobApplicationName);*/
 			}
 			else {
 				alert('there is no record to display');

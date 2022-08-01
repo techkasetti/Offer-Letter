@@ -5,7 +5,6 @@ public with sharing class JobProfileCntrlTest {
 
         Account account = new Account();
         account.Name = 'Burlingt sew';
-        account.KTDO1__Billing_City__c = 'pune';
         insert account;
         
         Contact con = new Contact();
@@ -27,32 +26,32 @@ public with sharing class JobProfileCntrlTest {
         team.Name = 'Team Delloite';
         insert team;
 
-            KTDO1__Job_Posting__c jobPost = new KTDO1__Job_Posting__c();
+            Job_Posting__c jobPost = new Job_Posting__c();
             jobPost.Name = 'Job Sony';
-            jobPost.KTDO1__Posting_Due_Date__c =  Date.newInstance(2022, 06, 30);
-            jobPost.KTDO1__Job_OC_Status__c = 'Open';
-            jobPost.KTDO1__No_Of_Candidate_Selected__c = 10;
-            //jobPost.KTDO1__Contact__c= con.Id;
-            jobPost.KTDO1__Teams__c = team.Id;
-            jobPost.KTDO1__Account__c = account.Id;
+            jobPost.Posting_Due_Date__c =  Date.newInstance(2022, 06, 30);
+            jobPost.Job_OC_Status__c = 'Open';
+            jobPost.No_Of_Candidate_Selected__c = 10;
+            //jobPost.Contact__c= con.Id;
+            jobPost.Teams__c = team.Id;
+            jobPost.Account__c = account.Id;
             insert jobPost;
 
-            KTDO1__Candidate_Profile__c candProfile = new KTDO1__Candidate_Profile__c();
+            Candidate_Profile__c candProfile = new Candidate_Profile__c();
             candProfile.Name = 'Alex Hakes';
-            candProfile.KTDO1__Email__c = 'alesx@gmail.com';
+            candProfile.Email__c = 'alesx@gmail.com';
             insert candProfile;
 
-            KTDO1__Job_Application__c jobApp = new KTDO1__Job_Application__c();
+            Job_Application__c jobApp = new Job_Application__c();
             jobApp.Name = 'Alex hakes';
-            jobApp.KTDO1__Client_Approval_Process__c = 'Deloitte';
-            jobApp.KTDO1__Profile_Status__c = 'Open';
-            jobApp.KTDO1__Candidate_Profile__c = candProfile.Id;
-            jobApp.KTDO1__Job_Posting__c = jobPost.Id;
+            jobApp.Client_Approval_Process__c = 'Deloitte';
+            jobApp.Profile_Status__c = 'Open';
+            jobApp.Candidate_Profile__c = candProfile.Id;
+            jobApp.Job_Posting__c = jobPost.Id;
             insert jobApp;
             
-            KTDO1__Comments__c comments = new KTDO1__Comments__c();
-            comments.KTDO1__Job_Application__c = jobApp.Id;
-            insert comments;
+            // Comments__c comments = new Comments__c();
+            // comments.Job_Application__c = jobApp.Id;
+            // insert comments;
 
 
 
@@ -64,8 +63,8 @@ public with sharing class JobProfileCntrlTest {
             JobProfileCntrl.getContact(jobPost.Id);
             JobProfileCntrl.setL1InterviewScheduled(jobApp.Id);
             JobProfileCntrl.hideProfileStatus();
-            JobProfileCntrl.saveComment(jobApp.Id,comment);
-            JobProfileCntrl.getComments(jobApp.Id);
+            //JobProfileCntrl.saveComment(jobApp.Id,comment);
+            //JobProfileCntrl.getComments(jobApp.Id);
             //JobProfileCntrl.saveResubmitProfile()
  
     }
@@ -75,7 +74,6 @@ public with sharing class JobProfileCntrlTest {
 
         Account account = new Account();
         account.Name = 'Burlingt sew';
-        account.KTDO1__Billing_City__c = 'pune';
         insert account;
         
         Contact con = new Contact();
@@ -97,32 +95,32 @@ public with sharing class JobProfileCntrlTest {
         team.Name = 'Team Delloite';
         insert team;
 
-            KTDO1__Job_Posting__c jobPost = new KTDO1__Job_Posting__c();
+            Job_Posting__c jobPost = new Job_Posting__c();
             jobPost.Name = 'Job Sony';
-            jobPost.KTDO1__Posting_Due_Date__c =  Date.newInstance(2022, 06, 30);
-            jobPost.KTDO1__Job_OC_Status__c = 'Open';
-            jobPost.KTDO1__No_Of_Candidate_Selected__c = 10;
-            //jobPost.KTDO1__Contact__c= con.Id;
-            jobPost.KTDO1__Teams__c = team.Id;
-            jobPost.KTDO1__Account__c = account.Id;
+            jobPost.Posting_Due_Date__c =  Date.newInstance(2022, 06, 30);
+            jobPost.Job_OC_Status__c = 'Open';
+            jobPost.No_Of_Candidate_Selected__c = 10;
+            //jobPost.Contact__c= con.Id;
+            jobPost.Teams__c = team.Id;
+            jobPost.Account__c = account.Id;
             insert jobPost;
 
-            KTDO1__Candidate_Profile__c candProfile = new KTDO1__Candidate_Profile__c();
+            Candidate_Profile__c candProfile = new Candidate_Profile__c();
             candProfile.Name = 'Alex Hakes';
-            candProfile.KTDO1__Email__c = 'alesx@gmail.com';
+            candProfile.Email__c = 'alesx@gmail.com';
             insert candProfile;
 
-            KTDO1__Job_Application__c jobApp = new KTDO1__Job_Application__c();
+            Job_Application__c jobApp = new Job_Application__c();
             jobApp.Name = 'Alex hakes';
-            jobApp.KTDO1__Client_Approval_Process__c = 'Deloitte';
-            jobApp.KTDO1__Profile_Status__c = 'Open';
-            jobApp.KTDO1__Candidate_Profile__c = candProfile.Id;
-            jobApp.KTDO1__Job_Posting__c = jobPost.Id;
+            jobApp.Client_Approval_Process__c = 'Deloitte';
+            jobApp.Profile_Status__c = 'Open';
+            jobApp.Candidate_Profile__c = candProfile.Id;
+            jobApp.Job_Posting__c = jobPost.Id;
             insert jobApp;
             
-            KTDO1__Comments__c comments = new KTDO1__Comments__c();
-            comments.KTDO1__Job_Application__c = jobApp.Id;
-            insert comments;
+            // Comments__c comments = new Comments__c();
+            // comments.Job_Application__c = jobApp.Id;
+            // insert comments;
 
 
 

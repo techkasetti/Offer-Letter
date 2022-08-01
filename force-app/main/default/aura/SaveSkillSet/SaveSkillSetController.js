@@ -1,25 +1,39 @@
 ({
-    
-    doInit : function(component, event,helper,page) 
-    {   
+
+    doInit: function (component, event, helper, page) {
+
+        var myPageRef = component.get("v.pageReference");
+        var recordId = myPageRef.state.c__candDocParserId;
+        if(recordId){
+            component.set("v.candRecordId", recordId);
+            console.log(component.get("v.candEditId"));
+        }else {
+            var candIdEdit = component.get("v.candIdEdit");
+            //alert('candIdEdit>>>'+candIdEdit);
+            console.log(candIdEdit);
+            component.set("v.candRecordId", candIdEdit);
+        }
         
-        component.set("v.SearchUserKeyWord","");
+       
+
+        component.set("v.SearchUserKeyWord", "");
         //component.set("v.selectedUserRecord",[]);
         
-        component.set("v.SearchUserKeyWord1","");
-        component.set("v.selectedLocationRecord",[]);
-        
-        component.set("v.SearchUserKeyWord2","");
-        
+
+        component.set("v.SearchUserKeyWord1", "");
+        component.set("v.selectedLocationRecord", []);
+
+        component.set("v.SearchUserKeyWord2", "");
+
         var action = component.get("c.getNoticePerPickListValues");
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
-                var test =component.set("v.listOfNoticePeriod",response.getReturnValue());
+            if (state === 'SUCCESS') {
+                var test = component.set("v.listOfNoticePeriod", response.getReturnValue());
                 // alert('picklist>>'+JSON.stringify(component.get('v.listOfNoticePeriod')));                
             }
-            else if(state === 'ERROR'){
-                
+            else if (state === 'ERROR') {
+
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -29,16 +43,16 @@
             }
         })
         $A.enqueueAction(action);
-        
-        
+
+
         var action = component.get("c.getDepartmentPickListValues");
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
-                var test =component.set("v.parentList",response.getReturnValue());
+            if (state === 'SUCCESS') {
+                var test = component.set("v.parentList", response.getReturnValue());
                 // alert('picklist>>'+JSON.stringify(component.get('v.listOfNoticePeriod')));                
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -48,17 +62,17 @@
             }
         })
         $A.enqueueAction(action);
-        
+
         //helper.getSkillset(component,event,helper);
-        
+
         var action = component.get("c.getIndustryPicklistValues");
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
-                var test =component.set("v.listOfIndustries",response.getReturnValue());
+            if (state === 'SUCCESS') {
+                var test = component.set("v.listOfIndustries", response.getReturnValue());
                 // alert('picklist>>'+JSON.stringify(component.get('v.listOfNoticePeriod')));                
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -68,15 +82,15 @@
             }
         })
         $A.enqueueAction(action);
-        
+
         var action = component.get("c.getFunctionalAreaPicklistValues");
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
-                var test =component.set("v.listOfFunctionalAreas",response.getReturnValue());
+            if (state === 'SUCCESS') {
+                var test = component.set("v.listOfFunctionalAreas", response.getReturnValue());
                 // alert('picklist>>'+JSON.stringify(component.get('v.listOfNoticePeriod')));                
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -86,15 +100,15 @@
             }
         })
         $A.enqueueAction(action);
-        
+
         var action = component.get("c.getDesignationPicklistValues");
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
-                var test =component.set("v.listOfDesignation",response.getReturnValue());
+            if (state === 'SUCCESS') {
+                var test = component.set("v.listOfDesignation", response.getReturnValue());
                 // alert('picklist>>'+JSON.stringify(component.get('v.listOfNoticePeriod')));                
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -104,15 +118,15 @@
             }
         })
         $A.enqueueAction(action);
-        
+
         var action = component.get("c.getStreamPicklistValues");
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
-                var test =component.set("v.listOfStreams",response.getReturnValue());
+            if (state === 'SUCCESS') {
+                var test = component.set("v.listOfStreams", response.getReturnValue());
                 // alert('picklist>>'+JSON.stringify(component.get('v.listOfNoticePeriod')));                
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -122,15 +136,15 @@
             }
         })
         $A.enqueueAction(action);
-        
+
         var action = component.get("c.getPGStreamPicklistValues");
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
-                var test =component.set("v.listOfPGStreams",response.getReturnValue());
+            if (state === 'SUCCESS') {
+                var test = component.set("v.listOfPGStreams", response.getReturnValue());
                 // alert('picklist>>'+JSON.stringify(component.get('v.listOfNoticePeriod')));                
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -140,19 +154,19 @@
             }
         })
         $A.enqueueAction(action);
-        
-        
-        
+
+
+
         var action = component.get("c.getSkillSetRatingPickList");
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
+            if (state === 'SUCCESS') {
                 //alert("Success");
-                component.set("v.listOfRatings",response.getReturnValue());
+                component.set("v.listOfRatings", response.getReturnValue());
                 console.log(response.getReturnValue());
                 //alert('picklist>>'+component.get('v.skillSetList'));                
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -162,26 +176,26 @@
             }
         })
         $A.enqueueAction(action);
-        
+
         //To get client Picklist values
         var action = component.get("c.getClientPicklistValues");
         var clients = component.get("v.clientList");
         //component.set("v.jobPostingList",null);
         console.log(JSON.stringify(component.get("v.clientList")));
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            var result= response.getReturnValue();
+            var result = response.getReturnValue();
             console.log(result);
-            if(state === 'SUCCESS'){
-                for(let i=0; i<result.length;i++){
-                    clients.push({"value":result[i].KTDO1__Account__r.Id, "label":result[i].KTDO1__Account__r.Name});
+            if (state === 'SUCCESS') {
+                for (let i = 0; i < result.length; i++) {
+                    clients.push({ "value": result[i].Id, "label": result[i].Name });
                 }
-                component.set("v.clientList",clients);
-                
-                console.log(component.get("v.clientList"));     
-                
+                component.set("v.clientList", clients);
+
+                console.log(component.get("v.clientList"));
+
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -190,8 +204,8 @@
                 toastEvent.fire();
             }
         })
-        $A.enqueueAction(action); 
-        
+        $A.enqueueAction(action);
+
         //To get Rolls And Responsibilities Picklist
         /*var action = component.get("c.getTypePicklistValues");
         action.setCallback(this, function(response) {
@@ -210,16 +224,16 @@
             }
         })
         $A.enqueueAction(action);*/
-        
+
         //To get Education Type Picklist Values
         var action = component.get("c.getEdTypePicklistValues");
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
-                var test =component.set("v.listOfEdTypes",response.getReturnValue());
+            if (state === 'SUCCESS') {
+                var test = component.set("v.listOfEdTypes", response.getReturnValue());
                 // alert('picklist>>'+JSON.stringify(component.get('v.listOfNoticePeriod')));                
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -229,17 +243,17 @@
             }
         })
         $A.enqueueAction(action);
-        
-        
+
+
         //To get PG Education Type Picklist Values
         var action = component.get("c.getPGEdTypePicklistValues");
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
-                var test =component.set("v.listOfPGEdTypes",response.getReturnValue());
+            if (state === 'SUCCESS') {
+                var test = component.set("v.listOfPGEdTypes", response.getReturnValue());
                 // alert('picklist>>'+JSON.stringify(component.get('v.listOfNoticePeriod')));                
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -250,13 +264,15 @@
         })
         $A.enqueueAction(action);
     },
-    
-    
-    
-    openModel: function(component, event, helper) {
-        // Set isModalOpen attribute to true       
+
+
+
+    openModel: function (component, event, helper) {
+        // Set isModalOpen attribute to true    
+        component.set("v.showSpinner", true);
         component.set("v.showModal", true);
-        
+        component.set("v.showSpinner", false);
+
         //To get the selected picklist value
         var candProfile = event.getSource().get("v.value");
         //var candprofile = component.get("v.candidateProfile");
@@ -264,21 +280,21 @@
         // alert('candprofile'+candprofile);
         var jobApp = component.get("v.jobApplication");
         jobApp.push(candprofile.Name);
-        component.set("v.jobApplication",jobApp);
-        console.log(component.get("v.jobApplication"));  
+        component.set("v.jobApplication", jobApp);
+        console.log(component.get("v.jobApplication"));
 
         var skillsList = component.get("v.skillsList");
         console.log(skillsList);
-        var action = component.get("c.getSkillName");      
-        
+        var action = component.get("c.getSkillName");
+
         action.setParams({
-          
+
             'skillsList': skillsList
-            
-        }); 
-        action.setCallback(this, function(response) {
+
+        });
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
+            if (state === 'SUCCESS') {
                 var storeResponse = response.getReturnValue();
                 console.log(storeResponse);
                 var skills = component.get("v.skillsListName");
@@ -286,35 +302,34 @@
                     skills.push(storeResponse[i]);
                     console.log(skills);
                 }*/
-                component.set("v.skillsListName",storeResponse);
+                component.set("v.skillsListName", storeResponse);
                 var skillsName = component.get("v.skillsListName");
                 console.log(skillsName);
-                }
-                else if(state === 'ERROR'){
-                    var toastEvent = $A.get("e.force:showToast");
-                    toastEvent.setParams({
-                        "title": "Error!",
-                        "message": "Error Occured!!"
-                    });
-                    toastEvent.fire();
-                    
-                }
-            })
-            $A.enqueueAction(action);  
+            }
+            else if (state === 'ERROR') {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Error!",
+                    "message": "Error Occured!!"
+                });
+                toastEvent.fire();
+
+            }
+        })
+        $A.enqueueAction(action);
     },
-    
-    hideModel: function(component, event, helper) {
+
+    hideModel: function (component, event, helper) {
         // Set isModalOpen attribute to false  
         component.set("v.showModal", false);
     },
-    
-    search : function(component, event, helper) {
-        
-        
+
+    search: function (component, event, helper) {
+
+
         var expAnnualSalary1 = component.find('input7').get('v.value');
         var expAnnualSalary2 = component.find('input9').get('v.value');
-        if(expAnnualSalary1 > expAnnualSalary2)
-        {
+        if (expAnnualSalary1 > expAnnualSalary2) {
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
                 title: "Warning",
@@ -323,14 +338,13 @@
             });
             toastEvent.fire();
             return;
-        }   
-        var exp = expAnnualSalary1 +  ',' + expAnnualSalary2 ;  
-        
+        }
+        var exp = expAnnualSalary1 + ',' + expAnnualSalary2;
+
         //experience
         var minExperience = component.find('input4').get('v.value');
         var maxExperience = component.find('input5').get('v.value');
-        if(minExperience > maxExperience)
-        {
+        if (minExperience > maxExperience) {
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
                 title: "Warning",
@@ -339,14 +353,13 @@
             });
             toastEvent.fire();
             return;
-        }   
-        
+        }
+
         //currentLocation
         var curLocation = component.find('input11').get('v.value');
-        
+
         //notice period
-        if((component.get("v.selectedNoticePeriod") =='NULL') || (component.get("v.selectedNoticePeriod") ==''))
-        {
+        if ((component.get("v.selectedNoticePeriod") == 'NULL') || (component.get("v.selectedNoticePeriod") == '')) {
             var toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
                 title: "Warning",
@@ -355,302 +368,303 @@
             });
             toastEvent.fire();
             return;
-        }   
-        
-        
-        
-        
+        }
+
+
+
+
         //preferred Location
         var preLocation = component.get("v.selectedLocationRecord");
         //alert('preLocation>>'+JSON.stringify(preLocation));
-        
-        
-        
+
+
+
         var action = component.get("c.getCustomerProfile");
         action.setParams({
-            'curLocation': curLocation ,
-            'expCTC':  exp ,
-            'minExperience': minExperience ,
-            'maxExperience': maxExperience ,
-            'noticePer': component.get("v.selectedNoticePeriod") ,
-            'skills': userList ,
+            'curLocation': curLocation,
+            'expCTC': exp,
+            'minExperience': minExperience,
+            'maxExperience': maxExperience,
+            'noticePer': component.get("v.selectedNoticePeriod"),
+            'skills': userList,
             'preLocation': preLocation
-        }); 
-        action.setCallback(this, function(response) {
+        });
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
-                var profile =JSON.stringify(response.getReturnValue());
-                var test =component.set("v.candidateProfile",response.getReturnValue());
-                component.set("v.ShowCandidateProfile",true);  
+            if (state === 'SUCCESS') {
+                var profile = JSON.stringify(response.getReturnValue());
+                var test = component.set("v.candidateProfile", response.getReturnValue());
+                component.set("v.ShowCandidateProfile", true);
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
                     "message": "Insertion Failed."
                 });
                 toastEvent.fire();
-                
+
             }
         })
         $A.enqueueAction(action);
-        
+
     },
-    
-    
-    
-    onblur : function(component,event,helper){       
-        component.set("v.listOfSearchRecords", null );
+
+
+
+    onblur: function (component, event, helper) {
+        component.set("v.listOfSearchRecords", null);
         var forclose = component.find("searchRes");
         $A.util.addClass(forclose, 'slds-is-close');
         $A.util.removeClass(forclose, 'slds-is-open');
-        component.set("v.listOfUserSearchRecords", null );
+        component.set("v.listOfUserSearchRecords", null);
         var forclose = component.find("searchUserRes");
         $A.util.addClass(forclose, 'slds-is-close');
         $A.util.removeClass(forclose, 'slds-is-open');
-        
+
     },
-    
-    keyPressUserController : function(component, event, helper) {
+
+    keyPressUserController: function (component, event, helper) {
         var getInputkeyWord = component.get("v.SearchUserKeyWord");
         // check if getInputKeyWord size id more then 0 then open the lookup result List and 
         // call the helper 
         // else close the lookup result List part.  
-        
-        if( getInputkeyWord.length > 0 ){             
+
+        if (getInputkeyWord.length > 0) {
             var forOpen = component.find("searchUserRes");
             $A.util.addClass(forOpen, 'slds-is-open');
             $A.util.removeClass(forOpen, 'slds-is-close');
-            helper.searchSkillHelper(component,event,getInputkeyWord);
+            helper.searchSkillHelper(component, event, getInputkeyWord);
         }
-        else{  
-            component.set("v.listOfUserSearchRecords", null ); 
+        else {
+            component.set("v.listOfUserSearchRecords", null);
             var forclose = component.find("searchUserRes");
             $A.util.addClass(forclose, 'slds-is-close');
             $A.util.removeClass(forclose, 'slds-is-open');
         }
     },
-    
-    clearUser :function(component,event,heplper){
+
+    clearUser: function (component, event, heplper) {
         var pillTarget = event.getSource().get('v.label');
         ///alert("pillTarget"+pillTarget);
-        
+
         var getSelectdUserList = component.get("v.selectedUserRecordClone");
         //alert('getSelectdUserList'+getSelectdUserList);
-        for(var i = 0; i < getSelectdUserList.length; i++){
-            if(getSelectdUserList[i] == pillTarget){
+        for (var i = 0; i < getSelectdUserList.length; i++) {
+            if (getSelectdUserList[i] == pillTarget) {
                 getSelectdUserList.splice(i, 1);
-                
+
                 component.set("v.selectedUserRecordClone", getSelectdUserList);
-            }  
+            }
         }
-        component.set("v.SearchUserKeyWord",null);
-        component.set("v.listOfUserSearchRecords", null );
-        component.set("v.selectedSkillsetExp",null);
-        component.set("v.selectedRating",null);
+        component.set("v.SearchUserKeyWord", null);
+        component.set("v.listOfUserSearchRecords", null);
+        component.set("v.selectedSkillsetExp", null);
+        component.set("v.selectedRating", null);
     },
-    
-    handleComponentEvent : function(component, event, helper) {
+
+    handleComponentEvent: function (component, event, helper) {
         // get the selected Account record from the COMPONETN event 
-        
+
         //if(helper.experience(component))
-        
+
         var selectedrecordByEvent = event.getParam("recordByEvent");
-        
+
         var selectedUserrecordByEvent = event.getParam("recordUserByEvent");
         //alert('selectedUserrecordByEvent' +selectedUserrecordByEvent);
         //var sillexp = event.getParam("selectedexp");
-        
-        component.set("v.experience",selectedUserrecordByEvent);
-        
-        
-        helper.searchSkillset(component,event,selectedUserrecordByEvent);
-        
+
+        component.set("v.experience", selectedUserrecordByEvent);
+
+
+        helper.searchSkillset(component, event, selectedUserrecordByEvent);
+
         var skill = component.get("v.experience");
-        console.log(JSON.stringify(component.get("v.experience")));        
-        component.set("v.SearchUserKeyWord",skill.Name);
-    }, 
-    
-    
-    onblur1 : function(component,event,helper){       
-        component.set("v.listOfSearchRecords1", null );
+        console.log(JSON.stringify(component.get("v.experience")));
+        component.set("v.SearchUserKeyWord", skill.Name);
+    },
+
+
+    onblur1: function (component, event, helper) {
+        component.set("v.listOfSearchRecords1", null);
         var forclose = component.find("searchRes1");
         $A.util.addClass(forclose, 'slds-is-close');
         $A.util.removeClass(forclose, 'slds-is-open');
-        component.set("v.listOfLocationSearchRecords", null );
+        component.set("v.listOfLocationSearchRecords", null);
         var forclose = component.find("searchLocationRes");
         $A.util.addClass(forclose, 'slds-is-close');
         $A.util.removeClass(forclose, 'slds-is-open');
-        
+
     },
-    
-    keyPressUserController1 : function(component, event, helper) {
+
+    keyPressUserController1: function (component, event, helper) {
         var getInputkeyWord = component.get("v.SearchUserKeyWord1");
         // check if getInputKeyWord size id more then 0 then open the lookup result List and 
         // call the helper 
         // else close the lookup result List part.   
-        if( getInputkeyWord.length > 0 ){             
+        if (getInputkeyWord.length > 0) {
             var forOpen = component.find("searchLocationRes");
             $A.util.addClass(forOpen, 'slds-is-open');
             $A.util.removeClass(forOpen, 'slds-is-close');
-            
-            helper.searchPreLocationHelper(component,event,getInputkeyWord);
+
+            helper.searchPreLocationHelper(component, event, getInputkeyWord);
         }
-        else{  
-            component.set("v.listOfLocationSearchRecords", null ); 
+        else {
+            component.set("v.listOfLocationSearchRecords", null);
             var forclose = component.find("searchLocationRes");
             $A.util.addClass(forclose, 'slds-is-close');
             $A.util.removeClass(forclose, 'slds-is-open');
         }
     },
-    
-    clearUser1 :function(component,event,heplper){
-        
-        var userName = event.getSource().get("v.label");    
+
+    clearUser1: function (component, event, heplper) {
+
+        var userName = event.getSource().get("v.label");
         //alert(userName);
         var getSelectdUserList = component.get("v.selectedLocationRecord");
         //console.log("getSelectdUserList:"+getSelectdUserList);
         //var newUserList = [];
-        for(var i = 0; i < getSelectdUserList.length; i++){
-            if(getSelectdUserList[i] == userName){
+        for (var i = 0; i < getSelectdUserList.length; i++) {
+            if (getSelectdUserList[i] == userName) {
                 getSelectdUserList.splice(i, 1);
                 component.set("v.selectedLocationRecord", getSelectdUserList);
-            }  
+            }
         }
-        component.set("v.SearchUserKeyWord1",null);
-        component.set("v.listOfLocationSearchRecords", null );  
-        
-        
+        component.set("v.SearchUserKeyWord1", null);
+        component.set("v.listOfLocationSearchRecords", null);
+
+
     },
-    
-    handleComponentEvent1 : function(component, event, helper) {
-        
+
+    handleComponentEvent1: function (component, event, helper) {
+
         var selectedUserrecordByEvent = event.getParam("recordLocationByEvent");
         //alert('selectedUserrecordByEvent'+selectedUserrecordByEvent);
-        if(selectedUserrecordByEvent != null && selectedUserrecordByEvent != ""){
+        if (selectedUserrecordByEvent != null && selectedUserrecordByEvent != "") {
             var pushToSelectdUser = component.get("v.selectedLocationRecord")
             pushToSelectdUser.push(selectedUserrecordByEvent);
-            component.set("v.selectedLocationRecord" , pushToSelectdUser);
+            component.set("v.selectedLocationRecord", pushToSelectdUser);
             var forclose = component.find("lookupUser-pill1");
             $A.util.addClass(forclose, 'slds-show');
             $A.util.removeClass(forclose, 'slds-hide');
-            
+
             var forclose = component.find("searchLocationRes");
             $A.util.addClass(forclose, 'slds-is-close');
             $A.util.removeClass(forclose, 'slds-is-open');
-            component.set("v.SearchUserKeyWord1" , '');
+            component.set("v.SearchUserKeyWord1", '');
         }
-        
+
     },
-    
-    onGroup: function(cmp, evt) {
+
+    onGroup: function (cmp, evt) {
         var selected = evt.getSource().get("v.label");
         //alert('selected>>'+selected);
-        
+
     },
-    
-    setSkillandExp : function(component,event,helper){
-        
-        var exp= component.find('mySelect').get('v.value');
+
+    setSkillandExp: function (component, event, helper) {
+
+        var exp = component.find('mySelect').get('v.value');
         console.log(exp);
         //alert('exp'+exp);
-        
+
         var rating = component.find('selectRating').get('v.value');
         // alert(rating);
-        
+
         var skill = component.get("v.experience");
         console.log(JSON.stringify(component.get("v.experience")));
-        
+
         //skill.push(exp);
         //console.log(JSON.stringify(component.get("v.experience")));
-        var skillExp = skill.Name+'-' + exp+'-' +rating;
-        
+        var skillExp = skill.Name + '-' + exp + '-' + rating;
+
         // alert('skillExp'+skillExp);
-        
-        var selectedUserRecordClone = component.get("v.selectedUserRecordClone" );
+
+        var selectedUserRecordClone = component.get("v.selectedUserRecordClone");
         //alert('selectedUserRecordClone All>>'+JSON.stringify(selectedUserRecordClone));
         selectedUserRecordClone.push(skillExp);
-        component.set("v.selectedUserRecordClone" , selectedUserRecordClone);
+        component.set("v.selectedUserRecordClone", selectedUserRecordClone);
         //console.log(component.get("v.selectedUserRecordClone"));
         var forclose = component.find("lookupUser-pill");
-        
+
         $A.util.addClass(forclose, 'slds-show');
         $A.util.removeClass(forclose, 'slds-hide');
-        
-        
-        
+
+
+
         var forclose = component.find("searchUserRes");
         $A.util.addClass(forclose, 'slds-is-close');
         $A.util.removeClass(forclose, 'slds-is-open');
-        
+
         var array = component.get("v.skillAndExp");
         //console.log(array);
-        
+
         //alert('skillExp'+skillExp);
-        
+
         console.log(component.get("v.skillAndExp"));
         //alert(typeof(array));
         for (const key in skill) {
             if (Object.hasOwnProperty.call(skill, key)) {
-                if(key=='Name' || key=='Id'){
+                if (key == 'Name' || key == 'Id') {
                     const element = skill[key];
                     array.push(element);
-                } 
+                }
             }
         }
         array.push(exp);
         array.push(rating);
         component.set("v.skillAndExp", array);
         console.log(component.get("v.skillAndExp"));
-        
+
         var skillsList = component.get("v.candidateSkills");
         skillsList[skill.Name] = exp;
-        component.set("v.candidateSkills",skillsList);
+        component.set("v.candidateSkills", skillsList);
         console.log(JSON.stringify(component.get("v.candidateSkills")));
-        component.set("v.selectedRating",'');
-        component.set("v.selectedSkillsetExp",'');
-        component.set("v.selectedparentList",'');
-        component.set("v.SearchUserKeyWord",'');
+        component.set("v.selectedRating", '');
+        component.set("v.selectedSkillsetExp", '');
+        component.set("v.selectedparentList", '');
+        component.set("v.SearchUserKeyWord", '');
     },
-    
-    handleChange: function(component,event,helper){
- 
+
+    handleChange: function (component, event, helper) {
+
         var getSelectedJob = component.find('select').get('v.value');
         console.log(getSelectedJob);
         //var mapValue = component.get("v.skillsList");
         var candSkills = component.get("v.skillsListName");
         console.log(JSON.stringify(candSkills));
 
-        var loc = component.find("locationForm").get("v.value");
-        console.log(JSON.stringify(loc));
+        /*var loc = component.find("locationForm").get("v.value");
+        console.log(JSON.stringify(loc));*/
 
         var fields = component.find("candiForm").get("v.value");
         console.log(JSON.stringify(fields));
-        
-        fields["KTDO1__Billing_Location__c"]= JSON.stringify(loc);
-        component.find('candiForm').set('v.value',fields);
-        console.log(JSON.stringify(fields));
+        //alert(JSON.stringify(fields));
+
+        // fields["Billing_Location__c"]= JSON.stringify(loc);
+        // component.find('candiForm').set('v.value',fields);
+        // console.log(JSON.stringify(fields));
 
         var action = component.get("c.getJobPostingValues");
-        
+
         //var mapValue = component.get("v.candidateSkills");   
-   
+
         action.setParams({
             'jobId': getSelectedJob,
             'candSkills': JSON.stringify(candSkills)
-            
-        }); 
-        action.setCallback(this, function(response) {
+
+        });
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            if(state === 'SUCCESS'){
+            if (state === 'SUCCESS') {
 
                 //Show that the job posting is in pause state if we get an empty value STARTS
-               // alert('response>>'+response.getReturnValue());
-                if(response.getReturnValue()){
-                   
+                // alert('response>>'+response.getReturnValue());
+                if (response.getReturnValue()) {
+
                     helper.handleOnSubmitHelper(component, event, helper, fields);
                 }
-                else{
+                else {
                     var toastEvent = $A.get("e.force:showToast");
                     toastEvent.setParams({
                         "title": "Error!",
@@ -659,29 +673,29 @@
                     });
                     toastEvent.fire();
                 }
-                    //alert('Inside for>>'+Object.keys(mapValue).includes(storeResponse[i].Name));
-                    //alert('Inside for>>'+Object.values(mapValue).includes(storeResponse[i].SkillSet_Experience__c));
+                //alert('Inside for>>'+Object.keys(mapValue).includes(storeResponse[i].Name));
+                //alert('Inside for>>'+Object.values(mapValue).includes(storeResponse[i].SkillSet_Experience__c));
+
+                /*if(Object.keys(mapValue).includes(storeResponse[i].Name) && Object.values(mapValue).includes(storeResponse[i].Skill_Experience_Level__c))
+                {
+                    skillMatch = true;     
+                }
+                else{
+                    skillMatch = false;
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Error!",
+                        "message": "Skills did not match"
+                    });
+                    toastEvent.fire();
                     
-                    /*if(Object.keys(mapValue).includes(storeResponse[i].Name) && Object.values(mapValue).includes(storeResponse[i].KTDO1__Skill_Experience_Level__c))
-                    {
-                        skillMatch = true;     
-                    }
-                    else{
-                        skillMatch = false;
-                        var toastEvent = $A.get("e.force:showToast");
-                        toastEvent.setParams({
-                            "title": "Error!",
-                            "message": "Skills did not match"
-                        });
-                        toastEvent.fire();
-                        
-                        break;
-                    }*/
-                    
-                    // alert('Skill Exp>>'+storeResponse[i].SkillSet_Experience__c);
-                    
-                
-                
+                    break;
+                }*/
+
+                // alert('Skill Exp>>'+storeResponse[i].SkillSet_Experience__c);
+
+
+
                 /*if ( component.find("fuploader").get("v.files").length > 0) {
                     //alert('File Found ');
                     if(skillMatch){
@@ -701,9 +715,9 @@
                 toastEvent.fire();
                 
             }*/
-                
+
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -715,152 +729,150 @@
 
             //Show that the job posting is in pause state if we get an empty value ENDS
 
-        
+
 
         })
         $A.enqueueAction(action);
-        
+
     },
-    
-    saveSkillandExp: function(component,event,helper)
-    {
+
+    saveSkillandExp: function (component, event, helper) {
         if (component.find("fuploader").get("v.files").length > 0) {
             alert('File Found ');
-            helper.uploadHelper(component, event,helper);
+            helper.uploadHelper(component, event, helper);
         } else {
             alert('Please Select a Valid File');
         }
-        
-        
+
+
     },
-    
-    handleFilesChange: function(component, event, helper) {
+
+    handleFilesChange: function (component, event, helper) {
         var fileName = 'No File Selected..';
         if (event.getSource().get("v.files").length > 0) {
             fileName = event.getSource().get("v.files")[0]['name'];
         }
         component.set("v.fileName", fileName);
     },
-    
-    saveDetails: function(component, event, helper) {
+
+    saveDetails: function (component, event, helper) {
         //To get the selected picklist value
-        helper.saveDetailsHelper(component,event,helper);
-        
-        
+        helper.saveDetailsHelper(component, event, helper);
+
+
     },
-    
-    
-    datachange :function(component)
-    {
+
+
+    datachange: function (component) {
         var value = component.get("v.candidateProfile");
         // alert("Inside"+value.Name);
-        
+
     },
-    
-    preferredNoticePeriod :function(component){
-        
+
+    preferredNoticePeriod: function (component) {
+
         var action = component.get("v.selectedNoticePeriod");
         //alert('action'+action);
-        
+
         var notice = component.get("v.candidateProfile.Notice_Period__c");
-        
-        component.set("v.candidateProfile.Notice_Period__c",action);
+
+        component.set("v.candidateProfile.Notice_Period__c", action);
         //console.log(JSON.stringify(component.get("v.candidateProfile")));
     },
-    
-    handleFilesChange: function(component, event, helper) {
+
+    handleFilesChange: function (component, event, helper) {
         var fileName = 'No File Selected..';
         if (event.getSource().get("v.files").length > 0) {
             fileName = event.getSource().get("v.files")[0]['name'];
         }
         component.set("v.fileName", fileName);
     },
-    
-    preferredIndustry :function(component){
-        
+
+    preferredIndustry: function (component) {
+
         var action = component.get("v.selectedIndustry");
         //alert('action'+action);
-        
+
         var notice = component.get("v.candidateProfile.Industry__c");
-        
-        component.set("v.candidateProfile.Industry__c",action);
+
+        component.set("v.candidateProfile.Industry__c", action);
         //console.log(JSON.stringify(component.get("v.candidateProfile")));
     },
-    
-    preferredRole :function(component){
-        
+
+    preferredRole: function (component) {
+
         var action = component.get("v.selectedFunctionalArea");
         //alert('action'+action);
-        
+
         var notice = component.get("v.candidateProfile.Functional_Area__c");
-        
-        component.set("v.candidateProfile.Functional_Area__c",action);
+
+        component.set("v.candidateProfile.Functional_Area__c", action);
         //console.log(JSON.stringify(component.get("v.candidateProfile")));
     },
-    
-    preferredDesignation :function(component){
-        
+
+    preferredDesignation: function (component) {
+
         var action = component.get("v.selectedDesignation");
         //alert('action'+action);
-        
+
         var notice = component.get("v.candidateProfile.Designation__c");
-        
-        component.set("v.candidateProfile.Designation__c",action);
+
+        component.set("v.candidateProfile.Designation__c", action);
         //console.log(JSON.stringify(component.get("v.candidateProfile")));
     },
-    
-    preferredStream :function(component){
-        
+
+    preferredStream: function (component) {
+
         var action = component.get("v.selectedStream");
         //alert('action'+action);
-        
+
         var notice = component.get("v.candidateProfile.UG_Stream__c");
-        
-        component.set("v.candidateProfile.UG_Stream__c",action);
+
+        component.set("v.candidateProfile.UG_Stream__c", action);
         //console.log(JSON.stringify(component.get("v.candidateProfile")));
     },
-    
-    preferredPGStream :function(component){
-        
+
+    preferredPGStream: function (component) {
+
         var action = component.get("v.selectedPGStream");
         //alert('action'+action);
-        
+
         var notice = component.get("v.candidateProfile.PG_Stream__c");
-        
-        component.set("v.candidateProfile.PG_Stream__c",action);
+
+        component.set("v.candidateProfile.PG_Stream__c", action);
         //console.log(JSON.stringify(component.get("v.candidateProfile")));
     },
-    
-    clientSelected : function(component, event, helper){
-        var clientId= component.find('selectClient').get('v.value');
+
+    clientSelected: function (component, event, helper) {
+        var clientId = component.find('selectClient').get('v.value');
         //alert(clientId);
-        component.set("v.jobPostingList",'');
+        component.set("v.jobPostingList", '');
         var array = component.get("v.jobPostingList");
-        
+
         console.log(component.get("v.jobPostingList"));
-        
+
         var action = component.get("c.getJobPostingPickListValues");
-        
+
         action.setParams({
             clientId: clientId
-            
-            
+
+
         });
-        action.setCallback(this, function(response) {
+        action.setCallback(this, function (response) {
             var state = response.getState();
-            var res= response.getReturnValue();
-            
-            if(state === 'SUCCESS'){
-                
-                for(let i=0; i<res.length;i++){
-                    array.push({"value":res[i].Id, "label":res[i].Name});
+            var res = response.getReturnValue();
+
+            if (state === 'SUCCESS') {
+
+                for (let i = 0; i < res.length; i++) {
+                    array.push({ "value": res[i].Id, "label": res[i].Name });
                 }
-                
-                component.set("v.jobPostingList",array);
-                
+
+                component.set("v.jobPostingList", array);
+
                 //console.log(component.get("v.jobPostingList"));       
             }
-            else if(state === 'ERROR'){
+            else if (state === 'ERROR') {
                 var toastEvent = $A.get("e.force:showToast");
                 toastEvent.setParams({
                     "title": "Error!",
@@ -869,109 +881,127 @@
                 toastEvent.fire();
             }
         })
-        $A.enqueueAction(action); 
+        $A.enqueueAction(action);
     },
-    
-    onblur2 : function(component,event,helper){       
-        component.set("v.listOfSearchRecords", null );
+
+    onblur2: function (component, event, helper) {
+        component.set("v.listOfSearchRecords", null);
         var forclose = component.find("searchRes");
         $A.util.addClass(forclose, 'slds-is-close');
         $A.util.removeClass(forclose, 'slds-is-open');
-        component.set("v.listOfUserSearchRecords", null );
+        component.set("v.listOfUserSearchRecords", null);
         var forclose = component.find("searchUserRes");
         $A.util.addClass(forclose, 'slds-is-close');
         $A.util.removeClass(forclose, 'slds-is-open');
-        
+
     },
-    
-    keyPressUserController2 : function(component, event, helper) {
+    openSingleFile: function (cmp, event, helper) {
+        $A.get('e.lightning:openFiles').fire({
+            recordIds: ['0688Z00000QX10xQAD']
+        });
+    },
+
+    keyPressUserController2: function (component, event, helper) {
         var getInputkeyWord = component.get("v.SearchUserKeyWord3");
         // check if getInputKeyWord size id more then 0 then open the lookup result List and 
         // call the helper 
         // else close the lookup result List part.  
-        
-        if( getInputkeyWord.length > 0 ){             
+
+        if (getInputkeyWord.length > 0) {
             var forOpen = component.find("searchRollsAndRespRes");
             $A.util.addClass(forOpen, 'slds-is-open');
             $A.util.removeClass(forOpen, 'slds-is-close');
-            helper.searchRollsAndResponsibilitiesHelper(component,event,getInputkeyWord);
+            helper.searchRollsAndResponsibilitiesHelper(component, event, getInputkeyWord);
         }
-        else{  
-            component.set("v.listOfRollsAndResponsibilitiesRecords", null ); 
+        else {
+            component.set("v.listOfRollsAndResponsibilitiesRecords", null);
             var forclose = component.find("searchRollsAndRespRes");
             $A.util.addClass(forclose, 'slds-is-close');
             $A.util.removeClass(forclose, 'slds-is-open');
         }
     },
-    
-    handleRollsComponentEvent: function(component, event, helper) {
-        
+
+    handleRollsComponentEvent: function (component, event, helper) {
+
         var selectedUserrecordByEvent = event.getParam("recordRollsAndRespByEvent");
         console.log(JSON.stringify(selectedUserrecordByEvent));
-        if(selectedUserrecordByEvent != null && selectedUserrecordByEvent != ""){
+        if (selectedUserrecordByEvent != null && selectedUserrecordByEvent != "") {
             var pushToSelectdUser = component.get("v.selectedRollsAndRespRecord")
             pushToSelectdUser.push(selectedUserrecordByEvent);
             console.log(JSON.stringify(pushToSelectdUser));
-            component.set("v.selectedRollsAndRespRecord" , pushToSelectdUser);
+            component.set("v.selectedRollsAndRespRecord", pushToSelectdUser);
             var forclose = component.find("lookupUser-pill2");
             $A.util.addClass(forclose, 'slds-show');
             $A.util.removeClass(forclose, 'slds-hide');
-            
+
             var forclose = component.find("searchRollsAndRespRes");
             $A.util.addClass(forclose, 'slds-is-close');
             $A.util.removeClass(forclose, 'slds-is-open');
             console.log(component.get("v.selectedRollsAndRespRecord"));
             var res = component.get("v.selectedRollsAndRespRecord")
-            for(var i =0; i<res.length; i++){
+            for (var i = 0; i < res.length; i++) {
                 console.log(res[i].Type__c);
-                component.set("v.SearchUserKeyWord3",res[i].Name);   
+                component.set("v.SearchUserKeyWord3", res[i].Name);
             }
-            
+
         }
-        component.set("v.SearchUserKeyWord3",'');   
-        
+        component.set("v.SearchUserKeyWord3", '');
+
     },
-    
-    preferredEdType :function(component){
-        
+
+    preferredEdType: function (component) {
+
         var action = component.get("v.selectedEdType");
         //alert('action'+action);
-        
-        var Type = component.get("v.candidateProfile.KTDO1__UG_Education_Type__c");
-        
-        component.set("v.candidateProfile.KTDO1__UG_Education_Type__c",action);
+
+        var Type = component.get("v.candidateProfile.UG_Education_Type__c");
+
+        component.set("v.candidateProfile.UG_Education_Type__c", action);
         //console.log(JSON.stringify(component.get("v.candidateProfile")));
     },
-    
-    preferredPGEdType :function(component){ 
-        
+
+    preferredPGEdType: function (component) {
+
         var action = component.get("v.selectedPGEdType");
         //alert('action'+action);
-        
-        var Type = component.get("v.candidateProfile.KTDO1__PG_Education_Type__c");
-        
-        component.set("v.candidateProfile.KTDO1__PG_Education_Type__c",action);
+
+        var Type = component.get("v.candidateProfile.PG_Education_Type__c");
+
+        component.set("v.candidateProfile.PG_Education_Type__c", action);
         //console.log(JSON.stringify(component.get("v.candidateProfile")));
     },
-    
-    handleOnSubmit : function(component, event, helper) {
-        
-        var loc = component.find("locationForm").get("v.value");
-        console.log(JSON.stringify(loc));
+
+    handleOnSubmit: function (component, event, helper) {
+
+        /* var loc = component.find("locationForm").get("v.value");
+         console.log(JSON.stringify(loc));*/
+         console.log(component.get("v.candDocParserId"));
+         var candidateId = component.get("v.candDocParserId");
 
         var fields = component.find('accForm1').get('v.value');
-        
-        console.log(JSON.stringify(fields));
-        fields["KTDO1__Billing_Location__c"]= JSON.stringify(loc);
-        component.find('accForm1').set('v.value',fields);
-        console.log(JSON.stringify(fields));
 
-        helper.handleOnSubmitHelper(component, event, helper,fields);
-        //event.preventDefault();
-        
-        
-    },
+        console.log(JSON.stringify(fields));
+        //console.log(JSON.stringify(fields.Id));
+        if(candidateId){
+            fields["Id"]= candidateId;
+            component.find('accForm1').set('v.value',fields);
+            console.log(JSON.stringify(fields));
     
+        }
+        //  fields["Billing_Location__c"]= JSON.stringify(loc);
+        // component.find('accForm1').set('v.value',fields);
+        // console.log(JSON.stringify(fields));
+
+
+
+
+        helper.handleOnSubmitHelper(component, event, helper, fields);
+
+        //event.preventDefault();
+
+
+    },
+
     /*handleOnSuccess : function(component, event, helper) {
         /*var resp = event.getParam().response;
        console.log(resp.Id);*/
@@ -985,23 +1015,23 @@
             
         });
     },*/
-    
-    addRow: function(component, event, helper) {
+
+    addRow: function (component, event, helper) {
         //get the account List from component  
         var skillsList = component.get("v.skillsList");
         //Add New Account Record
         skillsList.push({
-            'sobjectType': 'KTDO1__Skill_Set_Experience__c',
-            'KTDO1__Skill_Set__c': '',
-            'KTDO1__Skill_Experience_Level__c': '',
-            'KTDO1__Ratings__c': '',
-            
+            'sobjectType': 'Skill_Set_Experience__c',
+            'Skill_Set__c': '',
+            'Skill_Experience_Level__c': '',
+            'Ratings__c': '',
+
         });
         component.set("v.skillsList", skillsList);
         // alert('accountList   :::::'+accountList);
     },
-    
-    removeRecord: function(component, event, helper) {
+
+    removeRecord: function (component, event, helper) {
         //Get the account list
         var skillsList = component.get("v.skillsList");
         //Get the target object
@@ -1013,23 +1043,23 @@
         //Set modified account list
         component.set("v.skillsList", skillsList);
     },
-    
-    addRowForRoles: function(component, event, helper) {
+
+    addRowForRoles: function (component, event, helper) {
         //get the account List from component  
         var rolesAndRespo = component.get("v.rolesandRespoList");
         //Add New Account Record
         rolesAndRespo.push({
-            'sobjectType': 'KTDO1__Roll_and_Responsibilities__c',
-            'KTDO1__Type__c': '',
-            'KTDO1__Rolls_and_Responsibilities_Master__c': '',
-            
-            
+            'sobjectType': 'Roll_and_Responsibilities__c',
+            'Type__c': '',
+            'Rolls_and_Responsibilities_Master__c': '',
+
+
         });
         component.set("v.rolesandRespoList", rolesAndRespo);
         // alert('accountList   :::::'+accountList);
     },
-    
-    removeRolesRecord: function(component, event, helper) {
+
+    removeRolesRecord: function (component, event, helper) {
         //Get the account list
         var rolesAndRespo = component.get("v.rolesandRespoList");
         //Get the target object
@@ -1040,5 +1070,66 @@
         rolesAndRespo.splice(index, 1);
         //Set modified account list
         component.set("v.rolesandRespoList", rolesAndRespo);
+    },
+
+    //Upload File to Google Drive
+    UploadGDriveFile: function (component, event, helper) {
+
+        // helper.getAccessToken(component, event, helper);
+        //Get Access Token
+        var uploadedDocId = event.getSource().get("v.name");
+        console.log('uploadedFiles>>' + JSON.stringify(uploadedDocId));
+        var uploadedFiles = event.getParam("files");
+        var attachmentId = uploadedFiles[0].documentId;
+        console.log('on iupload finish');
+        var action = component.get("c.gdriveDocUpload");
+        action.setParams({
+            "candidateName": 'Resume',
+            "attachmentId": attachmentId,
+            "uploadedDocId": uploadedDocId,
+        });
+        console.log('Param set');
+        action.setCallback(this, function (response) {
+            var status = response.getState();
+            console.log('Return response');
+            console.log(status);
+            if (status === "SUCCESS") {
+                var responseCode = response.getReturnValue();
+                console.log(response.getReturnValue());
+                var res = responseCode.split("#");
+                console.log(res);
+                // alert('responseCode>>>' + responseCode);
+                if (res[0] == '200') {
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "type": "success",
+                        "title": "Success!",
+                        "message": "File Uploaded successfully."
+                    });
+                    toastEvent.fire();
+                    window.location.reload();
+                }
+                else {
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Error!",
+                        "message": "There was some error in uploading file to Google Drive."
+                    });
+                    toastEvent.fire();
+                }
+            }
+            else {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Error!",
+                    "message": "Error in file Upload."
+                });
+                toastEvent.fire();
+            }
+        });
+        $A.enqueueAction(action);
+
+        component.set("v.isModalOpen", true);
+
     },
 })
