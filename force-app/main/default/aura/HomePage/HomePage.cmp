@@ -1,35 +1,87 @@
-<aura:component controller="HomePageController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
-    <aura:attribute name="jobPostings" type="List"/>
-    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
-    
-    <div class="slds-box slds-theme_shade">   
+<aura:component controller="HomePageController"
+    implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+    access="global">
+    <aura:attribute name="jobPostings" type="List" />
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+
+    <!-- Filter attributes -->
+    <aura:attribute name="clientOptions" type="List" />
+    <aura:attribute name="selectedClient" type="String" />
+    <aura:attribute name="statusOptions" type="List" />
+    <aura:attribute name="selectedStatus" type="String" />
+
+    <div class="slds-box slds-theme_shade">
         <div class="slds-align_absolute-center slds-theme_alt-inverse slds-p-bottom_small slds-p-top_small">
-            <h1><b>OFFER LETTER</b></h1> 
-        </div> <br/>
+            <h1><b>OFFER LETTER</b></h1>
+        </div> <br />
         <div>
-            <lightning:button variant="Brand" label="X-Ray Search" title="X-Ray Search" iconName="utility:search" onclick="{!c.handlechange}"/>    
-            <lightning:button variant="Brand" label="My Dashboard" title="My Dashboard" iconName="standard:dashboard" onclick="{!c.handleclick}"/>
-            <lightning:button variant="Brand" label="Pending Validation" title="Pending Validation" iconName="utility:success" onclick="{!c.handlePending}"/>
-            <br/>
-            
-        </div><br/>
+            <lightning:button variant="Brand" label="X-Ray Search" title="X-Ray Search" iconName="utility:search"
+                onclick="{!c.handlechange}" />
+            <lightning:button variant="Brand" label="My Dashboard" title="My Dashboard" iconName="standard:dashboard"
+                onclick="{!c.handleclick}" />
+            <lightning:button variant="Brand" label="Pending Validation" title="Pending Validation"
+                iconName="utility:success" onclick="{!c.handlePending}" />
+            <br />
+
+        </div><br />
         <div>
-            <lightning:button  variant="Brand" label="Smart Search"  title="Smart Search" iconName="utility:search" onclick="{!c.handlesearch}"/>
-            <lightning:button variant="Brand" label="Create Job Post" title="Post a new job" iconName="utility:add" onclick="{!c.handleAdd}"/>
+            <lightning:button variant="Brand" label="Smart Search" title="Smart Search" iconName="utility:search"
+                onclick="{!c.handlesearch}" />
+            <lightning:button variant="Brand" label="Create Job Post" title="Post a new job" iconName="utility:add"
+                onclick="{!c.handleAdd}" />
         </div>
     </div>
-    
+
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col">
+
+        </div>
+        <div class="slds-col">
+            <lightning:select name="client" label="Select a Client:" onchange="{!c.companyFilterChange}"
+                aura:id="clientfilter" value="{!v.selectedClient}">
+                <option value="">choose one...</option>
+                <aura:iteration items="{!v.clientOptions}" var="option">
+                    <option text="{!option.label}" value="{!option.id}" selected="{!option.selected}" />
+                </aura:iteration>
+            </lightning:select>
+        </div>
+        <div class="slds-col">
+            <lightning:select name="status" label="Select a Status:" onchange="{!c.companyFilterChange}"
+                aura:id="poststatus" value="{!v.selectedStatus}">
+                <option value="">choose one...</option>
+                <aura:iteration items="{!v.statusOptions}" var="option">
+                    <option text="{!option.label}" value="{!option.id}" selected="{!option.selected}" />
+                </aura:iteration>
+            </lightning:select>
+        </div>
+        <div class="slds-col">
+
+        </div>
+
+    </div>
+
+
+
     <div class="slds-card__body">
-        <div class="table-scroll" >
-            <table Style="float:left" class="{!v.tablesizeExpand?'slds-table slds-table1 1':'slds-table slds-table2 2'}">
-                <thead >
-                    <tr class="slds-text-title_caps slds-gray" Style="Width=100%, display: inline" >
-                        
+        <div class="table-scroll">
+            <table Style="float:left"
+                class="{!v.tablesizeExpand?'slds-table slds-table1 1':'slds-table slds-table2 2'}">
+                <thead>
+                    <tr class="slds-text-title_caps slds-gray" Style="Width=100%, display: inline">
+
                         <th></th>
-                        <th><div class="slds-truncate slds-align_absolute-center">Job Postings </div></th>
-                        <th><div class="slds-truncate slds-align_absolute-center">No. of Candidate Selected</div></th>
-                        <th><div class="slds-truncate slds-align_absolute-center">Due Date</div></th>
-                        <th><div class="slds-truncate slds-align_absolute-center">Status</div></th>
+                        <th>
+                            <div class="slds-truncate slds-align_absolute-center">Job Postings </div>
+                        </th>
+                        <th>
+                            <div class="slds-truncate slds-align_absolute-center">No. of Candidate Selected</div>
+                        </th>
+                        <th>
+                            <div class="slds-truncate slds-align_absolute-center">Due Date</div>
+                        </th>
+                        <th>
+                            <div class="slds-truncate slds-align_absolute-center">Status</div>
+                        </th>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -37,19 +89,17 @@
                 </thead>
                 <tbody>
                     <aura:iteration items="{!v.jobPostings}" var="var1" indexVar="index">
-                        <aura:if isTrue="{!var1.KTDO1__Job_OC_Status__c == 'Open'}">
-                            <c:HomePageChild JobList="{!var1}"  /> 
-                        </aura:if>
-                    </aura:iteration>       
+                        <c:HomePageChild JobList="{!var1}" />
+                    </aura:iteration>
                 </tbody>
             </table>
         </div>
     </div>
-    
+
     <!-- <div class="slds-card__body">
         <div class="table-scroll">-->
     <!--<table class="slds-table slds-table"> -->
-    
+
     <!--<table class="{!v.tablesizeExpand?'slds-table slds-table1 1':'slds-table slds-table2 2'}">
                 <thead >
                     <tr class="slds-text-title_caps slds-gray ">
@@ -72,7 +122,7 @@
             </table>
         </div>
     </div>-->
-    
+
     <!--Trail-->
     <!--<aura:attribute type="Account[]" name="acctList"/>
     <aura:attribute name="gridColumns" type="List" />
@@ -87,7 +137,7 @@
                                 />       
         </div>
     </div>-->
-    
-    
-    
+
+
+
 </aura:component>

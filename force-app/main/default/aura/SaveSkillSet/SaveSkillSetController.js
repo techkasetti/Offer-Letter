@@ -49,7 +49,7 @@
         })
         $A.enqueueAction(action);
         
-        helper.getSkillset(component,event,helper);
+        //helper.getSkillset(component,event,helper);
         
         var action = component.get("c.getIndustryPicklistValues");
         action.setCallback(this, function(response) {
@@ -166,6 +166,7 @@
         //To get client Picklist values
         var action = component.get("c.getClientPicklistValues");
         var clients = component.get("v.clientList");
+        //component.set("v.jobPostingList",null);
         console.log(JSON.stringify(component.get("v.clientList")));
         action.setCallback(this, function(response) {
             var state = response.getState();
@@ -173,9 +174,10 @@
             console.log(result);
             if(state === 'SUCCESS'){
                 for(let i=0; i<result.length;i++){
-                    clients.push({"value":result[i].Id, "label":result[i].Name});
+                    clients.push({"value":result[i].KTDO1__Account__r.Id, "label":result[i].KTDO1__Account__r.Name});
                 }
                 component.set("v.clientList",clients);
+                
                 console.log(component.get("v.clientList"));     
                 
             }
@@ -191,7 +193,7 @@
         $A.enqueueAction(action); 
         
         //To get Rolls And Responsibilities Picklist
-        var action = component.get("c.getTypePicklistValues");
+        /*var action = component.get("c.getTypePicklistValues");
         action.setCallback(this, function(response) {
             var state = response.getState();
             if(state === 'SUCCESS'){
@@ -207,27 +209,98 @@
                 toastEvent.fire();
             }
         })
+        $A.enqueueAction(action);*/
+        
+        //To get Education Type Picklist Values
+        var action = component.get("c.getEdTypePicklistValues");
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if(state === 'SUCCESS'){
+                var test =component.set("v.listOfEdTypes",response.getReturnValue());
+                // alert('picklist>>'+JSON.stringify(component.get('v.listOfNoticePeriod')));                
+            }
+            else if(state === 'ERROR'){
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Error!",
+                    "message": "Error Occured."
+                });
+                toastEvent.fire();
+            }
+        })
         $A.enqueueAction(action);
         
         
-        
+        //To get PG Education Type Picklist Values
+        var action = component.get("c.getPGEdTypePicklistValues");
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if(state === 'SUCCESS'){
+                var test =component.set("v.listOfPGEdTypes",response.getReturnValue());
+                // alert('picklist>>'+JSON.stringify(component.get('v.listOfNoticePeriod')));                
+            }
+            else if(state === 'ERROR'){
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Error!",
+                    "message": "Error Occured."
+                });
+                toastEvent.fire();
+            }
+        })
+        $A.enqueueAction(action);
     },
     
     
     
     openModel: function(component, event, helper) {
-        // Set isModalOpen attribute to true
+        // Set isModalOpen attribute to true       
         component.set("v.showModal", true);
+        
         //To get the selected picklist value
         var candProfile = event.getSource().get("v.value");
-        var candprofile = component.get("v.candidateProfile");
-        //alert('Name'+candprofile.Name);
+        //var candprofile = component.get("v.candidateProfile");
+        var candprofile = component.get("v.candiProfile")
+        // alert('candprofile'+candprofile);
         var jobApp = component.get("v.jobApplication");
         jobApp.push(candprofile.Name);
         component.set("v.jobApplication",jobApp);
-        console.log(component.get("v.jobApplication"));
+        console.log(component.get("v.jobApplication"));  
+
+        var skillsList = component.get("v.skillsList");
+        console.log(skillsList);
+        var action = component.get("c.getSkillName");      
         
-        
+        action.setParams({
+          
+            'skillsList': skillsList
+            
+        }); 
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if(state === 'SUCCESS'){
+                var storeResponse = response.getReturnValue();
+                console.log(storeResponse);
+                var skills = component.get("v.skillsListName");
+                /*for(var i =0; i<storeResponse.size();i++){
+                    skills.push(storeResponse[i]);
+                    console.log(skills);
+                }*/
+                component.set("v.skillsListName",storeResponse);
+                var skillsName = component.get("v.skillsListName");
+                console.log(skillsName);
+                }
+                else if(state === 'ERROR'){
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Error!",
+                        "message": "Error Occured!!"
+                    });
+                    toastEvent.fire();
+                    
+                }
+            })
+            $A.enqueueAction(action);  
     },
     
     hideModel: function(component, event, helper) {
@@ -465,6 +538,7 @@
             var forclose = component.find("searchLocationRes");
             $A.util.addClass(forclose, 'slds-is-close');
             $A.util.removeClass(forclose, 'slds-is-open');
+            component.set("v.SearchUserKeyWord1" , '');
         }
         
     },
@@ -474,9 +548,6 @@
         //alert('selected>>'+selected);
         
     },
-    
-    
-    
     
     setSkillandExp : function(component,event,helper){
         
@@ -536,38 +607,62 @@
         skillsList[skill.Name] = exp;
         component.set("v.candidateSkills",skillsList);
         console.log(JSON.stringify(component.get("v.candidateSkills")));
-        
+        component.set("v.selectedRating",'');
+        component.set("v.selectedSkillsetExp",'');
+        component.set("v.selectedparentList",'');
+        component.set("v.SearchUserKeyWord",'');
     },
     
     handleChange: function(component,event,helper){
+ 
         var getSelectedJob = component.find('select').get('v.value');
         console.log(getSelectedJob);
+        //var mapValue = component.get("v.skillsList");
+        var candSkills = component.get("v.skillsListName");
+        console.log(JSON.stringify(candSkills));
+
+        var loc = component.find("locationForm").get("v.value");
+        console.log(JSON.stringify(loc));
+
+        var fields = component.find("candiForm").get("v.value");
+        console.log(JSON.stringify(fields));
+        
+        fields["KTDO1__Billing_Location__c"]= JSON.stringify(loc);
+        component.find('candiForm').set('v.value',fields);
+        console.log(JSON.stringify(fields));
+
         var action = component.get("c.getJobPostingValues");
         
-        var mapValue = component.get("v.candidateSkills");   
-        console.log(JSON.stringify(mapValue));
-        
+        //var mapValue = component.get("v.candidateSkills");   
+   
         action.setParams({
             'jobId': getSelectedJob,
-            'candSkills': JSON.stringify(mapValue)
+            'candSkills': JSON.stringify(candSkills)
             
         }); 
         action.setCallback(this, function(response) {
             var state = response.getState();
             if(state === 'SUCCESS'){
-                var storeResponse = response.getReturnValue();
-                console.log(storeResponse);
-                var mapValue = new Map();
-                mapValue = component.get("v.candidateSkills");
-                
-                console.log(JSON.stringify(mapValue));
-                var skillMatch = false;
-                for(var i=0; i<storeResponse.length;i++){
-                    
+
+                //Show that the job posting is in pause state if we get an empty value STARTS
+               // alert('response>>'+response.getReturnValue());
+                if(response.getReturnValue()){
+                   
+                    helper.handleOnSubmitHelper(component, event, helper, fields);
+                }
+                else{
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Error!",
+                        "message": "Skills did not match with Job Posting",
+                        type: "error"
+                    });
+                    toastEvent.fire();
+                }
                     //alert('Inside for>>'+Object.keys(mapValue).includes(storeResponse[i].Name));
                     //alert('Inside for>>'+Object.values(mapValue).includes(storeResponse[i].KTDO1__SkillSet_Experience__c));
                     
-                    if(Object.keys(mapValue).includes(storeResponse[i].Name) && Object.values(mapValue).includes(storeResponse[i].KTDO1__SkillSet_Experience__c))
+                    /*if(Object.keys(mapValue).includes(storeResponse[i].Name) && Object.values(mapValue).includes(storeResponse[i].KTDO1__Skill_Experience_Level__c))
                     {
                         skillMatch = true;     
                     }
@@ -581,13 +676,13 @@
                         toastEvent.fire();
                         
                         break;
-                    }
+                    }*/
                     
                     // alert('Skill Exp>>'+storeResponse[i].KTDO1__SkillSet_Experience__c);
                     
-                }
                 
-                if ( component.find("fuploader").get("v.files").length > 0) {
+                
+                /*if ( component.find("fuploader").get("v.files").length > 0) {
                     //alert('File Found ');
                     if(skillMatch){
                         helper.uploadHelper(component, event,helper);
@@ -605,7 +700,23 @@
                 });
                 toastEvent.fire();
                 
+            }*/
+                
             }
+            else if(state === 'ERROR'){
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Error!",
+                    "message": "Job Posting is in Pause State.",
+                    type: "error"
+                });
+                toastEvent.fire();
+            }
+
+            //Show that the job posting is in pause state if we get an empty value ENDS
+
+        
+
         })
         $A.enqueueAction(action);
         
@@ -614,7 +725,7 @@
     saveSkillandExp: function(component,event,helper)
     {
         if (component.find("fuploader").get("v.files").length > 0) {
-            //alert('File Found ');
+            alert('File Found ');
             helper.uploadHelper(component, event,helper);
         } else {
             alert('Please Select a Valid File');
@@ -723,8 +834,11 @@
     clientSelected : function(component, event, helper){
         var clientId= component.find('selectClient').get('v.value');
         //alert(clientId);
+        component.set("v.jobPostingList",'');
         var array = component.get("v.jobPostingList");
+        
         console.log(component.get("v.jobPostingList"));
+        
         var action = component.get("c.getJobPostingPickListValues");
         
         action.setParams({
@@ -737,10 +851,13 @@
             var res= response.getReturnValue();
             
             if(state === 'SUCCESS'){
+                
                 for(let i=0; i<res.length;i++){
                     array.push({"value":res[i].Id, "label":res[i].Name});
                 }
+                
                 component.set("v.jobPostingList",array);
+                
                 //console.log(component.get("v.jobPostingList"));       
             }
             else if(state === 'ERROR'){
@@ -811,7 +928,117 @@
             }
             
         }
+        component.set("v.SearchUserKeyWord3",'');   
         
     },
     
+    preferredEdType :function(component){
+        
+        var action = component.get("v.selectedEdType");
+        //alert('action'+action);
+        
+        var Type = component.get("v.candidateProfile.KTDO1__UG_Education_Type__c");
+        
+        component.set("v.candidateProfile.KTDO1__UG_Education_Type__c",action);
+        //console.log(JSON.stringify(component.get("v.candidateProfile")));
+    },
+    
+    preferredPGEdType :function(component){ 
+        
+        var action = component.get("v.selectedPGEdType");
+        //alert('action'+action);
+        
+        var Type = component.get("v.candidateProfile.KTDO1__PG_Education_Type__c");
+        
+        component.set("v.candidateProfile.KTDO1__PG_Education_Type__c",action);
+        //console.log(JSON.stringify(component.get("v.candidateProfile")));
+    },
+    
+    handleOnSubmit : function(component, event, helper) {
+        
+        var loc = component.find("locationForm").get("v.value");
+        console.log(JSON.stringify(loc));
+
+        var fields = component.find('accForm1').get('v.value');
+        
+        console.log(JSON.stringify(fields));
+        fields["KTDO1__Billing_Location__c"]= JSON.stringify(loc);
+        component.find('accForm1').set('v.value',fields);
+        console.log(JSON.stringify(fields));
+
+        helper.handleOnSubmitHelper(component, event, helper,fields);
+        //event.preventDefault();
+        
+        
+    },
+    
+    /*handleOnSuccess : function(component, event, helper) {
+        /*var resp = event.getParam().response;
+       console.log(resp.Id);*/
+    /*var record = event.getParam("response");
+        //alert('record' +JSON.stringify(record));
+        //alert(record.Id);
+        component.find("notificationsLibrary").showToast({
+            "title": "Success",
+            "message": "Candidate Profile Created",
+            "variant": "Success"
+            
+        });
+    },*/
+    
+    addRow: function(component, event, helper) {
+        //get the account List from component  
+        var skillsList = component.get("v.skillsList");
+        //Add New Account Record
+        skillsList.push({
+            'sobjectType': 'KTDO1__Skill_Set_Experience__c',
+            'KTDO1__Skill_Set__c': '',
+            'KTDO1__Skill_Experience_Level__c': '',
+            'KTDO1__Ratings__c': '',
+            
+        });
+        component.set("v.skillsList", skillsList);
+        // alert('accountList   :::::'+accountList);
+    },
+    
+    removeRecord: function(component, event, helper) {
+        //Get the account list
+        var skillsList = component.get("v.skillsList");
+        //Get the target object
+        var selectedItem = event.currentTarget;
+        //Get the selected item index
+        var index = selectedItem.dataset.record;
+        //Remove single record from account list
+        skillsList.splice(index, 1);
+        //Set modified account list
+        component.set("v.skillsList", skillsList);
+    },
+    
+    addRowForRoles: function(component, event, helper) {
+        //get the account List from component  
+        var rolesAndRespo = component.get("v.rolesandRespoList");
+        //Add New Account Record
+        rolesAndRespo.push({
+            'sobjectType': 'KTDO1__Roll_and_Responsibilities__c',
+            'KTDO1__Type__c': '',
+            'KTDO1__Rolls_and_Responsibilities_Master__c': '',
+            
+            
+        });
+        component.set("v.rolesandRespoList", rolesAndRespo);
+        // alert('accountList   :::::'+accountList);
+    },
+    
+    removeRolesRecord: function(component, event, helper) {
+        //Get the account list
+        var rolesAndRespo = component.get("v.rolesandRespoList");
+        //Get the target object
+        var selectedItem = event.currentTarget;
+        //Get the selected item index
+        var index = selectedItem.dataset.record;
+        //Remove single record from account list
+        rolesAndRespo.splice(index, 1);
+        //Set modified account list
+        component.set("v.rolesandRespoList", rolesAndRespo);
+    },
 })

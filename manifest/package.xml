@@ -1,31 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>HomePageController</members>
-		<members>JobProfileCntrl</members>
-		<members>MyDashboardController</members>
-		<members>smartSearchController</members>
-		<name>ApexClass</name>
-	</types>
-	<types>
-	    <members>ScheduleInterview</members>
-		<members>HomePage</members>
-		<members>HomePageChild</members>
-		<members>JobProfileChild</members>
-		<members>JobProfileChildlist</members>
-		<members>MyDashboard</members>
-		<members>ProfileSearch</members>
-		<members>SaveSkillSet</members>
-		<members>customLookUpforRecruiterData</members>
-		<members>customLookupforLocationdata</members>
-		<members>customLookupforRollsAndRespData</members>
-		<members>customLookupforSkillsdata</members>
-		<members>selectedLocationdataEvent</members>
-		<members>selectedRecruiterDataEvent</members>
-		<members>selectedRollsAndRespdataEvent</members>
-		<members>selectedSkillsdataEvent</members>
-		<members>showCandidateProfileSearch</members>
-		<name>AuraDefinitionBundle</name>
+		<members>Public_Dashboards</members>
+		
+		<name>Dashboard</name>
 	</types>
 	<version>53.0</version>
 </Package>

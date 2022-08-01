@@ -10,6 +10,7 @@
     <aura:attribute name="ShowStatusAction" type="boolean" default="false"/>
     <aura:attribute name="ShowResubmissionButton" type="boolean" default="false"/>
     <aura:attribute name="ShowResumissionModal" type="boolean" default="false"/>
+    <aura:attribute name="ShowConfirmationMessage" type="boolean" default="false"/>
     <aura:attribute name="addComments" type="boolean" default="false"/>
     <aura:attribute name="viewComments" type="boolean" default="false"/>
     <aura:attribute name="disableButton" type="boolean" default="false" />
@@ -29,9 +30,9 @@
     <aura:attribute name="JobAppdetails" type="Object"/>    
     <aura:attribute name="OpenJobProfileChild" type="boolean" default="false"/>
     
-    <tr Style="Width:100%">
+    <tr class="slds-border_bottom" Style="Width:100%">
         <td></td>
-        <td><button class="slds-button slds-button_neutral" aura:id="toggle" onclick="{!c.toggle}" value="{!v.checkThis}"  style="padding:0 2px;"> 
+        <td ><button class="slds-button slds-button_neutral" aura:id="toggle" onclick="{!c.toggle}" value="{!v.checkThis}"  style="padding:0 2px;"> 
             <lightning:Icon aura:id="chevronright" iconName="utility:chevronright" size="x-small"/>
             <lightning:Icon  class="slds-hide" aura:id="chevrondown" iconName="utility:chevrondown" size="x-small"/>
             </button> </td>
@@ -56,7 +57,7 @@
             
         </tr> 
         
-        <tr Style="Width:100%"> 
+        <tr class="slds-border_bottom" Style="Width:100%"> 
             <td></td>
             <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.Name}/{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Designation__c}</div></td>
             <td><div class="slds-text-heading-large">{!v.POList.JobAppication.KTDO1__Candidate_Profile__r.KTDO1__Experience__c}</div></td>
@@ -73,7 +74,7 @@
             </td>   
             
         </tr>
-        <tr Style="Width:100%">
+        <tr class="slds-border_bottom" Style="Width:100%">
             <td></td>
             <td> <div>
                 
@@ -294,12 +295,13 @@
                 </header>
                 <!--Modal/Popup Box Body Starts here-->
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    
+                    <lightning:input  type="text" value="{!v.comments.Name}" label="Enter your Feedback" placeholder="Enter Comments" style="width:600px;height:100px" required="true"/>
                     <aura:iteration items="{!v.commentsList}" var="com" indexVar="index">
                         <div class="slds-box slds-box_small">
-                            <p> {!com.KTDO1__Remarks__c}</p>
+                            <p> {!com.KTDO1__User__c} - {!com.KTDO1__Remarks__c}</p>
                         </div>
                     </aura:iteration>
-                    <lightning:input  type="text" value="{!v.comments.Name}" placeholder="Enter Comments" style="width:600px;height:100px"/>
                 </div>
                 <!--Modal/Popup Box Body Ends here-->
                 <!--Modal/Popup Box Footer Starts here-->
@@ -311,11 +313,41 @@
                     <lightning:button variant="brand"
                                       label="OK"
                                       title="OK"
+                                      value ="{!v.POList.JobAppication.Id}"
                                       onclick="{!c.handleSaveComment}"/>
                 </footer>
             </div>
         </section>
         <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.ShowConfirmationMessage}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" 
+                 aria-modal="true" aria-describedby="modal-content-id-1" 
+                 class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    
+                    <h1 class="slds-page-header__title slds-truncate " >Confirmation</h1>
+                </header>
+                
+                <div class="slds-modal__content slds-p-around--medium">
+                    <center><b>Are you sure you want to create Offer Letter?</b></center>
+                </div>
+                
+                <footer class="slds-modal__footer"> 
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{! c.hideModelOfferLetter }"/>
+                    <lightning:button variant="brand"
+                                      label="OK"
+                                      title="OK"
+                                      value ="{!v.POList.JobAppication.Id}"
+                                      onclick="{!c.createOffer}"/>
+                </footer>
+            </div>
+        </section>
     </aura:if>
     
 </aura:component>

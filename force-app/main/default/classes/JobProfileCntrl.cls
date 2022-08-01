@@ -134,7 +134,7 @@ opp.KTDO1__Job_Posting__c.
     }
     
     @AuraEnabled
-    public static void getContactDetails(String jobAppId){
+    public static void setL1InterviewScheduled(String jobAppId){
         system.debug('jobAppId>>>'+jobAppId);
         List <KTDO1__Job_Application__c> lstOfValues = [Select Id,Name,KTDO1__Profile_Status__c from KTDO1__Job_Application__c where Id=: jobAppId ];
         system.debug('KTDO1__Job_Application__c:'+lstOfValues);
@@ -163,7 +163,10 @@ opp.KTDO1__Job_Posting__c.
     public static List<KTDO1__Comments__c> saveComment(Id appId, String comment){
         system.debug('appId>>>'+appId);
         system.debug('comment>>>'+comment);
-        KTDO1__Comments__c commentValue = new KTDO1__Comments__c(KTDO1__Job_Application__c=appId,KTDO1__Remarks__c=comment);
+        String userName = UserInfo.getName();
+        system.debug('userName>>>'+userName);
+                
+        KTDO1__Comments__c commentValue = new KTDO1__Comments__c(KTDO1__Job_Application__c=appId,KTDO1__Remarks__c=comment,KTDO1__User__c=userName);
         insert commentValue;
         List<KTDO1__Comments__c> updatedComments = getComments(appId);
         system.debug('updatedComments>>>'+updatedComments);
@@ -173,13 +176,13 @@ opp.KTDO1__Job_Posting__c.
     @AuraEnabled
     public static List<KTDO1__Comments__c> getComments(Id appId){
         system.debug('appId>>>'+appId);
-        List<KTDO1__Comments__c> comments = [Select KTDO1__Job_Application__c,KTDO1__Remarks__c from KTDO1__Comments__c where KTDO1__Job_Application__c =:appId ];
+        List<KTDO1__Comments__c> comments = [Select KTDO1__Job_Application__c,KTDO1__Remarks__c,KTDO1__User__c from KTDO1__Comments__c where KTDO1__Job_Application__c =:appId ];
         system.debug('comments>>>'+comments);
         return comments;  
     }
     
     
-    @AuraEnabled
+   /* @AuraEnabled
     public static Boolean saveResubmitProfile(String candId,String fileName,String base64Data,String contentType,String fileId){
         system.debug('candId>>>'+candId);
         system.debug('fileName>>>'+fileName);
@@ -228,5 +231,7 @@ opp.KTDO1__Job_Posting__c.
             return false;
         }
         
-    }
+    }*/
+    
+   
 }
