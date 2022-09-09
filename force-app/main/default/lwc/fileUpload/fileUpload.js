@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api ,track} from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import uploadFile from '@salesforce/apex/FileUploaderClass.uploadFile';
 import getCandidateId from '@salesforce/apex/FileUploaderClass.getCandidateId';
@@ -6,9 +6,11 @@ import { NavigationMixin } from 'lightning/navigation';
 export default class FileUploaderCompLwc extends NavigationMixin(LightningElement) {
     
     @api recordId;
-   
+    @track isLoading = false;
     fileData
+    
     openfileUpload(event) {
+        
         const file = event.target.files[0]
         var reader = new FileReader()
         reader.onload = () => {
@@ -24,8 +26,9 @@ export default class FileUploaderCompLwc extends NavigationMixin(LightningElemen
         reader.readAsDataURL(file)
     }
    
-     
+   
     handleClick() {
+        
         console.log(this.fileData);
         console.log('result');
         const { base64, filename, recordId } = this.fileData
@@ -37,7 +40,9 @@ export default class FileUploaderCompLwc extends NavigationMixin(LightningElemen
              let title = `${filename} uploaded successfully!!`
              
              this.toast(title);
+             this.isLoading = true;
              setTimeout(() => {
+                
                  alert('Inside Timeout');
                  this.candidateId(result);
             }, 180000);
@@ -49,7 +54,7 @@ export default class FileUploaderCompLwc extends NavigationMixin(LightningElemen
     }
 
     candidateId(result){
-        
+            this.isLoading = false;
              console.log('result12223'+result); 
              getCandidateId({result: result}).then(response =>{
              console.log('response>>>'+response);

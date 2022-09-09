@@ -91,6 +91,10 @@
     <div class="slds-hide" aura:id="spinner">
         <lightning:spinner style="position: fixed" alternativeText="{Loading}" size="large" />
     </div>
+
+    <div class="slds-hide" aura:id="spinner">
+        <lightning:spinner style="position: fixed" alternativeText="{Loading}" size="large" />
+    </div>
     
     
     
@@ -113,16 +117,16 @@
         <lightning:recordEditForm objectApiName="Job_Posting__c" onsuccess="{!c.handleSuccess}" recordId="{!v.jobPostRecordId}">
             <div class="slds-grid slds-wrap">
                 <div class="slds-col slds-size_1-of-4">
-                    <lightning:inputField fieldName="Name" value="{!v.jobPost.Name}" required="true"/>
+                    <lightning:inputField fieldName="Name" value="{!v.jobPost.Name}" required="true" aura:Id = "nameValidation"/>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
-                    <lightning:inputField fieldName="Account__c" value="{!v.jobPost.Account__c}" onchange="{!c.handleAccountChange}" required="true"/>
+                    <lightning:inputField fieldName="Account__c" value="{!v.jobPost.Account__c}" onchange="{!c.handleAccountChange}" required="true" aura:Id = "AccountValidation"/>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
-                    <lightning:inputField fieldName="Designation__c" value="{!v.jobPost.Designation__c}" required="true"/>
+                    <lightning:inputField fieldName="Designation__c" value="{!v.jobPost.Designation__c}" required="true" aura:Id = "DesignationValidation"/>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
-                    <lightning:inputField fieldName="Location__c" value="{!v.jobPost.Location__c}" required="true"/>
+                    <lightning:inputField fieldName="Location__c" value="{!v.jobPost.Location__c}" required="true" aura:Id = "LocationValidation"/>
                 </div>
             </div>
             
@@ -137,14 +141,14 @@
                     <lightning:inputField fieldName="Posting_Due_Date__c" value="{!v.jobPost.Posting_Due_Date__c}"/>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
-                    <lightning:inputField fieldName="Min_CTC__c" value="{!v.jobPost.Min_CTC__c}" required="true"/>
+                    <lightning:inputField fieldName="Min_CTC__c" value="{!v.jobPost.Min_CTC__c}" required="true" aura:Id = "MinCTCValidation"/>
                 </div>
                 
             </div>
             
             <div class="slds-grid">
                 <div class="slds-col slds-size_1-of-4">
-                    <lightning:inputField fieldName="Max_CTC__c" value="{!v.jobPost.Max_CTC__c}" required="true"/>
+                    <lightning:inputField fieldName="Max_CTC__c" value="{!v.jobPost.Max_CTC__c}" required="true" aura:Id = "MaxCTCValidation"/>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
                     <lightning:inputField fieldName="Expected_Submission_Per_Day__c" value="{!v.jobPost.Expected_Submission_Per_Day__c}"/>
@@ -159,7 +163,7 @@
             </div>
             <div class="slds-grid">
                 <div class="slds-col slds-size_1-of-4">
-                    <lightning:inputField fieldName="Document_Stoarge__c" value="{!v.jobPost.Document_Stoarge__c}" required="true"/>
+                    <lightning:inputField fieldName="Document_Stoarge__c" value="{!v.jobPost.Document_Stoarge__c}" required="true" aura:Id = "DocumentStorageValidation"/>
                 </div>
                 <div class="slds-col slds-size_1-of-4">
                     <lightning:inputField fieldName="PayRoll_Company__c" value="{!v.jobPost.PayRoll_Company__c}"/>
@@ -181,11 +185,13 @@
             <br/>
             <!--SKILL SECTION FOR UPDATE STARTS-->
             <aura:if isTrue="{!not(empty(v.jobPostSkillRecordId))}">
-                <aura:iteration items="{!v.jobPostSkillRecordId}" var="recordId">
-                    <lightning:recordEditForm objectApiName="Skill_Set_Experience__c" aura:id="skillEditForm" onsuccess="{!c.handleOnSuccess}" recordId="{!recordId}">
-                        <div class="slds-grid">
+                <aura:iteration items="{!v.jobPostSkillRecordId}" var="recordId" indexVar="index">
+                    <lightning:recordEditForm objectApiName="Skill_Set_Experience__c" aura:id="skillEditForm" onload="{!c.skillLoaded}" onsuccess="{!c.handleOnSuccess}" recordId="{!recordId}">
+                        {!index+1}
+                    <div class="slds-grid">
+                            
                             <div class="slds-col slds-size_1-of-4">
-                                <lightning:inputField  fieldName="Skill_Set__c"  value="{!Skill_Set__c}" />
+                                <lightning:inputField  fieldName="Skill_Set__c"  required="true" value="{!Skill_Set__c}" />
                             </div>
                             <div class="slds-col slds-size_1-of-4">
                                 <lightning:inputField  fieldName="Skill_Experience_Level__c" value="{!Skill_Experience_Level__c}"/>
@@ -203,10 +209,10 @@
             <!--SKILL SECTION FOR UPDATE ENDS-->
             
             <aura:iteration items="{!v.skillsList}" var="skills" indexVar="index">
-                <lightning:recordEditForm objectApiName="Skill_Set_Experience__c" aura:id="skillForm" onsuccess="{!c.handleOnSuccess}" >
+                <lightning:recordEditForm objectApiName="Skill_Set_Experience__c"  onsuccess="{!c.handleOnSuccess}" >
                     <div class="slds-grid">
                         <div class="slds-col slds-size_1-of-4">
-                            <lightning:inputField  fieldName="Skill_Set__c"  value="{!skills.Skill_Set__c}" />
+                            <lightning:inputField  fieldName="Skill_Set__c" aura:id="skillSetValidation" required="true" value="{!skills.Skill_Set__c}" />
                         </div>
                         <div class="slds-col slds-size_1-of-4">
                             <lightning:inputField  fieldName="Skill_Experience_Level__c" value="{!skills.Skill_Experience_Level__c}"/>
@@ -251,10 +257,10 @@
             <!--DOCUMENT MASTER SECTION FOR UPDATE ENDS-->
             
             <aura:iteration items="{!v.docMasterList}" var="doc" indexVar="index">
-                <lightning:recordEditForm objectApiName="Job_Posting_Document__c" aura:id="docForm" onsuccess="{!c.handleOnSuccess}" recordId="{!v.jobPostDocRecordId}">
+                <lightning:recordEditForm objectApiName="Job_Posting_Document__c" aura:id="docForm" onsuccess="{!c.handleOnSuccess}">
                     <div class="slds-grid">
                         <div class="slds-col slds-size_1-of-4">
-                            <lightning:inputField  fieldName="Document_Master__c"  value="{!doc.Document_Master__c}" />
+                            <lightning:inputField  fieldName="Document_Master__c"  value="{!doc.Document_Master__c}"/>
                         </div>
                         <div class="slds-col slds-size_1-of-4 slds-p-top_large slds-p-left_small">
                             <a onclick="{!c.removeDocRecord}" data-record="{!index}">
@@ -279,16 +285,16 @@
             <div class="slds-grid">
                 <div class="slds-col slds-size_1-of-4 slds-p-bottom_small slds-p-left_xx-small">
                     <aura:if isTrue="{!not(empty(v.jobPostRecordId))}">
-                        <lightning:select label="Teams" aura:id="select" required="true" value="{!v.selectedTeam}" onchange="{! c.handleTeamChange }">
+                        <lightning:select label="Teams"  required="true" value="{!v.selectedTeam}" onchange="{! c.handleTeamChange }">
                             <aura:iteration items="{!v.teamList}" var="option">
                                 <option text="{!option.Name}" value="{!option.Id}" selected="{!option.selected}"/>
                             </aura:iteration>
                         </lightning:select>
                         <aura:set attribute="else">
-                            <lightning:select label="Teams" aura:id="select" required="true" value="{!v.selectedTeam}" onchange="{! c.handleTeamChange }">
+                            <lightning:select label="Teams" aura:id="TeamsValidation" required="true" value="{!v.selectedTeam}" onchange="{! c.handleTeamChange }">
                                 <option value="">-- Please Select --</option>
                                 <aura:iteration items="{!v.teamList}" var="option">
-                                    <option text="{!option.Name}" value="{!option.Id}" selected="{!option.selected}"/>
+                                    <option text="{!option.Name}" value="{!option.Id}"   selected="{!option.selected}"/>
                                 </aura:iteration>
                             </lightning:select>
                         </aura:set>
@@ -301,7 +307,7 @@
                         <aura:iteration items="{!v.teamMemberList}" var="teamMember" indexVar="index">
                             <tr>
                                 <lightning:recordEditForm aura:id="form" recordId="{!teamMember.Id}" objectApiName="CustomTeams__Team_Members__c" recordTypeId= "">
-                                    <lightning:inputField fieldName="CustomTeams__User__c"  value="{!teamMember.CustomTeams__User__c}"/>
+                                    <lightning:inputField fieldName="CustomTeams__User__c"  value="{!teamMember.CustomTeams__User__c}" />
                                 </lightning:recordEditForm>
                             </tr>
                         </aura:iteration>
@@ -356,7 +362,7 @@
                     <div class="page-footer">
                         <tr>
                             <aura:if isTrue="{!not(empty(v.jobPostRecordId))}">
-                                <td class=""><lightning:button class="slds-theme_inverse slds-align_absolute-center" aura:id="updateJobPostingFields" type="submit" label="UPDATE JOB" onclick="{!c.UpdateJob}" value="{!v.jobPost}"/></td>
+                                <td class=""><lightning:button class="slds-theme_inverse slds-align_absolute-center" aura:id="updateJobPostingFields" type="" label="UPDATE JOB" onclick="{!c.UpdateJob}" value="{!v.jobPost}"/></td>
                                 <aura:set attribute="else">
                                     <td class="slds-p-right_x-large"><lightning:button class="slds-button slds-button_destructive slds-align_absolute-center" aura:id="search" type="submit" label="+ ADD ANOTHER JOB" onclick="{!c.addAnotherJob}"/></td>
                                     <td></td>

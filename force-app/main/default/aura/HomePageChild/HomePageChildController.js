@@ -3,6 +3,7 @@
     doInit : function(component, event,helper,page) 
     {    
         var items = component.get("v.JobList"); 
+        console.log('%%%%%%%%%%%%%%%%%%%%%%%');
         console.log(JSON.stringify(component.get("v.JobList")));
         //var jobPostings = JSON.parse(items);
         //console.log(jobPostings);
@@ -128,4 +129,79 @@
         });
         evt.fire();
     },
+   
+        openModel: function(component, event, helper) {
+            component.set("v.isModalOpen", true);
+         },
+        
+         closeModel: function(component, event, helper) { 
+            component.set("v.isModalOpen", false);
+         },
+        
+         submitDetails: function(component, event, helper) {
+            component.set("v.isModalOpen", false);
+         },
+
+
+
+         openpage : function(component,event,helper){
+            var jobpost= component.get("v.JobList");
+        console.log('Inside function');
+        console.log(jobpost.jobPosting.Name);
+        window.open("https://www.facebook.com/sharer/sharer.php?u=https://kasetti-dev-evironmet-dev-ed.lightning.force.com/"+jobpost.jobPosting.Name);
+    },
+
+
+         openpage1 : function(component,event,helper){
+            var jobpost= component.get("v.JobList");
+            console.log('Inside function');
+        console.log(jobpost.jobPosting.Name);
+           window.open("https://www.linkedin.com/pulse/text="+jobpost.jobPosting.Name);
+     },
+
+
+
+     openpage2 : function(component,event,helper){
+        var jobpost= component.get("v.JobList"); 
+        console.log('Inside function');
+        console.log(jobpost.jobPosting.Name);
+        console.log(jobpost.jobPosting.Designation__c);
+       
+      //  helper.Skill(component,helper,event);
+       //  console.log(jobskill.skills.Name);
+
+        window.open("https://api.whatsapp.com/send?text="+"JobPosting Name : "+jobpost.jobPosting.Name+"%0a"+"Designations : "+jobpost.jobPosting.Designation__c+"%0a"+"Number Of Positions : "+jobpost.jobPosting.No_Of_Positions__c+"%0a"+"Job Requirement Type : "+jobpost.jobPosting.Job_Requirement_Type__c+"%0a"+"Role : "+jobpost.jobPosting.role__c+
+                       "%0a"+"Posting Start Date : "+jobpost.jobPosting.Posting_Start_Date__c+"%0a"+"Posting Last Date : "+jobpost.jobPosting.Posting_Due_Date__c+"%0a"+"Location : "+jobpost.jobPosting.Location__c);
+
+     },
+ 
+ openpage3 : function(component,event,helper){
+    var jobpost= component.get("v.JobList");
+    window.open("https://twitter.com/intent/tweet?text="+"JobPosting Name : "+jobpost.jobPosting.Name+"%0a"+"Designations : "+jobpost.jobPosting.Designation__c+"%0a"+"Number Of Positions : "+jobpost.jobPosting.No_Of_Positions__c+"%0a"+"Job Requirement Type : "+jobpost.jobPosting.Job_Requirement_Type__c+"%0a"+"Role : "+jobpost.jobPosting.role__c+
+    "%0a"+"Posting Start Date : "+jobpost.jobPosting.Posting_Start_Date__c+"%0a"+"Posting Last Date : "+jobpost.jobPosting.Posting_Due_Date__c+"%0a"+"Location : "+jobpost.jobPosting.Location__c);
+},
+
+
+openpage4 : function(component,event,helper){
+    var jobpost= component.get("v.JobList");
+    window.open("https://www.naukri.com/"+jobpost.jobPosting.Name);
+},
+
+
+openpage5 : function(component,event,helper){
+    var jobpost= component.get("v.JobList");
+    console.log('Inside function');
+    console.log(jobpost.jobPosting.Name);
+    window.open("mailto: ?cc=nothing&bcc=nothing&subject=jobPosting&body="+"JobPosting Name : "+jobpost.jobPosting.Name+"%0a"+"Designations : "+jobpost.jobPosting.Designation__c+"%0a"+"Number Of Positions : "+jobpost.jobPosting.No_Of_Positions__c+"%0a"+"Job Requirement Type : "+jobpost.jobPosting.Job_Requirement_Type__c+"%0a"+"Role : "+jobpost.jobPosting.role__c+
+    "%0a"+"Posting Start Date : "+jobpost.jobPosting.Posting_Start_Date__c+"%0a"+"Posting Last Date : "+jobpost.jobPosting.Posting_Due_Date__c+"%0a"+"Location : "+jobpost.jobPosting.Location__c);
+},
+
+
+openpage6 : function(component,event,helper){
+    var jobpost= component.get("v.JobList");
+    window.open("https://t.me/share/url?url=https://telegram.org&text="+"JobPosting Name : "+jobpost.jobPosting.Name+"%0a"+"Designations : "+jobpost.jobPosting.Designation__c+"%0a"+"Number Of Positions : "+jobpost.jobPosting.No_Of_Positions__c+"%0a"+"Job Requirement Type : "+jobpost.jobPosting.Job_Requirement_Type__c+"%0a"+"Role : "+jobpost.jobPosting.role__c+
+    "%0a"+"Posting Start Date : "+jobpost.jobPosting.Posting_Start_Date__c+"%0a"+"Posting Last Date : "+jobpost.jobPosting.Posting_Due_Date__c+"%0a"+"Location : "+jobpost.jobPosting.Location__c);
+}
+
+
 })

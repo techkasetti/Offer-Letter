@@ -10,6 +10,8 @@
     <aura:attribute name="candEmail" type="String" />
     <aura:attribute name="hostEmail" type="String" />
     <aura:attribute name="batchId" type="String" />
+    <aura:attribute name="contactList" type="List" />
+    <aura:attribute name="contactSelected" type="Object"/>
 
     <div class="slds-hide" aura:id="spinner">
         <lightning:spinner style="position: fixed" alternativeText="{Loading}" size="large" />
@@ -27,14 +29,20 @@
             <header class="slds-modal__header">
                 <lightning:buttonIcon class="slds-modal__close" alternativeText="Close" iconName="utility:close"
                     onclick="{!c.close}" variant="bare-inverse" size="large"></lightning:buttonIcon>
-                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">ZOOM MEETING SHEDULE</h2>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">ZOOM MEETING SCHEDULE</h2>
             </header>
             
                         <!--content STARTS here-->
                         <div class="slds-modal__content" id="">
                             <br/>
                             <lightning:input type="{!v.inputType}" name="startDateTime" value="{!v.startDatetime}" label="" onchange="{}" required="true" class="slds-p-left_small"/>
-                            <lightning:input aura:id="hostEmail" name="hostEmail" label="Host" value="{! v.hostEmail }" class="slds-p-left_small slds-p-right_small" disabled="true"/>
+                            <lightning:select aura:id="select" name="select" label="Contact Person" onchange="{! c.onChange }" class="slds-p-left_small slds-p-right_small">
+                                        <option value="">Contact Person</option> 
+                                        <aura:iteration items="{!v.contactList}" var="lst" >    
+                                            <option value="{!lst.Name}">{!lst.Name}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                            <lightning:input aura:id="hostEmail" name="hostEmail" label="Host" value="{! v.contactSelected.Email }" class="slds-p-left_small slds-p-right_small" disabled="true"/>
                             <lightning:input aura:id="addMember" name="addMember" label="Additional Member" value="{! v.addMember }" class="slds-p-left_small slds-p-right_small" />
                             <lightning:input aura:id="candEmail" name="candEmail" label="Candidate Email" value="{! v.candEmail }" class="slds-p-left_small slds-p-right_small" disabled="true"/>
 

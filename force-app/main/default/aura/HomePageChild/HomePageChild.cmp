@@ -4,23 +4,66 @@
     <aura:attribute name="CandidateProfiles" type="List"/> 
     <aura:attribute name="expanded" type="Boolean" default="false"/>
     <aura:attribute name="checkThis" type = "Boolean" default ="true" />
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
     <tr class= "slds-text-title_caps slds-border_bottom" Style="Width:100%">    
        
-        <td Style="align-content:right, width:50px"><button class="slds-button slds-button_neutral" aura:id="toggle" onclick="{!c.toggle}" value="{!v.checkThis}"  style="padding:0 2px;"> 
+        <td Style="align-content:right; width:50px;"><button class="slds-button slds-button_neutral" aura:id="toggle" onclick="{!c.toggle}" value="{!v.checkThis}"  style="padding:0 2px;"> 
             <lightning:Icon aura:id="chevronright" iconName="utility:chevronright" size="x-small"/>
             <lightning:Icon  class="slds-hide" aura:id="chevrondown" iconName="utility:chevrondown" size="x-small"/>
             </button> 
         </td>
         
-        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.JobPosting.Name}</b></div></td>
-        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.JobPosting.No_Of_Candidate_Selected__c}</b></div></td>
-        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.JobPosting.Posting_Due_Date__c}</b></div></td>
-        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b class="status">{!v.JobList.JobPosting.Job_OC_Status__c}</b></div>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.jobPosting.Name}</b></div></td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.jobPosting.No_Of_Candidate_Selected__c}</b></div></td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b>{!v.JobList.jobPosting.Posting_Due_Date__c}</b></div></td>
+        <td><div class="slds-text-heading-large slds-gray slds-align_absolute-center"><b class="status">{!v.JobList.jobPosting.Job_OC_Status__c}</b></div>
+
+
         </td>
         <td><lightning:button name="{!v.JobList.Id}"  iconName="utility:edit" iconPosition="right"  onclick="{! c.editJobPosting }"/></td>
-        <td><lightning:button name="{!v.JobList.JobPosting.Id}"  label="Add Profile" variant="Brand" iconPosition="right"  onclick="{! c.navigateToSmartSearch }"/></td>
+        <td><lightning:button name="{!v.JobList.jobPosting.Id}"  label="Add Profile" variant="Brand" iconPosition="right"  onclick="{! c.navigateToSmartSearch }"/></td>
+        <td><lightning:button name="{!v.JobList.jobPosting.Id}"  label="Share" variant="Brand" iconPosition="right" iconName="utility:socialshare"  onclick="{! c.openModel }"/></td>  
         
-    </tr>
+        <aura:if isTrue="{!v.isModalOpen}"> 
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+             <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                    onclick="{! c.closeModel }"
+                    alternativeText="close"
+                    variant="bare-inverse"
+                    class="slds-modal__close"/>
+<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Share With</h2>
+</header>
+<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+
+   <lightning:button label="Facebook" onclick="{!c.openpage}" /> 
+    <lightning:button label="LinkedIn" onclick="{!c.openpage1}" />
+    <lightning:button  label="WhatsApp"  onclick="{!c.openpage2}"/>
+    <lightning:button label="Twitter" onclick="{!c.openpage3}" />
+    <lightning:button label="Naukri" onclick="{!c.openpage4}" />
+    <lightning:button label="Gmail" onclick="{!c.openpage5}" />
+    <lightning:button label="Telegram" onclick="{!c.openpage6}" /> 
+
+   
+         </div>
+<footer class="slds-modal__footer">
+    <lightning:button variant="neutral"
+                      label="Cancel"
+                      title="Cancel"
+                      onclick="{! c.closeModel }"/>
+    <lightning:button variant="brand"
+                      label="OK"
+                      title="OK"
+                      onclick="{!c.submitDetails}"/>
+</footer>
+</div>
+</section>
+<div class="slds-backdrop slds-backdrop_open"></div>
+</aura:if>
+
+  </tr>
+    
     <!--<tr>       
         <td><button class="slds-button slds-button_neutral" aura:id="toggle" onclick="{!c.toggle}" value="{!v.checkThis}"  style="padding:0 2px;"> 
             <lightning:Icon aura:id="chevronright" iconName="utility:chevronright" size="x-small"/>
@@ -53,7 +96,7 @@
                 </tr>
 
                 
-                <aura:iteration items="{!v.JobList.JobApplicationWrapList}" var="var1" indexVar="index">
+                <aura:iteration items="{!v.JobList.jobApplicationWrapList}" var="var1" indexVar="index">
                     <c:JobProfileChild jobApplication="{!var1}"  /> 
                 </aura:iteration>
                 

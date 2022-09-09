@@ -60,7 +60,7 @@ public class ZoomMetingSchedule {
         Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail }); 
         //SEND MAIL TO ADDRESS ENDS
 
-        return 'response';
+        return res.getStatus();
         
     }
     
@@ -97,19 +97,34 @@ public class ZoomMetingSchedule {
     }
 
     @AuraEnabled
-    public static String getCandEmail(String candidateID) {
-        system.debug('candidateID>>>'+candidateID);
-        Candidate_Profile__c email = [Select Email__c from Candidate_Profile__c  where Id=:candidateID];
+    public static String getCandEmail(String candAppID) {
+        system.debug('candidateID>>>'+candAppID);
+        Job_Application__c candId = [Select Name,Candidate_Profile__c from Job_Application__c where Id =: candAppID];
+        Candidate_Profile__c email = [Select Email__c from Candidate_Profile__c  where Id=:candId.Candidate_Profile__c];
         system.debug('email.Email__c>>>'+email.Email__c);
         return email.Email__c;
     }
 
-    @AuraEnabled
+    /*@AuraEnabled
     public static String getHostEmail(String hostID) {
         system.debug('hostID>>>'+hostID);
         Contact email = [Select Email from Contact where Id=: hostID];
         system.debug('email>>>'+email.Email);
         return email.Email;
+    }*/
+    
+    @AuraEnabled
+    public static List<Contact> getHostEmail() {
+        //system.debug('hostID>>>'+hostID);
+       Job_Application__c jobPostId = [Select Id,Name,Job_Posting__c  from Job_Application__c where Id = 'a088Z000013B4OcQAK'];
+        system.debug('jobPostId>>>'+jobPostId);
+        system.debug('jobPostAcc1>>>'+jobPostId.Job_Posting__c);
+        Job_Posting__c accId = [Select Id,Name,Account__c  from Job_Posting__c where Id =: jobPostId.Job_Posting__c];
+        system.debug('accId>>>'+accId);
+        List<Contact> a = [Select Id,Name,Phone,Email from Contact where AccountId =:accId.Account__c ];
+        system.debug('Contact>>'+a);
+         
+        return a;
     }
 
 }

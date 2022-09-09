@@ -8,8 +8,9 @@
        action.setCallback(this, function(response) {
            var state = response.getState();
                if(state === 'SUCCESS'){
-                   //console.log('jobPostRecordId>>'+response.getReturnValue());
+                   console.log('jobPostRecordId>>'+response.getReturnValue());
                    component.set("v.jobPostDocRecordId", response.getReturnValue());
+                   
                }
                else if(state === 'ERROR'){
                    var toastEvent = $A.get("e.force:showToast");
@@ -68,29 +69,29 @@
        })
        $A.enqueueAction(action);
 
-    //    //GET TEAM MEMBERS FOR EDIT
-    //     var teamMemlookupId= component.get("v.teamList");
-    //     var action = component.get("c.getTeamMembers");
-    //     action.setParams({   
-    //         "team": teamMemlookupId.Id
-    //     });
-    //     action.setCallback(this, function(response) {
-    //         var state = response.getState();
-    //             if(state === 'SUCCESS'){
-    //                 component.set("v.teamID",'sjhjs');
-    //                 component.set("v.teamMemberList",response.getReturnValue());
-    //                 //alert('teamMembersOptions>>'+JSON.stringify(response.getReturnValue()));
-    //             }
-    //             else if(state === 'ERROR'){
-    //                 var toastEvent = $A.get("e.force:showToast");
-    //                 toastEvent.setParams({
-    //                     "title": "Error!",
-    //                     "message": "Error in getTeamMembers."
-    //                 });
-    //                 toastEvent.fire();  
-    //             }
-    //     })
-    //     $A.enqueueAction(action);
+       //GET TEAM MEMBERS FOR EDIT
+        var teamMemlookupId= component.get("v.teamList");
+        var action = component.get("c.getTeamMembers");
+        action.setParams({   
+            "team": teamMemlookupId.Id
+        });
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+                if(state === 'SUCCESS'){
+                    // component.set("v.teamID",'sjhjs');
+                    component.set("v.teamMemberList",response.getReturnValue());
+                    //alert('teamMembersOptions>>'+JSON.stringify(response.getReturnValue()));
+                }
+                else if(state === 'ERROR'){
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Error!",
+                        "message": "Error in getTeamMembers."
+                    });
+                    toastEvent.fire();  
+                }
+        })
+        $A.enqueueAction(action);
      },
 
 

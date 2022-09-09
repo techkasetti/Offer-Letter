@@ -2,6 +2,8 @@
 
     doInit: function (component, event, helper, page) {
 
+        
+
         var myPageRef = component.get("v.pageReference");
         var recordId = myPageRef.state.c__candDocParserId;
         if(recordId){
@@ -13,6 +15,17 @@
             console.log(candIdEdit);
             component.set("v.candRecordId", candIdEdit);
         }
+         //---
+         var recId = component.get("v.candRecordId");
+         console.log("rec id"+recId);
+         if(component.get("v.candRecordId")){
+            console.log("recid in");
+
+           // alert('recID');
+             helper.getSkillForEdit(component,event,helper);
+         }
+       
+        //---
         
        
 
@@ -263,6 +276,10 @@
             }
         })
         $A.enqueueAction(action);
+
+       
+
+      
     },
 
 
@@ -972,10 +989,17 @@
     },
 
     handleOnSubmit: function (component, event, helper) {
+///---------
 
+//helper.ValidateName(component, event, helper);
+
+
+ 
+   
+///---------
         /* var loc = component.find("locationForm").get("v.value");
          console.log(JSON.stringify(loc));*/
-         console.log(component.get("v.candDocParserId"));
+        // alert(component.get("v.candDocParserId"));
          var candidateId = component.get("v.candDocParserId");
 
         var fields = component.find('accForm1').get('v.value');
@@ -991,11 +1015,421 @@
         //  fields["Billing_Location__c"]= JSON.stringify(loc);
         // component.find('accForm1').set('v.value',fields);
         // console.log(JSON.stringify(fields));
+//----------
+var emailval =component.find('emailValidation');
+var value = emailval.get("v.value");
+var emailRegex=/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+var validatedata = true;
+console.log('email2');
+
+if(value==null){
+    console.log('email if');
+    validatedata = false;
+    var toastEvent=$A.get("e.force:showToast");
+    toastEvent.setParams({
+        title:'ERROR!',
+        message:'Email is Empty',
+        type:'error',
+        mode:'pester'
+
+    });
+    toastEvent.fire();
+
+}
+else if (!value.match(emailRegex))
+{
+    validatedata=false;
+
+    console.log('email else if');
+    var toastEvent=$A.get("e.force:showToast");
+    toastEvent.setParams({
+        title:'ERROR!',
+        message:'Enter Valid Email',
+        type:'error',
+        mode:'pester'
+
+    });
+    toastEvent.fire();
+
+
+}
+
+else{
+    console.log('email else');
+}
+    //Validation for Name
+   
+    var nameValidation = component.find('nameValidation');
+    var value = nameValidation.get("v.value");
+    var rexName = /^[a-zA-Z\s]*$/;  
+    console.log(' name');
+    
+ if( value ==null){
+    validatedata=false;
+
+    console.log('inside if name');
+    var toastEvent = $A.get("e.force:showToast");
+    toastEvent.setParams({
+    title: "ERROR!",
+    message: " Candidate Name is Empty .",
+    duration:' 5000',
+    type: "error",
+    mode: 'pester'
+});
+    toastEvent.fire();
+}
+     else if (!value.match(rexName)) {
+        validatedata=false;
+
+         console.log('inside if name');
+          var toastEvent = $A.get("e.force:showToast");
+          toastEvent.setParams({
+          title: "ERROR!",
+          message: " Candidate Name Should be alphabetic characters .",
+          duration:' 5000',
+          type: "error",
+          mode: 'pester'
+});
+          toastEvent.fire();
+//component.set("v.errors",[{message:"Invalid Phone No: " + value}]);
+    }
+   
+
+
+   // Validation for Phone Number
+  //validatePhoneNo : function(component, event, helper) {
+    console.log('Hello phone');
+    var phoneValidation = component.find('phoneValidation');
+    var value1 = phoneValidation.get("v.value");
+    console.log(value);
+  //  alert(value);
+          if (isNaN(value1)) {
+            validatedata=false;
+
+            console.log('inside if phone');
+             var toastEvent = $A.get("e.force:showToast");
+             toastEvent.setParams({
+             title: "ERROR!",
+             message: " Invalid Phone number.",
+             duration:' 5000',
+             type: "error",
+             mode: 'pester'
+    });
+    toastEvent.fire();
+   // component.set("v.errors",[{message:"Invalid Phone No: " + value}]);
+        }
+        else if ( value1.length !=10){ 
+            validatedata=false;
+
+            console.log('else if phone');
+            var toastEvent = $A.get("e.force:showToast");
+             toastEvent.setParams({
+             title: "ERROR!",
+             message: " Invalid Phone number pattern.",
+             duration:' 5000',
+             type: "error",
+             mode: 'pester'
+    });
+    toastEvent.fire();
+         } else {
+              console.log('inside else phone');
+             // phoneValidation.set("v.errors",null);
+              console.log('inside else after phone');
+             }
+ //Current Location
+         var currLocValidation = component.find('currLocValidation');
+         var value =currLocValidation.get("v.value");
+         var regexcurr =/^[a-zA-Z]+$/;
+         if(value == null){
+            validatedata = false;
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title:"ERROR!",
+                message:"Current Location is Empty",
+                type:"error",
+                duration:"5000",
+                mode:"pester"
+            });
+            toastEvent.fire();
+         }
+         else if(!value.match(regexcurr)){
+            validatedata = false;
+            var toastEvent =$A.get("e.force:showToast");
+            toastEvent.setParams({
+                title:"ERROR!",
+                message:"Current Location Should be alphabetic characters .",
+                type:"error",
+                duration:"5000",
+                mode:"pester"
+            });
+            toastEvent.fire();
+
+         }
+         else{
+            console.log('current Location');
+         }
+// Validation for Adhaar Number
+         var adhaarValidation = component.find('adhaarValidation');
+         var value = adhaarValidation.get("v.value"); 
+         if (isNaN(value)) {
+            validatedata=false;
+
+            console.log('inside if adhaar');
+             var toastEvent = $A.get("e.force:showToast");
+             toastEvent.setParams({
+             title: "ERROR!",
+             message: " Invalid Adhaar number.",
+             duration:' 5000',
+             type: "error",
+             mode: 'pester'
+    });
+    toastEvent.fire();
+   // component.set("v.errors",[{message:"Invalid Phone No: " + value}]);
+        }  else if ( value.length !=12){ 
+            validatedata=false;
+
+            var toastEvent = $A.get("e.force:showToast");
+             toastEvent.setParams({
+             title: "ERROR!",
+             message: " Adhaar Number should be 12 digits.",
+             duration:' 5000',
+             type: "error",
+             mode: 'pester'
+    });
+    toastEvent.fire();
+         } else {
+            console.log('inside else');
+           // adhaarValidation.set("v.errors",null);
+            console.log('inside else after adhaar');
+           } 
+// Validation for PanNumber
+        var panValidation = component.find('panValidation');
+        var value = panValidation.get("v.value"); 
+        var panPattern = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+        
+        console.log('pan entered :-'+value);
+        if(value==null){
+            validatedata=false;
+            console.log('inside if Pan');
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+            title: "ERROR!",
+            message: " Invalid Pan number empty.",
+            duration:' 5000',
+            type: "error",
+            mode: 'pester'
+   });
+            toastEvent.fire();
+
+        }
+         else  if (!value.match(panPattern)) {
+            validatedata=false;
+              console.log('inside if Pan');
+               var toastEvent = $A.get("e.force:showToast");
+               toastEvent.setParams({
+               title: "ERROR!",
+               message: " Invalid Pan number.",
+               duration:' 5000',
+               type: "error",
+               mode: 'pester'
+      });
+                   toastEvent.fire();
+          } 
+          else{
+            console.log(' inside else');
+          }
+     //Pteferred Location
+         console.log('outside pre');
+         var preLocValidation = component.find('preLocValidation') ;
+         var value =preLocValidation.get("v.value");
+         if(value == null){
+            console.log('loc if');
+            validatedata = false;
+            var toastEvent =$A.get("e.force:showToast");
+            toastEvent.setParams({
+                title:"ERROR!",
+                message:"Minimum one Preferred Location is Required",
+                type:"error",
+                duration:'5000',
+                mode:"pester"
+            });
+            toastEvent.fire();
+
+         }
+         else{
+            console.log('location selected');
+         }
+     //resumeValidation
+        //  var resumeValidation =component.find('resumeValidation');
+        //  var value = resumeValidation.get("v.value");
+        // // var uploadvalidate =component.get("v.uploadValidate")
+        //  console.log('resumr value '+value);
+        //  if(value == null)
+           
+        //  {   console.log('file');
+        // // validatedata=false;
+        //         var toastEvent = $A.get("e.force:showToast");
+        //         toastEvent.setParams({
+        //         title:"ERROR!",
+        //         message:"File is mandaroary to upload",
+        //         duration:'5000',
+        //         type:"error",
+        //         mode:'pester'
+
+        //     });
+        //     toastEvent.fire();
+        //  } 
+        //  else{
+        //     console.log('file upload');
+        //  }  
+
+         //UG
+        //  var streamValidation = component.find('tabs');
+        //  var value = streamValidation.get("v.value");
+        //  console.log('stream');
+        //  if(value == null){
+        //     console.log('if strean');
+        //     // validatedata=false;
+            
+        //     var toastEvent = $A.get("e.force:showToast");
+           
+        //     toastEvent.setParams({
+        //         title:"Info",
+        //         message:"UG Qualification is required",
+        //         type:"Info",
+        //         mode:"dismissible"
+        //     });
+        
+        //     console.log('strean fire')
+        //     toastEvent.fire();
+        //  }
+        //  else{
+        //     console.log('true');
+        //  }
+   // Stream      
+         var streamValidation = component.find('streamValidation');
+         var value = streamValidation.get("v.value");
+         console.log('stream');
+         if(value == null){
+            console.log('if strean');
+             validatedata=false;
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title:"ERROR!",
+                message:"UG Stream is required",
+                type:"error",
+                mode:"pester"
+            });
+            console.log('strean fire')
+            toastEvent.fire();
+         }
+         else{
+            console.log('true');
+         }
+         var InstituteNameValidation =component.find('InstituteNameValidation');
+         var value = InstituteNameValidation.get("v.value");
+         if(value == null){
+             validatedata=false;
+            var toastEvent=$A.get("e.force:showToast");
+            toastEvent.setParams({
+                title:"ERROR!",
+                message:" UG Institute Name is required",
+                type:"error",
+                mode:"pester"
+            });
+            toastEvent.fire();
+            
+         }
+
+    //Education Type    
+         var educationValidation = component.find('educationValidation');
+         var value = educationValidation.get("v.value");
+         if(value == null){
+             validatedata=false;
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+            title:"ERROR!",
+            message:"UG Education Type is Required",
+            type:"error",
+            mode:"pester"
+
+            });
+            console.log('fire type')
+
+            toastEvent.fire();
+         }
+//Year of Graduation
+         var FromYearValidation = component.find('FromYearValidation');
+         var value = FromYearValidation.get("v.value");
+         console.log('to');
+         if(value == null){
+
+            console.log('if year');
+
+             validatedata=false;
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+            title:"ERROR!",
+            message:" Graduation starting Year is Required",
+            type:"error",
+            mode:"pester"
+
+            });
+            console.log('fire to');
+
+
+            toastEvent.fire();
+         }
+         else{
+            console.log('else to');
+         }
+
+         var ToYearValidation = component.find('ToYearValidation');
+         var value = ToYearValidation.get("v.value");
+         console.log('from');
+         if(value == null){
+
+            console.log('if frm');
+
+             validatedata=false;
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+            title:"ERROR!",
+            message:"Graduation Completion Year is Required",
+            type:"error",
+            mode:"pester"
+
+            });
+            console.log('fire from');
+
+
+            toastEvent.fire();
+         }
+         else{
+            console.log('else from');
+         }
+
+         
+         if(component.get("v.viewButton")){
+            validatedata = true;
+            console.log('Resume Uploaded');
+        }else{
+            validatedata = false;
+            console.log('Resume Not Uploaded else block');
+            var msg = "Please Upload the Resume !";
+            helper.errorToastMessage(component, event, helper,msg);
+         }
 
 
 
+//----------
+
+
+if(validatedata==true){
+    console.log('handler');
 
         helper.handleOnSubmitHelper(component, event, helper, fields);
+}
 
         //event.preventDefault();
 
@@ -1071,20 +1505,30 @@
         //Set modified account list
         component.set("v.rolesandRespoList", rolesAndRespo);
     },
+    //----------
+    // handleEmail : function(component, event, handler){
+    //     console.log('email');
+
+       
+
+    // },
+    ///---------
 
     //Upload File to Google Drive
     UploadGDriveFile: function (component, event, helper) {
 
         // helper.getAccessToken(component, event, helper);
         //Get Access Token
+        
         var uploadedDocId = event.getSource().get("v.name");
         console.log('uploadedFiles>>' + JSON.stringify(uploadedDocId));
-        var uploadedFiles = event.getParam("files");
+        var uploadedFiles = event.getParam("files");       
         var attachmentId = uploadedFiles[0].documentId;
+        
         console.log('on iupload finish');
         var action = component.get("c.gdriveDocUpload");
         action.setParams({
-            "candidateName": 'Resume',
+            "candidateName":'Resume',
             "attachmentId": attachmentId,
             "uploadedDocId": uploadedDocId,
         });
@@ -1098,6 +1542,9 @@
                 console.log(response.getReturnValue());
                 var res = responseCode.split("#");
                 console.log(res);
+                helper.getPreviewLink(component, event, helper,res[1]);
+                component.set("v.viewButtonActive", false);
+               // component.get("v.uploadValidate")
                 // alert('responseCode>>>' + responseCode);
                 if (res[0] == '200') {
                     var toastEvent = $A.get("e.force:showToast");
@@ -1107,7 +1554,10 @@
                         "message": "File Uploaded successfully."
                     });
                     toastEvent.fire();
-                    window.location.reload();
+                    $A.get('e.lightning:openFiles').fire({
+                        recordIds: [documentId]
+                        });
+                   // window.location.reload();
                 }
                 else {
                     var toastEvent = $A.get("e.force:showToast");
@@ -1132,4 +1582,222 @@
         component.set("v.isModalOpen", true);
 
     },
+
+    viewButton :  function (component, event, helper,resumeId) {
+        console.log('viewbotton');
+           // helper.getPreviewLink(component, event, helper, resumeId);
+           var action =component.get("c.getPreviewLink");
+           console.log('inside get preview link2');
+          
+           window.open(component.get("v.uploadedFileLink"));
+          
+           
+    },
+    //---
+    UpdateJob : function(component,event,helper){
+        
+        helper.dltSkillForEdit(component,event);
+
+        console.log(component.get("v.candRecordId"));
+        var candidateId = component.get("v.candRecordId");
+        //alert('id >>>'+candidateId);
+
+        var fields = component.find('updatePro').get('v.value');
+
+        console.log('fields'+JSON.stringify(fields));
+        //console.log(JSON.stringify(fields.Id));
+        if(candidateId){
+           fields["Id"]= candidateId;
+           component.find('updatePro').set('v.value',fields);
+           console.log('fields>'+JSON.stringify(fields));
+   
+       }
+    var skillsList = component.get("v.skillsList");
+    console.log(skillsList);
+    //alert('skillsList>>'+skillsList);
+   // alert('skillsList>>'+JSON.stringify(skillsList));
+
+
+    var rolesAndRespo = component.get("v.rolesandRespoList");
+    console.log(rolesAndRespo);
+    //alert('rolesAndRespo>>'+rolesAndRespo);
+
+    var action = component.get("c.updateCandidateProfile");
+    console.log('before action');
+
+    action.setParams({
+        "candFields": fields,
+        "skills": skillsList,
+        "rolesAndResp": rolesAndRespo,
+        "updateCandiDateId":candidateId
+    });
+    console.log('after action');
+    action.setCallback(this, function (response) {
+        //get response status 
+        var state = response.getState();
+        console.log(' action'+state);
+        if (state === "SUCCESS") {
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                "title": "Success",
+                "message": "Profile updated.",
+                "type":'success'
+            });
+            toastEvent.fire(); 
+             //url redirect
+             var urlString = window.location.href;
+             var CommunityBaseURL = urlString.substring(0,urlString.indexOf("/one/"));
+             window.location.replace(CommunityBaseURL+"/lightning/n/Home_Page");
+
+        }
+        else if (state ==='ERROR'){
+            var toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                "title": "Error!",
+                "message": "Error in update."
+            });
+            toastEvent.fire(); 
+        }
+           
+            });
+            $A.enqueueAction(action);
+
+            
+              
+                       
+
+    },
+    removeEditRecord : function(component,event,helper){
+        //helper.dltSkillForEdit(component,event);
+
+         //Get the Document list
+         var skillList = component.get("v.SkillEditRecordId");
+         console.log('skillList>>>'+skillList);
+         //Get the target object
+         var selectedItem = event.currentTarget;
+         console.log('selectedItem>>>'+selectedItem);
+        // alert('selectedItem>>>'+selectedItem);
+
+
+         //Get the selected item index
+         var index = selectedItem.dataset.record;
+         console.log('index>>>'+index);
+         //Remove single record from Document list
+        var delSkill = component.get("v.deleteSkill");
+        console.log( 'deleteSkill>>'+delSkill);
+        console.log('sli'+skillList[index]); 
+        delSkill.push(skillList[index]) ;
+        
+        component.set("v.deleteSkill",delSkill);
+        console.log('get>'+component.get("v.deleteSkill"))
+         skillList.splice(index,1);
+         console.log('After Splice skillList>>>'+skillList);
+
+         //Set modified Document list
+         component.set("v.SkillEditRecordId", skillList);
+
+         var AfterSkillList = component.get("v.SkillEditRecordId");
+         console.log('AfterSkillList>>>'+AfterSkillList);
+
+    },
+    removeRolesAndResRecord: function (component,event,helper) {
+        //alert('in');
+        helper.dlteditRoll(component,event);
+        //Get the Document list
+        var rolesndRes = component.get("v.roleAndResRecordId");
+        //Get the target object
+        var selectedItem = event.currentTarget;
+        //Get the selected item index
+        var index = selectedItem.dataset.record;
+        //Remove single record from Document list
+        rolesndRes.splice(index, 1);
+        //Set modified Document list
+        component.set("v.roleAndResRecordId", rolesndRes);
+        //alert('dlt');
+    },
+    //---
+
+   
+       
+  /*     
+ validatePhoneNo : function(component, event, helper) {
+        console.log('Hello');
+        var phoneValidation = component.find('phoneValidation');
+        var value = phoneValidation.get("v.value");
+       console.log(value);
+      //  alert(value);
+              if (  isNaN(value) ) {
+                console.log('inside if');
+                component.set("v.errors",[{message:"Invalid Phone No: " + value}]);
+            } else {
+                  console.log('inside else');
+                  component.set("v.errors",null);
+                  console.log('inside else after');
+                
+               
+              }
+       },
+
+
+        ValidateAdhaar : function(component, event, helper) {
+        console.log('Hello');
+        var inputCmp = component.find('adhaarValidation');
+        var value = inputCmp.get("v.value");
+        console.log('Step 2');
+              if ( value.length >12|| isNaN(value) ) {
+                console.log('inside if');
+                component.set("v.errors", [{message:"Invalid Adhaar No: " + value}]);
+            } else {
+                  console.log('inside else');
+                  component.set("v.errors", null);
+                  console.log('inside else after');
+                
+               
+              }
+       },
+
+        ValidatePan : function(component, event, helper) {
+        console.log('Hello');
+        var inputCmp = component.find('PanValidation');
+        var value = inputCmp.get("v.value");
+        var patt = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+        console.log('Step 2');
+              if ( !value.match(patt)) {
+                //--------
+                 inputCmp.setCustomValidity("Enter valid Pan number");
+            inputCmp.reportValidity();
+            //------
+                console.log('inside if');
+                component.set("v.errors", [{message:"Invalid Pan No: " + value}]);
+            } else {
+                  console.log('inside else');
+                  component.set("v.errors", null);
+                  console.log('inside else after');
+                
+               
+              }
+       },
+      
+        
+       ValidatePan : function(component, event, helper) {
+        console.log('Hello');
+        var inputCmp = component.find('panValidation');
+        var value = inputCmp.get("v.value");
+        var patt = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+        console.log('Step 2');
+              if ( !value.match(patt)) {
+               
+            //------
+                console.log('inside if');
+                component.set("v.errors", [{message:"Invalid Pan No: " + value}]);
+            } else {
+                  console.log('inside else');
+                  component.set("v.errors", null);
+                  console.log('inside else after');
+                
+               
+              }
+       },
+       */
+      
 })

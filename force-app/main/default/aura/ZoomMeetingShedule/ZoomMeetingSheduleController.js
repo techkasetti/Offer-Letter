@@ -6,7 +6,7 @@
         //alert('batchid>>>'+component.get("v.batchId"));
         var action = component.get("c.getCandEmail");
             action.setParams({
-                "candidateID" : "a048Z00000kRgvNQAS"
+                "candAppID" : component.get("v.batchId")
                 });
                 action.setCallback(this, function(response) {
                     var state = response.getState();
@@ -29,13 +29,14 @@
             //SET HOST EMAIL STARTS
             var action = component.get("c.getHostEmail");
             action.setParams({
-                "hostID" : "0038Z00002srN93QAE"
+                "hostID" : component.get("v.batchId")
                 });
                 action.setCallback(this, function(response) {
                     var state = response.getState();
                         if(state === 'SUCCESS'){
                             //alert('getHostEmail>>>'+response.getReturnValue());
-                            component.set("v.hostEmail",response.getReturnValue());
+                            component.set("v.contactList",response.getReturnValue());
+                            //component.set("v.hostEmail",response.getReturnValue());
                         }
                         else if(state === 'ERROR'){
                             var toastEvent = $A.get("e.force:showToast");
@@ -93,4 +94,20 @@
                 $A.enqueueAction(action);
 
     },
+    
+    onChange: function(component, event, helper) {
+        var contactName = event.getSource().get("v.value");
+        //alert(recName);
+
+        var record = component.get("v.contactList");
+        //console.log(JSON.stringify(component.get("v.contactList")));
+        var contactSelected;
+        record.forEach(element => {
+            if (contactName == element.Name) {
+                contactSelected = element;
+                component.set("v.contactSelected", contactSelected);
+            }
+        });
+        
+    }
 })

@@ -19,6 +19,7 @@ Public class CandFieldSet {
    public static List<String> getFieldSet(String sObjectName){
        Schema.SObjectType sObj = Schema.getGlobalDescribe().get(sObjectName);
        List<String> fieldSetList = new List<String>();
+       
        FOR(Schema.FieldSet FS : sObj.getDescribe().fieldSets.getMap().values()){
            fieldSetList.add(fs.getName() +'####'+fs.getLabel());
        }
@@ -133,6 +134,7 @@ Public class CandFieldSet {
         /*sObject contactsForUpdate = (sObject) JSON.deserialize(
            objectData,
            Type.forName('Candidate_Profile__c'));*/
+              system.debug('skillList >>>>>>>>>'+skillList.size()+'sdf'+skillList.size()); 
        if(skillList.size()>0){
        string skills = ' ';
        if(skillList.size() ==1){

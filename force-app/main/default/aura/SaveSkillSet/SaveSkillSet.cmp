@@ -8,7 +8,7 @@
     <aura:handler name="oRetailerdataEvent1" event="c:selectedLocationdataEvent" action="{!c.handleComponentEvent1}"/>
     <aura:handler name="oRetailerdataEvent2" event="c:selectedCandidatedataEvent" action="{!c.handleComponentEvent2}"/-->
 
-    <!--aura:attribute name="selectedTab" type="String"/-->
+    <aura:attribute name="selectedTab" type="String" default="UGQualification"/>
     <aura:attribute name="candidateProfile" type="Candidate_Profile__c" default="{'SObject':'Candidate_Profile__c'}" />
     <aura:attribute name="skillAndExp" type="List" default="" />
     <aura:attribute name="ShowCandidateProfile" type="boolean" default="false" />
@@ -109,6 +109,13 @@
         description="Use,for store the list of search records which returns from apex class" />
 
     <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <aura:attribute name="viewButton" type="Boolean" default="false" />
+    <aura:attribute name="uploadedFileLink" type="String" default="" />
+    <aura:attribute name="getViewButton" type="String" default="" />
+    <aura:attribute name="viewButtonActive" type="Boolean" default="true"/>
+    <aura:attribute name="uploadValidate" type="Boolean" default="true"/>
+
+
 
     <aura:attribute name="fromDate" type="Date" />
     <aura:attribute name="toDate" type="Date" />
@@ -129,8 +136,19 @@
     <aura:attribute name="candDocParserId" type="String"/>
     <aura:attribute name="candIdEdit" type="String"/>
     <aura:attribute name="candRecordId" type="String"/>
-    
-       
+    <aura:attribute name="recordIDs" type="String"/>
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="skillrecordId" type="String" />
+    <aura:attribute name="SkillEditRecordId" type="String" />
+    <aura:attribute name="roleAndResRecordId" type="String" />
+    <aura:attribute name="dltSkillEditRecordId" type="String" />
+    <aura:attribute name="dltroleAndResRecordId" type="String" />
+    <aura:attribute name="deleteSkill" type="String[]" />
+
+
+
+
+
 
     <div class="slds-theme_shade " style="background-color: white; border-radius: 2%;">
         <div class="slds-border_bottom slds-align_absolute-center  slds-var-p-bottom_small slds-p-top_small ">
@@ -149,39 +167,48 @@
             <aura:if isTrue="{!v.reloadForm}">
                 <div class="slds-grid slds-wrap">
                     <div class="slds-col slds-size_1-of-3">
-                        <lightning:inputField fieldName="Name" value="{!v.candiProfile.Name}" />
+                        <lightning:inputField fieldName="Name" value="{!v.candiProfile.Name}" required="true" aura:id="nameValidation" />
 
                     </div>
                     <div class="slds-col slds-size_1-of-3">
                         <lightning:inputField fieldName="Email__c" aura:id="emailValidation" required="true"
-                            value="{!v.candiProfile.Email__c}" />
+                            value="{!v.candiProfile.Email__c}"  onblur="{!c.handleEmail}"/>
 
                     </div>
                     <div class="slds-col slds-size_1-of-3">
-                        <lightning:inputField fieldName="Phone__c" required="true" value="{!v.candiProfile.Phone__c}" />
+                        <lightning:inputField fieldName="Phone__c" required="true"  value="{!v.candiProfile.Phone__c}" aura:Id="phoneValidation"   />
                     </div>
                     <div class="slds-col slds-size_1-of-3">
                         <lightning:inputField fieldName="Current_Location__c"
-                            value="{!v.candiProfile.Current_Location__c}" />
+                            value="{!v.candiProfile.Current_Location__c}"  aura:id="currLocValidation" required="true" />
                     </div>
                     <div class="slds-col slds-size_1-of-3">
                         <lightning:inputField fieldName="Aadhaar_No__c" required="true"
-                            value="{!v.candiProfile.Aadhaar_No__c}" />
+                            value="{!v.candiProfile.Aadhaar_No__c}" aura:id="adhaarValidation" />
                     </div>
                     <div class="slds-col slds-size_1-of-3">
                         <lightning:inputField fieldName="PAN_No__c" required="true"
-                            value="{!v.candiProfile.PAN_No__c}" />
+                            value="{!v.candiProfile.PAN_No__c}" aura:id="panValidation"  />
                     </div>
                     <div class="slds-col slds-size_1-of-3">
-                        <lightning:inputField fieldName="Preferred_Location__c"
-                            value="{!v.candiProfile.Preferred_Location__c}" />
+                        <lightning:inputField  fieldName="Preferred_Location__c"
+                            value="{!v.candiProfile.Preferred_Location__c}"  aura:id="preLocValidation" required="true" />
                     </div>
                     
                     <div>
-                    <lightning:fileUpload name="Akhilesh" accept="{!v.filetype}" multiple="false" label="Upload Resume" recordId=""
-                    onuploadfinished="{!c.UploadGDriveFile}" />
+                    <lightning:fileUpload name="Akhilesh" disabled="{!v.viewButton}" accept="{!v.filetype}" multiple="false" label="Upload Resume" recordId="{!v.recordIDs}"
+                    onuploadfinished="{!c.UploadGDriveFile}" aura:id="resumeValidation" />
+                    <lightning:button label="view"   onclick="{!c.viewButton}" aura:id="view"  disabled="{!v.viewButtonActive}"/>
                 </div>
-          
+                <!-- <aura:if isTrue="{!v.viewButtonActive}">
+                      <button aura:id="view" disabled/>
+                      <aura:set attribute="else">
+                        false
+                     <button aura:id="view"/>
+                   </aura:set>
+                </aura:if> -->
+               
+                
                     <!--div class="slds-col slds-size_1-of-3">  
                         <lightning:inputField fieldName="Billing_Location__c" />      
                     </div-->
@@ -204,13 +231,14 @@
                 </div>
                 <div class="slds-grid slds-wrap">
                     <div class="slds-col slds-size_1-of-3">
-                        <lightning:inputField fieldName="Experience__c" value="{!v.candiProfile.Experience__c}" />
+                        <lightning:inputField fieldName="Experience__c" value="{!v.candiProfile.Experience__c}" 
+                        />
                     </div>
                     <div class="slds-col slds-size_1-of-3">
                         <lightning:inputField fieldName="Designation__c" value="{!v.candiProfile.Designation__c}" />
                     </div>
                     <div class="slds-col slds-size_1-of-3">
-                        <lightning:inputField fieldName="Current_CTC__c" value="{!v.candiProfile.Expected_CTC__c}" />
+                        <lightning:inputField fieldName="Current_CTC__c" value="{!v.candiProfile.Current_CTC__c}" />
 
                     </div>
                     <div class="slds-col slds-size_1-of-3">
@@ -239,7 +267,7 @@
 
 
                 </div>
-                <div>
+                <!-- <div> -->
                     <div class=" slds-p-left_small slds-p-bottom_x-small slds-p-top_x-small"
                         style="background-color: #F3F3F3">
                         <h1><b>Skills Experience</b></h1>
@@ -250,11 +278,52 @@
                                 alternativeText="Add" onclick="{!c.addRow}" />
                         </h1>
                     </div>
+                    
+            <!--SKILL FOR UPDATE -->
+            <div>
+                    <aura:if isTrue="{!not(empty(v.SkillEditRecordId))}">
+                        <aura:iteration items="{!v.SkillEditRecordId}" var="record" indexVar="index">
+                            <tr>
+    <td>{!recordId}</td>
+                                <lightning:recordEditForm objectApiName="Skill_Set_Experience__c" aura:id="skillForms"
+                                    onsubmit="{!c.handleOnSubmit}" onsuccess="{!c.handleOnSuccess}" recordId="{!record}">
+                                    <td>
+                                        {!index + 1}
+                                    </td>
+                                    <td>
+                                        <lightning:inputField fieldName="Skill_Set__c" value="{!Skill_Set__c}" />
+                                    </td>
+                                     <td>
+                                        <lightning:inputField fieldName="Skill_Experience_Level__c"
+                                            value="{!Skill_Experience_Level__c}" />
+                                    </td>
+    
+                                    <td>
+                                        <lightning:inputField fieldName="Ratings__c" value="{!Ratings__c}" />
+                                    </td>
+     
+    
+                                    <td>
+    
+                                        <a onclick="{!c.removeEditRecord}" data-record="{!index}">
+                                            <lightning:icon iconName="utility:delete" size="small"
+                                                alternativeText="Delete" />
+                                            <span class="slds-assistive-text">Delete</span>
+                                        </a>
+                                    </td>
+                                </lightning:recordEditForm>
+    
+                            </tr>
+                        </aura:iteration>
+                    </aura:if>
+                </div>   
+            <!--SKILL FOR UPDATE ended-->
+                <div>
                     <aura:iteration items="{!v.skillsList}" var="skills" indexVar="index">
                         <tr>
 
                             <lightning:recordEditForm objectApiName="Skill_Set_Experience__c" aura:id="skillForm"
-                                onsubmit="{!c.handleOnSubmit}" onsuccess="{!c.handleOnSuccess}">
+                                onsubmit="{!c.handleOnSubmit}" onsuccess="{!c.handleOnSuccess}" >
                                 <td>
                                     {!index + 1}
                                 </td>
@@ -283,7 +352,8 @@
 
                         </tr>
                     </aura:iteration>
-                </div>
+                </div>   
+                <!-- </div> -->
                 <div class=" slds-p-left_small slds-p-bottom_x-small slds-p-top_x-small"
                     style="background-color: #F3F3F3">
                     <h1><b>Roles and Responsibilities</b></h1>
@@ -294,6 +364,44 @@
                             onclick="{!c.addRowForRoles}" />
                     </h1>
                 </div>
+                 <!--Roles and Responsibilities FOR UPDATE STARTS-->
+           
+                <div>
+
+                    <aura:if isTrue="{!not(empty(v.roleAndResRecordId))}">
+                    <aura:iteration items="{!v.roleAndResRecordId}" var="rolesAndResp" indexVar="index">
+                        <tr>
+
+                            <lightning:recordEditForm objectApiName="Roll_and_Responsibilities__c" aura:id="skillForm"
+                                onsubmit="{!c.handleOnSubmit}" onsuccess="{!c.handleOnSuccess}" recordId="{!rolesAndResp}">
+                                <td>
+                                    {!index + 1}
+                                </td>
+                                <td>
+                                    <lightning:inputField fieldName="Type__c" value="{!Type__c}" />
+                                </td>
+                                <td>
+                                    <lightning:inputField fieldName="Rolls_and_Responsibilities_Master__c"
+                                        value="{!Rolls_and_Responsibilities_Master__c}" />
+                                </td>
+
+                                <td>
+
+                                    <a onclick="{!c.removeRolesAndResRecord}" data-record="{!index}">
+                                        <lightning:icon iconName="utility:delete" size="small"
+                                            alternativeText="Delete" />
+                                        <span class="slds-assistive-text">Delete</span>
+                                    </a>
+                                </td>
+                            </lightning:recordEditForm>
+
+                        </tr>
+                    </aura:iteration>
+
+            </aura:if>
+                </div>
+         <!--Roles and Responsibilities FOR UPDATE END-->
+
                 <div>
 
 
@@ -336,26 +444,34 @@
                 </div>
                 <lightning:tabset class="slds-p-bottom_x-large" aura:id="tabs" selectedTabId="{!v.selectedTab}">
                     <lightning:tab class="slds-theme_shade" label="UG Qualification" id="UGQualification" onactive=""
-                        iconName="">
+                        iconName="" >
                         <div class="slds-grid slds-wrap">
                             <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="UG_Stream__c" />
+                                <lightning:inputField fieldName="UG_Stream__c" aura:id = "streamValidation" required="true" 
+                                value="{!v.candiProfile.UG_Stream__c}"/>
                             </div>
                             <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="UG_Institute_Name__c" />
+                                <lightning:inputField fieldName="UG_Institute_Name__c" aura:id = "InstituteNameValidation" required="true" 
+                                value="{!v.candiProfile.UG_Institute_Name__c}"/>
+                                
                             </div>
                             <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="UG_Education_Type__c" />
+                                <lightning:inputField fieldName="UG_Education_Type__c"  aura:id = "educationValidation" required="true"
+                                value="{!v.candiProfile.UG_Education_Type__c}"/>
+                                
 
                             </div>
                             <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="From_Year_Of_Graduation__c" />
+                                <lightning:inputField fieldName="From_Year_Of_Graduation__c" aura:id ="FromYearValidation" required="true" 
+                                value="{!v.candiProfile.From_Year_Of_Graduation__c}"/>
                             </div>
                             <div class="slds-col slds-size_1-of-2">
 
                             </div>
                             <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="To_Year_Of_Graduation__c" />
+                                <lightning:inputField fieldName="To_Year_Of_Graduation__c" aura:id = "ToYearValidation" required="true"
+                                value="{!v.candiProfile.To_Year_Of_Graduation__c}"/>
+
 
                             </div>
 
@@ -365,24 +481,25 @@
                         iconName="">
                         <div class="slds-grid slds-wrap">
                             <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="PG_Stream__c" />
-                            </div>
-                            <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="PG_Institute_Name__c" />
-                            </div>
-                            <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="PG_Education_Type__c" />
+                                <lightning:inputField fieldName="PG_Stream__c"  value="{!v.candiProfile.PG_Stream__c}"/>
 
                             </div>
                             <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="PG_From_Year_Of_Graduation__c" />
+                                <lightning:inputField fieldName="PG_Institute_Name__c"  value="{!v.candiProfile.PG_Institute_Name__c}" />
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="PG_Education_Type__c" value="{!v.candiProfile.PG_Education_Type__c}" />
+
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="PG_From_Year_Of_Graduation__c" value="{!v.candiProfile.PG_From_Year_Of_Graduation__c}"   />
 
                             </div>
                             <div class="slds-col slds-size_1-of-2">
 
                             </div>
                             <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="PG_To_Year_Of_Graduation__c" />
+                                <lightning:inputField fieldName="PG_To_Year_Of_Graduation__c" value="{!v.candiProfile.PG_To_Year_Of_Graduation__c}" />
 
                             </div>
 
@@ -392,11 +509,17 @@
             </aura:if>
 
             <div class="slds-p-top_small slds-p-bottom_medium slds-p-left_small">
-
+                <aura:if isTrue="{!not(empty(v.candRecordId))}">
+                    <center>
+                 <lightning:button variant="brand" label="UPDATE"  onclick="{!c.UpdateJob}" aura:id="updatePro" value="{!v.candiProfile}"/>
+                </center> 
+                 <aura:set attribute="else">
                 <lightning:button variant="brand" label="Create Candidate Profile" aura:id="accForm1"
                     onclick="{!c.handleOnSubmit}" value="{!v.candiProfile}" />
                 <lightning:button variant="brand" label="Create Profile with Job Application"
                     onclick="{!c.openModel}" />
+                </aura:set>
+                </aura:if>
             </div>
         </lightning:recordEditForm>
         <!--<lightning:recordForm

@@ -648,24 +648,42 @@ public class smartSearchController {
         //UPDATE TEAM ENDS
         
         //INSERT SKILL LIST START
+        Set<Id> newSkillSet = new Set<Id>();
         if(skillsList.size() <> 0){
-            Set<Id> skillSet = new Set<Id>();
             for(Integer i =0; i<skillsList.size(); i++){
-                skillSet.add(skillsList[i].Skill_Set__c);
+                newSkillSet.add(skillsList[i].Skill_Set__c);
             }
-            List<Skill_Set__c> skillName = [Select Name from Skill_Set__c where Id IN : skillSet];
-            system.debug('skillName'+skillName);
-            for(Integer i=0; i<skillName.size(); i++){
-                skillsList[i].Name=(skillName[i].Name);
-            }
-            system.debug('skillsList>>'+skillsList);
-            
-            for(Skill_Set_Experience__c skills : skillsList){
-                skills.Job_Posting__c = updateJobPosId;
-                system.debug('skills>>'+skills);
-            }
-            insert skillsList;
         }
+        List<Skill_Set_Experience__c> existingSkill = [SELECT Skill_Set__c FROM Skill_Set_Experience__c WHERE Job_Posting__c = :updateJobPosId];
+        System.debug('Existing Skill' + existingSkill);
+        List<Skill_Set_Experience__c> skilltoRemove = new list<Skill_Set_Experience__c>();
+        set<Id> skillsToRemove = new set<Id>();
+        
+        for (Skill_Set_Experience__c skill : existingSkill) {
+            if(newSkillSet.contains(skill.Skill_Set__c)){
+                System.debug('Skill already Exist');
+                newSkillSet.remove(skill.Skill_Set__c);
+            }else{
+                skilltoRemove.add(skill);
+            }
+        }
+        delete skilltoRemove;
+        // list<Skill_Set__c> skillList = [Select Name from Skill_Set__c where Id IN : newSkillSet];
+        Map<Id,String> idSkillMAp = new Map<Id,String>();
+        for (Skill_Set_Experience__c skill : skillsList) {
+            idSkillMAp.put(skill.Skill_Set__c, skill.Name);
+        }
+        
+        List<Skill_Set_Experience__c> skilltoAdd = new list<Skill_Set_Experience__c>();
+        for (Id newskill : newSkillSet) {
+            Skill_Set_Experience__c addSkill = new Skill_Set_Experience__c();
+            addSkill.Skill_Set__c = newskill;
+            addSkill.Job_Posting__c = updateJobPosId;
+            addSkill.Name = idSkillMAp.get(newskill);
+            skilltoAdd.add(addSkill);
+        }
+        insert skilltoAdd; 
+       
         //INSERT SKILL LIST ENDS
       
         //INSERT DOCUMENT MASTER LIST START
@@ -741,6 +759,140 @@ public class smartSearchController {
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
+    }
+       @AuraEnabled
+    public static string getPreviewLink(String resumeId){
+        List<Resume__c> link =[SELECT PreviewLink__c FROM Resume__c WHERE Id=:resumeId LIMIT 1];
+        return link[0].PreviewLink__c;
+    }
+    
+     @AuraEnabled        
+    public static List<String> getSkill(String skillExpId) {
+       
+        List<String> SkillExpList = new List<String>();
+        List<Skill_Set_Experience__c> lstOfValues = [Select Id from Skill_Set_Experience__c where Candidate_Profile__c =: skillExpId];
+        for(Skill_Set_Experience__c values : lstOfValues){
+            SkillExpList.add(values.Id);
+            //SkillExpList.add(values.Name);
+            //SkillExpList.add(values.Ratings__c);
+           // SkillExpList.add(values.Skill_Set__c);
+           // SkillExpList.add(values.Skill_Experience_Level__c);
+        }
+        System.debug('SkillExpList>>>'+SkillExpList);
+        return SkillExpList;
+    }
+    @AuraEnabled        
+    public static List<String> getRoleAndResp(String RoleAndRespId) {
+        System.debug('RoleAndRespId>>>'+RoleAndRespId);
+        List<String> RoleAndResp = new List<String>();
+        List<Roll_and_Responsibilities__c> lstOfValues = [Select Id from Roll_and_Responsibilities__c where Candidate_Profile__c =: RoleAndRespId];
+        for(Roll_and_Responsibilities__c values : lstOfValues){
+            RoleAndResp.add(values.Id);
+           // RoleAndResp.add(values.Name);
+           // RoleAndResp.add(values.Type__c);
+           // RoleAndResp.add(values.Rolls_and_Responsibilities_Master__c);
+        }
+        System.debug('RoleAndResp>>>'+RoleAndResp);
+        return RoleAndResp;
+    }
+    @AuraEnabled
+    public static List<Skill_Set_Experience__c> updateCandidateProfile(Candidate_Profile__c candFields, List<Skill_Set_Experience__c> skills, List<Roll_and_Responsibilities__c> rolesAndResp ,String updateCandiDateId ){
+        system.debug('candFields>>'+candFields);
+        system.debug('skills>>'+skills);
+        system.debug('rolesAndResp>>'+rolesAndResp);
+        system.debug('updateCandiDateId>>'+updateCandiDateId);
+        if(candFields.Resume__c != null){
+            Candidate_Profile__c updateValues = new Candidate_Profile__c(Id=updateCandiDateId); 
+            updateValues.Resume__c = candFields.Email__c;
+            update updateValues;
+        }
+       
+        String candId = candFields.Id;
+        system.debug('candId>>'+candId);
+
+        //If candidate Id is present then update the existing record else create new
+        if(candId != null){
+            update candFields; 
+        }else{
+            insert candFields;
+        }
+        //insert candFields;
+        system.debug('candFields>>'+candFields);
+        //Removing duplicate skill id
+        Set<Id> skillSet = new Set<Id>();
+        
+        for(Integer i =0; i<skills.size(); i++){
+            system.debug(skills[i].Skill_Set__c);
+            skillSet.add(skills[i].Skill_Set__c);
+
+        }
+        system.debug('skillSet'+skillSet);
+
+        //Getting Skill name with skill id
+        List<Skill_Set__c> skillName = [Select Name from Skill_Set__c where Id IN : skillSet];
+        system.debug('skillName'+skillName);
+        //Pushing skill name to skills object
+        for(Integer i=0; i<skillName.size(); i++){
+            skills[i].Name=(skillName[i].Name);
+        }
+        system.debug('skills>>'+skills);
+        //Removing Duplicate id
+        Set<Id> rolesSet = new Set<Id>();
+        
+        for(Integer i =0; i<rolesAndResp.size(); i++){
+            system.debug(rolesAndResp[i].Rolls_and_Responsibilities_Master__c);
+            rolesSet.add(rolesAndResp[i].Rolls_and_Responsibilities_Master__c);
+
+        }
+        system.debug('rolesSet>>'+rolesSet);
+        //Querying Roles and Resp  name with filtered Master id
+        List<Rolls_and_Responsibilities_Master__c> rolesAndRespName = [Select Name from Rolls_and_Responsibilities_Master__c where Id IN : rolesSet];
+        system.debug('rolesAndRespName>>>'+rolesAndRespName);
+        for(Integer i=0; i<rolesAndRespName.size(); i++){
+            rolesAndResp[i].Name=(rolesAndRespName[i].Name);
+        }
+        system.debug('rolesAndResp>>'+rolesAndResp);
+
+        for(Roll_and_Responsibilities__c rollsAndRespList : rolesAndResp){
+            rollsAndRespList.Candidate_Profile__c = updateCandiDateId;
+            system.debug('rollsAndRespList>>'+rollsAndRespList);
+        }
+        insert rolesAndResp;
+
+       for(Skill_Set_Experience__c skillsList : skills){
+            skillsList.Candidate_Profile__c = updateCandiDateId;
+            
+            system.debug('skillsList>>'+skillsList);
+        }
+        system.debug('skills>>'+skills);
+        insert skills;
+        return skills;
+    }
+
+    @AuraEnabled        
+    public static boolean deleteSkill(list<String> skillExpId) {
+       System.debug(skillExpId);
+       list<Skill_Set_Experience__c> values = new list<Skill_Set_Experience__c>();
+       for (String var : skillExpId) {
+            System.debug('row added');
+            Skill_Set_Experience__c skill = new Skill_Set_Experience__c(Id=var);
+            values.add(skill);
+        }
+        system.debug(values);
+        delete values;
+        System.debug('SkillExpList>>>'+values);
+        return true;
+    }
+    @AuraEnabled        
+    public static List<String> deleteRoleAndResp(String RoleAndRespId) {
+        List<String> RoleAndResp = new List<String>();
+        List<Roll_and_Responsibilities__c> lstOfValues = [Select Id from Roll_and_Responsibilities__c where Candidate_Profile__c =: RoleAndRespId LIMIT 1];
+        for(Roll_and_Responsibilities__c values : lstOfValues){
+            delete values;
+          
+        }
+        System.debug('RoleAndResp>>>'+lstOfValues);
+        return RoleAndResp;
     }
 
 }

@@ -1,4 +1,4 @@
-public class HomePageController {
+public with sharing class HomePageController {
     
     @AuraEnabled        
     public static List<Job_Posting__c> getJobPosting(String companyFilter, String postStatus) {
@@ -25,7 +25,7 @@ List<Job_Posting__c> listOfValues = Database.query(qryJobPosting);
 
 System.debug('listOfValues'+listOfValues);*/
         //   String companyFilter = 'Sony India';
-        String querry = 'Select Account__r.Name, Teams__c,Name,Posting_Due_Date__c,No_Of_Candidate_Selected__c,Job_OC_Status__c from Job_Posting__c WHERE Id <> null ';
+        String querry = 'Select Account__r.Name, Teams__c,Name,Posting_Due_Date__c,No_Of_Candidate_Selected__c,Job_OC_Status__c,Designation__c from Job_Posting__c WHERE Id <> null ';
         if(String.isNotBlank(companyFilter)){
             querry+= ' AND Account__r.Name = :companyFilter';
         }
@@ -36,6 +36,7 @@ System.debug('listOfValues'+listOfValues);*/
         List<Job_Posting__c> listOfValues = Database.query(querry);
         system.debug('listOfValues>>>'+listOfValues);
         //Added by Dharshan
+        list<Job_Posting__c> jobPostingUpdate= new list<Job_Posting__c>();
         for(Job_Posting__c values : listOfValues){
             if(values.Posting_Due_Date__c != null){
                 //Due Date
@@ -51,15 +52,22 @@ System.debug('listOfValues'+listOfValues);*/
                 if(todaysDateStr > dueDateStr1){
                     values.Job_OC_Status__c = 'Closed';
                 }
-                update values;
+                jobPostingUpdate.add(values);
+                }
             }
+            if(Job_Posting__c.sObjectType.getDescribe().isAccessible()&&
+                Schema.sObjectType.Job_Posting__c.fields.Job_OC_Status__c.isUpdateable()){
+            update jobPostingUpdate;
         }
         //ENDED by Dharshan  
         
         List<Job_Posting__c> lstOfAddedList = new List<Job_Posting__c>();
         for(Job_Posting__c teamMember : listOfValues){
-            List<CustomTeams__Team_Members__c> lstOfMember = [Select CustomTeams__User__c from CustomTeams__Team_Members__c where CustomTeams__Team__c =: teamMember.Teams__c];
-            for(CustomTeams__Team_Members__c member : lstOfMember){
+            List<CustomTeams__Team_Members__c> lstOfMember=new List<CustomTeams__Team_Members__c>();
+            if(CustomTeams__Team_Members__c.sObjectType.getDescribe().isAccessible() && 
+            Schema.SObjectType.CustomTeams__Team_Members__c.fields.CustomTeams__User__c.isAccessible()){
+            lstOfMember = [Select CustomTeams__User__c from CustomTeams__Team_Members__c where CustomTeams__Team__c =: teamMember.Teams__c];        
+        }            for(CustomTeams__Team_Members__c member : lstOfMember){
                 system.debug('fetchdata :'+UserInfo.getUserId());
                 system.debug('member.CustomTeams__User__c'+member.CustomTeams__User__c);
                 if(member.CustomTeams__User__c == UserInfo.getUserId()){
@@ -139,6 +147,7 @@ System.debug('listOfValues'+listOfValues);*/
         //Check controlling field is not null
         if(controllerField == null){
             // return null;
+            system.debug('null');
         } 
         //Get controlling field result
         Schema.DescribeFieldResult controllerFieldResult = controllerField.getDescribe();
@@ -171,21 +180,28 @@ System.debug('listOfValues'+listOfValues);*/
             }
         }
         system.debug('dependentPicklistValues ::'+dependentPicklistValues);
-        List<JobPostingsWrap> JobPostingsWrapList = new List<JobPostingsWrap>();
+        List<JobPostingsWrap> jobPostingsWrapList = new List<JobPostingsWrap>();
         
         
         if(buttonType != '' && buttonTypeId != ''){
-            Job_Application__c lstOfValues = [Select Name,Job_Posting__c,Candidate_Profile__r.Designation__c,Candidate_Profile__r.Experience__c,Candidate_Profile__r.Skills__c,Candidate_Profile__r.Current_Location__c,Candidate_Profile__r.Notice_Period__c,Profile_Status__c,Status__c from Job_Application__c where Id =:buttonTypeId ];
+            Job_Application__c lstOfValues=new Job_Application__c();
+            if(Job_Application__c.sObjectType.getDescribe().isAccessible()){
+             lstOfValues = [Select Name,Job_Posting__c,Candidate_Profile__r.Designation__c,Candidate_Profile__r.Experience__c,Candidate_Profile__r.Skills__c,Candidate_Profile__r.Current_Location__c,Candidate_Profile__r.Notice_Period__c,Profile_Status__c,Status__c from Job_Application__c where Id =:buttonTypeId ];
             system.debug('Job_Application__c:'+lstOfValues);
+            }
             
             lstOfValues.Profile_Status__c = buttonType; 
+            if(Job_Application__c.sObjectType.getDescribe().isAccessible() &&
+            Schema.sObjectType.Job_Application__c.fields.Profile_Status__c.isUpdateable()){
             update lstOfValues;
-            List<JobApplicationWrap> JobApplicantsWrapList1 = new List<JobApplicationWrap>();
-            JobPostingsWrap JobPostingsWrapVal = new JobPostingsWrap();
-            JobApplicationWrap JobApplicantsWrapVal = new JobApplicationWrap();
+                 
+            }
+            List<JobApplicationWrap> jobApplicantsWrapList1 = new List<JobApplicationWrap>();
+            JobPostingsWrap jobPostingsWrapVal = new JobPostingsWrap();
+            JobApplicationWrap jobApplicantsWrapVal = new JobApplicationWrap();
             JobApplicantsWrapVal.JobApplication = lstOfValues;
             system.debug('dependentPicklistValues.get(lstOfValues.Profile_Status__c)   :::'+dependentPicklistValues.get(lstOfValues.Profile_Status__c));
-            JobApplicantsWrapVal.StatusButtons = dependentPicklistValues.get(lstOfValues.Profile_Status__c);
+            JobApplicantsWrapVal.statusButtons = dependentPicklistValues.get(lstOfValues.Profile_Status__c);
             JobApplicantsWrapList1.add(JobApplicantsWrapVal);
             JobPostingsWrapVal.JobApplicationWrapList = JobApplicantsWrapList1;
             system.debug('JobPostingsWrapVal>>'+JobPostingsWrapVal);
@@ -202,7 +218,7 @@ System.debug('listOfValues'+listOfValues);*/
                                                 from Job_Posting__c where   Teams__c  IN :teamMemberId  ];
             system.debug('jobPostings>>'+jobPostings);*/
             
-        String querry = 'Select Id,Name,Account__r.Name,Posting_Due_Date__c,Teams__c  ,No_Of_Candidate_Selected__c,Job_OC_Status__c,(Select Name,Candidate_Profile__r.Designation__c,Candidate_Profile__r.Experience__c,Candidate_Profile__r.Skills__c,Candidate_Profile__r.Current_Location__c,Candidate_Profile__r.Notice_Period__c,Profile_Status__c,Status__c from Job_Applications__r) from Job_Posting__c where   Teams__c  IN :teamMemberId ';
+        String querry = 'Select Id,Name,Designation__c,No_Of_Positions__c,role__c,Job_Requirement_Type__c,Posting_Start_Date__c,Location__c,Account__r.Name,Posting_Due_Date__c,Teams__c  ,No_Of_Candidate_Selected__c,Job_OC_Status__c,(Select Name,Candidate_Profile__r.Designation__c,Candidate_Profile__r.Experience__c,Candidate_Profile__r.Skills__c,Candidate_Profile__r.Current_Location__c,Candidate_Profile__r.Notice_Period__c,Profile_Status__c,Status__c from Job_Applications__r) from Job_Posting__c where   Teams__c  IN :teamMemberId ';
         if(String.isNotBlank(companyFilter)){
             querry+= ' AND Account__r.Name = :companyFilter';
         }
@@ -215,16 +231,16 @@ System.debug('listOfValues'+listOfValues);*/
             
             for(Job_Posting__c jobPostingValues : listOfValues)
             {
-                JobPostingsWrap JobPostingsWrapVal = new JobPostingsWrap();
+                JobPostingsWrap jobPostingsWrapVal = new JobPostingsWrap();
                 JobPostingsWrapVal.JobPosting = jobPostingValues;
                 
-                List<JobApplicationWrap> JobApplicationWrapList1 = new List<JobApplicationWrap>() ;
+                List<JobApplicationWrap> jobApplicationWrapList1 = new List<JobApplicationWrap>() ;
                 system.debug('jobPostingValues>>'+jobPostingValues);
                 system.debug('jobPostingValues.Job_Applications__r>>'+jobPostingValues.Job_Applications__r);
                 for(Job_Application__c jobApplication : jobPostingValues.Job_Applications__r){
-                    JobApplicationWrap JobApplicationWrapVal = new JobApplicationWrap();
+                    JobApplicationWrap jobApplicationWrapVal = new JobApplicationWrap();
                     JobApplicationWrapVal.JobApplication = jobApplication;
-                    JobApplicationWrapVal.StatusButtons = dependentPicklistValues.get(jobApplication.Profile_Status__c);
+                    JobApplicationWrapVal.statusButtons = dependentPicklistValues.get(jobApplication.Profile_Status__c);
                     // String allstring = string.join(dependentPicklistValues.get(values.Profile_Status__c),',');
                     system.debug('dependentPicklistValues.get(jobApplication.Profile_Status__c)   :::'+dependentPicklistValues.get(jobApplication.Profile_Status__c));
                     //JobApplicationWrapList1.add(JobApplicantsWrapVal);
@@ -251,22 +267,28 @@ System.debug('listOfValues'+listOfValues);*/
     public class JobPostingsWrap
     {
         
-        @AuraEnabled public Job_Posting__c JobPosting = new Job_Posting__c();
-        @AuraEnabled public List<JobApplicationWrap> JobApplicationWrapList = new List<JobApplicationWrap>() ;
+        @AuraEnabled public Job_Posting__c jobPosting = new Job_Posting__c();
+        @AuraEnabled public List<JobApplicationWrap> jobApplicationWrapList = new List<JobApplicationWrap>() ;
     }
     public class JobApplicationWrap
     {
-        @AuraEnabled public List<string> StatusButtons ;
-        @AuraEnabled public Job_Application__c JobApplication = new Job_Application__c();
+        @AuraEnabled public List<string> statusButtons ;
+        @AuraEnabled public Job_Application__c jobApplication = new Job_Application__c();
     }
     
     @AuraEnabled
     public static Boolean hideProfileStatus(){
         String userId = UserInfo.getUserId();
         system.debug('userId>>>'+userId);
-        User userProfile = [Select ProfileId from User where Id=: userId];
-        system.debug('userProfile>>>'+userProfile);
-        Profile profileName = [Select Name from Profile where Id=:userProfile.ProfileId];
+        User userProfile=new User();
+        if(User.SObjectType.getDescribe().isAccessible()){
+         userProfile = [Select ProfileId from User where Id=: userId];
+        }       
+         system.debug('userProfile>>>'+userProfile);
+         Profile profileName=new Profile();
+         if(Profile.SObjectType.getDescribe().isAccessible()){
+          profileName = [Select Name from Profile where Id=:userProfile.ProfileId];
+         }
         system.debug('profileName>>>'+profileName);
         if(profileName.Name =='System Administrator'){
             return true;
@@ -281,8 +303,11 @@ System.debug('listOfValues'+listOfValues);*/
         system.debug('jobId>>>'+jobId);
         Job_Posting__c con = [SELECT Id,Name,Account__c  FROM Job_Posting__c where Id =: jobId LIMIT 1];
         system.debug('con'+con);
-        Account a = [Select Id, Name,(Select Id,Name,Phone,Email,Venue_Details__c,SkypeId__c from Contacts) from Account where Id=:con.Account__c];
-        system.debug('a'+a);
+        Account a =new Account();
+        if(Account.sObjectType.getDescribe().isAccessible() && 
+        Contact.sObjectType.getDescribe().isAccessible()){
+          a = [SELECT Id, Name,(SELECT Id,Name,Phone,Email,Venue_Details__c,SkypeId__c FROM Contacts) FROM Account WHERE Id=:con.Account__c WITH SECURITY_ENFORCED];
+        }        system.debug('a'+a);
         return a.Contacts;
         
     }
@@ -311,7 +336,7 @@ System.debug('listOfValues'+listOfValues);*/
         JSONParser parser = JSON.createParser(res.getBody());
         JSONParser parser1 = JSON.createParser(res.getBody());
         String hostURL='';
-        String join_url='';
+        String joinurl='';
         while (parser.nextToken() != null) {
             if ((parser.getCurrentToken() == JSONToken.FIELD_NAME) && 
                 (parser.getText() == 'start_url')) {
@@ -324,16 +349,16 @@ System.debug('listOfValues'+listOfValues);*/
         }
         while (parser1.nextToken() != null) {
             if ((parser1.getCurrentToken() == JSONToken.FIELD_NAME) && 
-                (parser1.getText() == 'join_url')) {
+                (parser1.getText() == 'joinurl')) {
                     // Get the value.
                     parser1.nextToken();
                     
                     // Compute the grand total price for all invoices.
-                    join_url += parser1.getText();
+                    joinurl += parser1.getText();
                 }
         }
         system.debug('hostURL>>>>'+hostURL);
-        system.debug('join_url>>>'+join_url);
+        system.debug('join_url>>>'+joinurl);
 
         //SEND MAIL TO ADDRESS STARTS
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
@@ -386,8 +411,11 @@ System.debug('listOfValues'+listOfValues);*/
     @AuraEnabled
     public static String getCandEmail(String candidateID) {
         system.debug('candidateID>>>'+candidateID);
-        Candidate_Profile__c email = [Select Email__c from Candidate_Profile__c  where Id=:candidateID];
-        system.debug('email.Email__c>>>'+email.Email__c);
+        Candidate_Profile__c email=new Candidate_Profile__c();
+        if(Candidate_Profile__c.sObjectType.getDescribe().isAccessible() &&
+        Schema.SObjectType.Candidate_Profile__c.fields.Email__c.isAccessible()){
+          email = [Select Email__c from Candidate_Profile__c  where Id=:candidateID];
+        }        system.debug('email.Email__c>>>'+email.Email__c);
         return email.Email__c;
     }
 
@@ -407,7 +435,10 @@ System.debug('listOfValues'+listOfValues);*/
         system.debug('userName>>>'+userName);
                 
         Comment__c commentValue = new Comment__c(Job_Application__c=appId,Remarks__c=comment,User__c=userName);
+        if(Comment__c.sObjectType.getDescribe().isAccessible() &&
+             Schema.sObjectType.Comment__c.isCreateable()){
         insert commentValue;
+             }
         List<Comment__c> updatedComments = getComments(appId);
         system.debug('updatedComments>>>'+updatedComments);
         return updatedComments;

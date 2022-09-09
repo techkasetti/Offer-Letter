@@ -5,6 +5,9 @@
             accept=".xlsx, .xls, .csv, .png, .doc, .docx, .pdf"
             label="Attachment" onchange={openfileUpload}></lightning-input>
         </div>
+        <div if:true={isLoading}>
+            <lightning-spinner alternative-text="Data parsing" size="medium"></lightning-spinner>
+        </div>
         <template if:true={fileData}>
             <p>{fileData.filename}</p>
         </template>

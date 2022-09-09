@@ -84,7 +84,7 @@
                                                         <td>
                                                             <ui:inputCheckbox aura:id="checkbox" label=""
                                                                 change="{!c.onCheckGDrive}" />
-                                                        </td>
+                                                         </td>
                                                     </div>
 
                                                     <aura:if isTrue="{!v.isModifyOpen}">

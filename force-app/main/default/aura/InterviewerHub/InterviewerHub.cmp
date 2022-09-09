@@ -1,0 +1,176 @@
+<aura:component controller="CandFieldSet" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:isUrlAddressable"
+access="global">
+
+<aura:handler name="init" action="{!c.doInit}" value="{!this}" />
+<aura:attribute name="comments" type="Interviewer_Notes_and_Feedback__c" default="{'SObject':'Interviewer_Notes_and_Feedback__c'}" />
+<aura:attribute name="commentsList" type="List" />
+<aura:attribute name="candidateProfile" type="sObject" />
+
+<div class="slds-theme_shade " style="background-color: white;">
+<!--lightning:tabset class="slds-p-bottom_x-large" aura:id="tabs" selectedTabId="{!v.selectedTab}">
+                    
+                        
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="UG_Stream__c" />
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="UG_Institute_Name__c" />
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="UG_Education_Type__c" />
+
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="From_Year_Of_Graduation__c" />
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="To_Year_Of_Graduation__c" />
+
+                            </div>
+
+                        </div>
+               
+                    <lightning:tab class="slds-theme_shade" label="Notes" id="Notes" onactive=""
+                        iconName="">
+                        hello
+                        <lightning:input type="text" value="{!v.comments.Name}" label="Enter your Feedback"
+                        placeholder="Enter Comments" style="width:600px;height:100px" required="true" />
+                    <aura:iteration items="{!v.commentsList}" var="com" indexVar="index">
+                        <div class="slds-box slds-box_small">
+                            <p> <b>{!com.User__c}</b> - {!com.Notes__c}</p>
+                        </div>
+                    </aura:iteration>
+                    <lightning:button variant="brand" label="OK" title="OK"
+                        value="" onclick="{!c.handleSaveComment}" />
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="PG_Stream__c" />
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="PG_Institute_Name__c" />
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="PG_Education_Type__c" />
+
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="PG_From_Year_Of_Graduation__c" />
+
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="PG_To_Year_Of_Graduation__c" />
+
+                            </div>
+
+                        </div>
+                        
+                    </lightning:tab>
+                    <lightning:tab class="slds-theme_shade" label="Resume" id="Notes" onactive=""
+                        iconName="">
+                    </lightning:tab>
+                </lightning:tabset-->
+                
+                <aura:iteration items="{!v.candidateProfile}" var="lst">
+            <div class="showCandidatesProfile slds-m-around_small slds-border_bottom">
+                <fieldset class="candidatesProfile">
+                    <div class=" slds-p-bottom_small slds-p-top_small"  style="background-color: #F3F3F3">
+                        <table class="display">
+                            <tbody>
+                                <tr>
+                                    <td class="slds-align_absolute-center">
+                                        <h1><b>Candidate Profile</b></h1> <br />
+
+                                    </td>
+                                    <td class="body slds-float_right slds-p-right_small">
+                                        <lightning:button variant="brand" label="View Document" value="{!lst.Id}"
+                                            onclick="{!c.viewDocument}" />
+                                    </td>
+                                    <td class="body slds-float_right slds-p-right_small">
+                                        <lightning:button variant="brand" label="Edit Profile" value="{!lst.Id}"
+                                            onclick="{!c.editProfile}" />
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <table class="display">
+                            <tbody>
+
+                                <tr>
+                                    <td class="body slds-p-left_small"><b>Name</b> :
+                                        {!lst.Name}</td>
+                                   
+                                </tr>
+                                <tr>
+
+                                    <td class="body slds-p-left_small"><b>Location</b> :
+                                        {!lst.Current_Location__c}</td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <table class="display">
+                            <tbody>
+                                <tr>
+                                    <td class="body slds-p-left_small"><b>Email</b> :
+                                        {!lst.Email__c}</td>
+                                    <td class="body" style="width:50%;float:right;"><b>Phone</b> :{!lst.Phone__c}</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <table class="display1" style="width:50%;float:left;">
+                            <tbody>
+                                <tr>
+                                    <td class="body slds-p-left_small"><b>Designation :</b>{!lst.Designation__c}</td>
+                                </tr>
+                                <tr>
+                                    <td class="body slds-p-left_small"><b>Current Employer :</b>{!lst.Employers__c}</td>
+                                </tr>
+                                <tr>
+                                    <td class="body slds-p-left_small"><b>Current CTC :</b>{!lst.Current_CTC__c}LPA</td>
+                                </tr>
+                                <tr>
+                                    <td class="body slds-p-left_small"><b>Expected CTC :</b>{!lst.Expected_CTC__c}LPA</td>
+                                </tr>
+                                <tr>
+                                    <td class="body slds-p-left_small"><b>Preferred Location :</b>{!lst.Preferred_Location__c}</td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <table class="display2" style="width:50%;float:left;">
+                            <tbody>
+
+                                <tr>
+                                    <td class="body"><b>Key Skills :</b>
+                                        <aura:iteration items="{!lst.Skill_Set_Experiences__r}" var="skill">
+                                            {!skill.Name} - {!skill.SkillSet_Experience__c}, </aura:iteration>
+                                    </td>
+
+                                </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </fieldset>
+                  
+
+            </div>
+        </aura:iteration>
+         
+                </div>
+
+</aura:component>	

@@ -16,7 +16,7 @@
             component.set("v.fileName", 'Alert : File size cannot exceed ' + self.MAX_FILE_SIZE + ' bytes.\n' + ' Selected file size: ' + file.size);
             return;
         }
-
+n
         // create a FileReader object 
         var objFileReader = new FileReader();
         // set onload function of FileReader object   
@@ -163,7 +163,8 @@
         }
     },
     saveSkillandExpHelper: function (component, event, file, fileContents, startPosition, endPosition, attachId) {
-
+       // var validation = component.get("v.fieldValidation"); 
+        
         var profile = component.get("v.candidateProfile");
         //alert('saveSkillAndExp>>'+JSON.stringify(component.get('v.candidateProfile')));
 
@@ -208,6 +209,37 @@
         }
         component.set("v.candidateProfile.Preferred_Location__c", locationArray);
         console.log(JSON.stringify(component.get("v.candidateProfile")));
+//-----
+        // if(validation){
+        //     var action = component.get("c.handleOnSubmit");
+        //     action.setCallback(this,function(response){
+        //         var state=response.getState();
+        //         if(state == 'SUCCESS'){
+        //             var toastEvent =$A.get("e.force:shorToast");
+        //             toastEvent.setParams({
+        //                 title:"SUCCESS",
+        //                 message:"Input field are valid",
+                       
+        //             });
+        //             toastEvent.fire();
+        //             var storeResponse = response.getReturnValue();
+        //             console.log(storeResponse);
+        //         }
+        //     })
+
+            
+        // }else{
+        //     //toast please check / correct the required inputs
+        //     var toastEvent =$A.get("e.force:shorToast");
+        //     toastEvent.setParams({
+        //         title:"Error",
+        //         message:"please check the required inputs",
+        //         type:"error",
+        //         mode:"pester"
+        //     });
+        //     toastEvent.fire();
+        // }
+        //------
 
         var getchunk = fileContents.substring(startPosition, endPosition);
 
@@ -457,7 +489,9 @@
     handleOnSubmitHelper: function (component, event, helper, fields) {
 
         var skillsList = component.get("v.skillsList");
-        console.log(skillsList);
+        console.log('skillsList'+skillsList);
+       // alert('skillsList'+skillsList);
+
         var rolesAndRespo = component.get("v.rolesandRespoList");
         console.log(rolesAndRespo);
         var action = component.get("c.saveCandidateProfile");
@@ -558,6 +592,271 @@
         });
         $A.enqueueAction(action);
     },
+    getPreviewLink: function (component, event, helper, resumeId) {
+        console.log('inside get preview link');
+        var action =component.get("c.getPreviewLink");
+        console.log('inside get preview link2');
+        action.setParams({
+            "resumeId":resumeId
+        });
+        action.setCallback(this,function(response){ 
+            console.log('apex action'); 
+            var state = response.getState();  
+            if(state=='SUCCESS'){  
+                var result = response.getReturnValue();      
+
+                component.set("v.uploadedFileLink", result);
+                component.set("v.viewButton", true);
+                console.log(result);
+            }else{
+                alert('failed to call apex');
+            }
+        });  
+        $A.enqueueAction(action);  
+    },
+
+    errorToastMessage: function(component,event, helper,msg){
+        var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+        title:"ERROR!",
+        message:msg,
+        type:"error",
+        mode:"pester"});
+        toastEvent.fire();
+    },
+
+     //----
+    // skilledit :function(component,event,handler){
+         
+    //     var action =component.get("c.getSkillRecord");
+    //     action.setParams({
+    //         "skillrecordId":skillrecordId
+    //     });
+    //     action.setCallback(this,function(responce){
+    //         var state=responce.getState();
+    //         if(state==='SUCCESS'){
+    //             var res = responce.getReturnValue();
+    //             component.set("v.skillrecordId",res);
+    //         }
+    //         else if (state ==='ERROR'){
+    //             var toastEvent = $A.get("e.force:showToast");
+    //             toastEvent.setParams({
+    //                 "title": "Error!",
+    //                 "message": "Error Occured."
+    //             });
+    //             toastEvent.fire();
+
+    //         }
+    //     })
+    //     $A.enqueueAction(action);
+      
+
+    // },
+    getSkillForEdit :function(component,event,handler){
+        //skill
+        console.log("edit skill>>>");
+        var action =component.get("c.getSkill");
+        console.log("edit skill>>>");
+       // alert(component.get("v.candRecordId")); 
+        action.setParams({
+            'skillExpId': component.get("v.candRecordId")
+        });
+       action.setCallback(this, function(response) {
+           var state = response.getState();
+           console.log("state>>>"+state);
+               if(state === 'SUCCESS'){
+                    console.log('>>>'+response.getReturnValue());
+                    var result=response.getReturnValue();
+                   component.set("v.SkillEditRecordId",result);
+                  // alert("result>>>"+JSON.stringify(component.get("v.SkillEditRecordId")));
+
+
+               }
+               else if(state === 'ERROR'){
+                   var toastEvent = $A.get("e.force:showToast");
+                   toastEvent.setParams({
+                       "title": "Error!",
+                       "message": "Error in getSkillExpList."
+                   });
+                   toastEvent.fire();   
+                  
+               }
+       })
+       $A.enqueueAction(action);
+
+       //Role and Resp
+       var action = component.get("c.getRoleAndResp");
+       action.setParams({
+           'RoleAndRespId': component.get("v.candRecordId")
+       });
+      action.setCallback(this, function(response) {
+          var state = response.getState();
+              if(state === 'SUCCESS'){
+
+                  component.set("v.roleAndResRecordId", response.getReturnValue());
+                  console.log("Roleresult>>>"+response.getReturnValue());
+                 // alert("result>>>"+JSON.stringify(component.get("v.roleAndResRecordId")));
+
+
+              }
+              else if(state === 'ERROR'){
+                  var toastEvent = $A.get("e.force:showToast");
+                  toastEvent.setParams({
+                      "title": "Error!",
+                      "message": "Error in getRoleAndResp."
+                  });
+                  toastEvent.fire();   
+                  $A.util.toggleClass(spinner, "slds-hide");
+              }
+      })
+      $A.enqueueAction(action);
+
+    },
+    dltSkillForEdit :function(component,event,handler){
+        //skill
+        alert("check"+JSON.stringify(component.get("v.SkillEditRecordId")));
+        console.log("edit skill>>>");
+        var delSkill = component.get("v.deleteSkill");
+
+        console.log('list of del skillID'+delSkill);
+        var action =component.get("c.deleteSkill");
+        console.log("edit skill>>>");
+       // alert(component.get("v.candRecordId")); 
+        action.setParams({
+            'skillExpId': delSkill
+        });
+       action.setCallback(this, function(response) {
+           var state = response.getState();
+           console.log("state>>>"+state);
+           alert('Success skil delete');
+               if(state === 'SUCCESS'){
+                    console.log('>>>'+response.getReturnValue());
+                    var result=response.getReturnValue();
+                   component.set("v.dltSkillEditRecordId",result);
+                  // alert("result>>>"+JSON.stringify(component.get("v.SkillEditRecordId")));
+
+
+               }
+               else if(state === 'ERROR'){
+                   var toastEvent = $A.get("e.force:showToast");
+                   toastEvent.setParams({
+                       "title": "Error!",
+                       "message": "Error in getSkillExpList."
+                   });
+                   toastEvent.fire();   
+                  
+               }
+       })
+       $A.enqueueAction(action);
+    },
+
+       //Role and Resp
+
+       dlteditRoll :function(component,event,handler){
+       // alert('dltRoll');
+       var action = component.get("c.deleteRoleAndResp");
+      // alert('call apex');
+       action.setParams({
+           'RoleAndRespId': component.get("v.candRecordId")
+       });
+      action.setCallback(this, function(response) {
+          var state = response.getState();
+              if(state === 'SUCCESS'){
+
+                  component.set("v.dltroleAndResRecordId", response.getReturnValue());
+                  console.log("dltRoleresult>>>"+response.getReturnValue());
+                 // alert("result>>>"+JSON.stringify(component.get("v.dltroleAndResRecordId")));
+
+
+              }
+              else if(state === 'ERROR'){
+                  var toastEvent = $A.get("e.force:showToast");
+                  toastEvent.setParams({
+                      "title": "Error!",
+                      "message": "Error in getRoleAndResp."
+                  });
+                  toastEvent.fire();   
+                  $A.util.toggleClass(spinner, "slds-hide");
+              }
+      })
+      $A.enqueueAction(action);
+
+    },
+
+    // updateCandidateProfile: function (component, event, helper, fields) {
+    //    var updateCandiProId =component.get("v.candDocParserId");
+    //    alert('updateCandiProId'+updateCandiProId);
+    //     var skillsList = component.get("v.skillsList");
+    //     console.log('skillsList>>'+JSON.stringify(skillsList));
+
+    //     console.log(skillsList);
+    //     var rolesAndRespo = component.get("v.rolesandRespoList");
+    //     console.log(rolesAndRespo);
+    //     var action = component.get("c.updateCandidateProfile");
+    //     action.setParams({
+    //         "candFields": fields,
+    //         "skills": skillsList,
+    //         "rolesAndResp": rolesAndRespo,
+    //         "updateCandiDateId":updateCandiDateId
+    //     });
+    //     action.setCallback(this, function (response) {
+    //         //get response status 
+    //         var state = response.getState();
+    //         if (state === "SUCCESS") {
+
+    //         }
+    //         else if (state ==='ERROR'){
+    //             var toastEvent = $A.get("e.force:showToast");
+    //             toastEvent.setParams({
+    //                 "title": "Error!",
+    //                 "message": "Error in update."
+    //             });
+    //             toastEvent.fire(); 
+    //         }
+               
+    //             });
+    //             $A.enqueueAction(action);
+
+    //             var action = component.get("c.updateCandidateProfile");
+    //             action.setParams({
+    //                 "candFields": fields,
+    //                 "skills": skillsList,
+    //                 "rolesAndResp": rolesAndRespo,
+    //                 "updateCandiDateId":updateCandiDateId
+    //             });
+    //             action.setCallback(this, function(response) {
+    //                 var state = response.getState();
+    //                         if(state === 'SUCCESS'){
+    //                             var toastEvent = $A.get("e.force:showToast");
+    //                             toastEvent.setParams({
+    //                                 "title": "SUCCESS!",
+    //                                 "message": "Candidate Profile Created Successfully.",
+    //                                 "variant": "Success"
+    //                             });
+    //                             toastEvent.fire();
+    //                             //url redirect
+    //                             var urlString = window.location.href;
+    //                             var CommunityBaseURL = urlString.substring(0,urlString.indexOf("/one/"));
+    //                             window.location.replace(CommunityBaseURL+"/lightning/n/Home_Page");
+    //                         }
+    //                             else if(state === 'ERROR'){
+    //                                 var toastEvent = $A.get("e.force:showToast");
+    //                                 toastEvent.setParams({
+    //                                     "title": "Error!",
+    //                                     "message": "Error in Job Post Format."
+    //                                 });
+    //                                 toastEvent.fire();  
+    //                             }
+    //                     })
+    //                     $A.enqueueAction(action);
+    //              },
+               
+                
+               
+    
+  //---
+        
+    
 
     // getAccessToken: function (component, event, helper) {
     //     var accessToken;
@@ -573,6 +872,13 @@
     //     });
     //     $A.enqueueAction(action);
     // },
-
-
+//------
+// ValidateName: function(component, event, helper) {
+//     console.log("On Click helper");
+//      var allValid = component.find('nameValidation').reduce(function (validSoFar, inputCmp) {
+//          inputCmp.showHelpMessageIfInvalid();
+//          return validSoFar && !inputCmp.get('v.validity').valueMissing;
+//      }, true);
+// },
+   
 })

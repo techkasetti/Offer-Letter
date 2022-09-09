@@ -38,7 +38,7 @@
         // alert('toggle');
 
         var items = component.get("v.jobApplication");
-        //alert('items ::'+JSON.stringify(items));
+        // alert('items ::'+JSON.stringify(items));
         console.log(JSON.stringify(items));
         var chevronright = component.find('chevronright');
         var chevrondown = component.find('chevrondown');
@@ -175,10 +175,10 @@
 
         var obj = JSON.parse(jobposting);
         console.log(obj);
-        console.log(obj.JobAppication.Id);
+        console.log(obj.jobAppication.Id);
         var save_action = component.get("c.setL1InterviewScheduled");
         save_action.setParams({
-            'jobAppId': obj.JobAppication.Id
+            'jobAppId': obj.jobAppication.Id
 
 
         });

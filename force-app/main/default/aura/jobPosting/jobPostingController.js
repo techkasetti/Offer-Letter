@@ -1,22 +1,30 @@
 ({
-	doInit : function(component, event,helper,page) 
+    doInit : function(component, event,helper,page) 
     {   
-        // var action = component.get("c.getAccessToken");
-        // action.setCallback(this, function (response) {
-        //     var status = response.getState();
-        //     if (status === "SUCCESS") {
-        //         var accessToken = response.getReturnValue();
-        //         alert('accessToken>>>'+accessToken);
-        //         component.set("v.accessToken", accessToken);
-        //     }
-        // });
-        // $A.enqueueAction(action);
+        var recId = component.get("v.jobPostRecordId");
+         if(component.get("v.jobPostRecordId")){
+             helper.getJobPostForEdit(component,event,helper);
+         }
 
-        //component.set("v.jobPostRecordId",'a038Z00000XIxjhQAD');
 
-        if(component.get("v.jobPostRecordId")){
-            helper.getJobPostForEdit(component,event,helper);
-        }
+         var recId = component.get("v.recordId");
+         if(component.get("v.recordId")){
+             helper.getJobPostForEdit(component,event,helper);
+         }
+
+
+        var action = component.get("c.getAccessToken");
+        action.setCallback(this, function (response) {
+            var status = response.getState();
+            if (status === "SUCCESS") {
+                var accessToken = response.getReturnValue();
+                // alert('accessToken>>>'+accessToken); 
+                component.set("v.accessToken", accessToken);
+            }
+        });
+        $A.enqueueAction(action);
+
+       
 
 
         var action = component.get("c.getDepartmentPickListValues");
@@ -38,7 +46,8 @@
         })
         $A.enqueueAction(action);
 
-        //helper.getSkillsetHelper(component,event,helper);       
+        //helper.getSkillsetHelper(component,event,helper);    
+       
 
         var action = component.get("c.getJoiningInPickListValues");
         action.setCallback(this, function(response) {
@@ -57,6 +66,7 @@
                 }
         })
         $A.enqueueAction(action);
+
 
         //teams
         var action = component.get("c.getTeams");
@@ -111,15 +121,26 @@
 
     removeSkillRecord: function (component,event,helper) {
         //Get the Skill list
+        alert('inside removeSkillRecord');
         var skillsList = component.get("v.skillsList");
+        alert('inside removeSkillRecord'+skillsList);
         //Get the target object
         var selectedItem = event.currentTarget;
         //Get the selected item index
+        console.log('Before splice skillsList>>>>'+skillsList);
         var index = selectedItem.dataset.record;
         //Remove single record from Skill list
         skillsList.splice(index, 1);
+        console.log('skillsList>>>>'+skillsList);
+
         //Set modified Skill list
         component.set("v.skillsList", skillsList);
+    },
+    skillLoaded: function(component, event, helper){
+        var fieldNames = Object.keys(record.fields);
+        var value = event.getParam("value");
+        console.log(fieldNames);
+        console.log(value);
     },
 
     removeDocRecord: function (component,event,helper) {
@@ -151,14 +172,20 @@
     removeSkillEditRecord: function (component,event,helper) {
         //Get the Document list
         var docMasterList = component.get("v.jobPostSkillRecordId");
+        alert('docMasterList>>>'+docMasterList);
         //Get the target object
         var selectedItem = event.currentTarget;
+        alert('selectedItem>>>'+selectedItem);
         //Get the selected item index
         var index = selectedItem.dataset.record;
+        alert('index>>>'+index);
         //Remove single record from Document list
         docMasterList.splice(index, 1);
+        alert('After Splice docMasterList>>>'+docMasterList);
         //Set modified Document list
         component.set("v.jobPostSkillRecordId", docMasterList);
+        var AfterdocMasterList = component.get("v.jobPostSkillRecordId");
+        alert('AfterdocMasterList>>>'+AfterdocMasterList);
     },
 
     removeUserRecord: function (component,event,helper) {
@@ -417,7 +444,7 @@
              minCTC = 0;
              maxCTC = 0;
          }
-         
+          
          if(!noOfPositions){
             noOfPositions = 0;
         }
@@ -738,7 +765,7 @@
             'Document_Master__c': ''
         });
         component.set("v.docMasterList", docList);
-        //alert('docMasterList>>>'+JSON.stringify(component.get("v.docMasterList")));
+        alert('docMasterList>>>'+JSON.stringify(component.get("v.docMasterList")));
     },
 
     addUserRow: function(component, event, helper) {
@@ -752,11 +779,308 @@
         //alert('userList>>>'+JSON.stringify(component.get("v.userList")));
     },
 
+   postNewJob : function(component, event, helper) {
+ ///////////////////////////////////////////////////////////////////////////////////////////////
+        {
+        var nameValidation = component.find('nameValidation');
+           var value = nameValidation.get("v.value");
+           var rexName = /^[a-zA-Z\s]*$/;  
+        //   alert(' name');
+           
+        if(value==null){
+           //validatedata=false;
+           console.log('inside if name');
+           var toastEvent = $A.get("e.force:showToast");
+           //console.log('inside if ');
 
-       postNewJob : function(component, event, helper) {
+           toastEvent.setParams({
+           title: "ERROR!",
+           message: "Job Posting Name is Empty .",
+           duration:' 8000',
+           type: "error",
+           mode: 'pester'
+       });
+           toastEvent.fire();
+       }
+            else if (!value.match(rexName)) {
+              // validatedata=false;
+       
+                console.log('inside ELSEif name');
+                 var toastEvent = $A.get("e.force:showToast");
+                 toastEvent.setParams({
+                 title: "ERROR!",
+                 message: " Job Posting Name Should be alphabetic characters .",
+                 duration:' 8000',
+                 type: "error",
+                 mode: 'pester'
+       });
+                 toastEvent.fire();
+       
+           }
+        }
+        ///////
 
+///////////Account Validation /////////////
+//alert('Before AccountValidation');
+{
+    var AccountValidation = component.find('AccountValidation');
+    var value = AccountValidation.get("v.value");
+    var rexName = /^[a-zA-Z\s]*$/;  
+ //   alert(' name');
+    
+ if(value==null){
+    //validatedata=false;
+    console.log('inside if name');
+    var toastEvent = $A.get("e.force:showToast");
+    //console.log('inside if ');
+
+    toastEvent.setParams({
+    title: "ERROR!",
+    message: "Account is Empty .",
+    duration:' 8000',
+    type: "error",
+    mode: 'pester'
+});
+    toastEvent.fire();
+}
+//      else if (!value.match(rexName)) {
+//        // validatedata=false;
+
+//          console.log('inside ELSEif name');
+//           var toastEvent = $A.get("e.force:showToast");
+//           toastEvent.setParams({
+//           title: "ERROR!",
+//           message: " Job Posting Name Should be alphabetic characters .",
+//           duration:' 8000',
+//           type: "error",
+//           mode: 'pester'
+// });
+//           toastEvent.fire();
+
+//     }
+}
+
+
+    //// Designation Validation///////
+    {
+
+        {
+            var DesignationValidation = component.find('DesignationValidation');
+               var value = DesignationValidation.get("v.value");
+               var rexName = /^[a-zA-Z\s]*$/;  
+            //   alert(' name');
+               
+            if(value==null){
+               //validatedata=false;
+               console.log('inside if name');
+               var toastEvent = $A.get("e.force:showToast");
+               //console.log('inside if ');
+    
+               toastEvent.setParams({
+               title: "ERROR!",
+               message: "Designation Name is Empty .",
+               duration:' 8000',
+               type: "error",
+               mode: 'pester'
+           });
+               toastEvent.fire();
+           }
+                else if (!value.match(rexName)) {
+                  // validatedata=false;
+           
+                    console.log('inside ELSEif name');
+                     var toastEvent = $A.get("e.force:showToast");
+                     toastEvent.setParams({
+                     title: "ERROR!",
+                     message: " Designation Should be alphabetic characters .",
+                     duration:' 8000',
+                     type: "error",
+                     mode: 'pester'
+           });
+                     toastEvent.fire();
+           
+               }
+            }
+     
+     
+}
+
+////////Validation Location////////////
+//alert('Before Location');
+{
+    {
+        var LocationValidation = component.find('LocationValidation');
+           var value = LocationValidation.get("v.value");
+           var rexName = /^[a-zA-Z\s]*$/;  
+        //   alert(' name');
+           
+        if(value==null){
+           //validatedata=false;
+           console.log('inside if name');
+           var toastEvent = $A.get("e.force:showToast");
+           //console.log('inside if ');
+
+           toastEvent.setParams({
+           title: "ERROR!",
+           message: "Location Name is Empty .",
+           duration:' 8000',
+           type: "error",
+           mode: 'pester'
+       });
+           toastEvent.fire();
+       }
+            else if (!value.match(rexName)) {
+              // validatedata=false;
+       
+                console.log('inside ELSEif name');
+                 var toastEvent = $A.get("e.force:showToast");
+                 toastEvent.setParams({
+                 title: "ERROR!",
+                 message: " Location Name Should be alphabetic characters .",
+                 duration:' 8000',
+                 type: "error",
+                 mode: 'pester'
+       });
+                 toastEvent.fire();
+       
+           }
+        }
+ 
+ 
+}
+
+
+
+////////Minimum CTCValidation///////
+{
+var MinCTCValidation = component.find('MinCTCValidation');
+var value = MinCTCValidation.get("v.value");
+//var rexName = /^[a-zA-Z\s]*$/;  
+ //alert(' min ctc');
+
+if(value==null){
+//validatedata=false;
+console.log('inside if name');
+var toastEvent = $A.get("e.force:showToast");
+//console.log('inside if ');
+
+toastEvent.setParams({
+title: "ERROR!",
+message: "Min CTC is Empty .",
+duration:' 8000',
+type: "error",
+mode: 'pester'
+});
+toastEvent.fire();
+}
+}
+
+////////Max CTCValidation///////
+{
+var MaxCTCValidation = component.find('MaxCTCValidation');
+var value = MaxCTCValidation.get("v.value");
+//var rexName = /^[a-zA-Z\s]*$/;  
+ //alert(' Maximum ctc');
+
+if(value==null){
+//validatedata=false;
+//alert('inside if Max');
+var toastEvent = $A.get("e.force:showToast");
+//console.log('inside if ');
+
+toastEvent.setParams({
+title: "ERROR!",
+message: "Maximum CTC is Empty .",
+duration:' 8000',
+type: "error",
+mode: 'pester'
+});
+toastEvent.fire();
+//alert('End');
+}
+}
+////////DocumentStorageValidation///////
+{
+var DocumentStorageValidation = component.find('DocumentStorageValidation');
+var value = DocumentStorageValidation.get("v.value");
+//var rexName = /^[a-zA-Z\s]*$/;  
+ //alert(' Maximum ctc');
+
+if(value==null){
+//validatedata=false;
+//alert('inside if Max');
+var toastEvent = $A.get("e.force:showToast");
+//console.log('inside if ');
+
+toastEvent.setParams({
+title: "ERROR!",
+message: "Document Storage is Empty .",
+duration:' 8000',
+type: "error",
+mode: 'pester'
+});
+toastEvent.fire();
+//alert('End');
+}
+}
+
+
+// ///////////////SkillSetValidation//////////////////////
+
+alert('Skill');
+{
+    var skillSetValidation = component.find('skillSetValidation');
+    alert(' Sk');
+    var value = skillSetValidation.get("v.value");
+     alert(' Sk');   
+    if(value >= 0){
+    alert('Skills');
+    var toastEvent = $A.get("e.force:showToast"); 
+    toastEvent.setParams({
+    title: "ERROR!",
+    message: "Skill Set is Empty .",
+    duration:' 8000',
+    type: "error",
+    mode: 'pester'
+    });
+    toastEvent.fire();
+    alert('Skillend');
+    }
+    }
+
+
+
+/////////////////TeamsValidation//////////////////////
+// {
+// var TeamsValidation = component.find('TeamsValidation');
+// var value = TeamsValidation.get("v.value");
+// //var rexName = /^[a-zA-Z\s]*$/;   
+//  alert(' Team');
+
+// if(value >= 0){
+// //validatedata=false;
+// alert('Team1');
+// var toastEvent = $A.get("e.force:showToast");
+// //console.log('inside if ');
+
+// toastEvent.setParams({
+// title: "ERROR!",
+// message: "Teams is Empty .",
+// duration:' 8000',
+// type: "error",
+// mode: 'pester'
+// });
+// toastEvent.fire();
+// alert('team2');
+// }
+// }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //alert('a');
         var jobPostingfields = component.find('jobPostingFields').get('v.value');
         console.log('jobPostingfields>>'+JSON.stringify(jobPostingfields));
+       
         var skillsList = component.get("v.skillsList");
         console.log('skillsList>>'+JSON.stringify(skillsList));
         var docMasterList = component.get("v.docMasterList");
@@ -803,46 +1127,22 @@
 //UPDATE JOB POSTING STARTS
         UpdateJob : function(component, event, helper) {
         var updateJobId = component.get("v.jobPostRecordId");
-        alert('updateJobId>>>'+updateJobId);
+        console.log('updateJobId>>>'+updateJobId);
 
         var jobPostingfields = component.find('updateJobPostingFields').get('v.value');
         console.log('jobPostingfields>>'+JSON.stringify(jobPostingfields));
-        var skillsList = component.get("v.skillsList");
+        
+        var skillsList = component.get("v.jobPostSkillRecordId");
         console.log('skillsList>>'+JSON.stringify(skillsList));
-        var docMasterList = component.get("v.docMasterList");
+        
+        var docMasterList = component.get("v.jobPostDocRecordId");
         console.log('docMasterList>>'+JSON.stringify(docMasterList));
         console.log('component.get("v.teamID")>>'+component.get("v.teamID"));
 
-        // jobPostingfields["Teams__c"]= component.get("v.teamID");
-        // component.find('jobPostingFields').set('v.value',jobPostingfields);
-        // console.log('component.get("v.teamID")>>'+component.find('jobPostingFields').get('v.value'));
-        alert('2');
+        jobPostingfields["Teams__c"]= component.get("v.teamID");
+        component.find('jobPostingFields').set('v.value',jobPostingfields);
+        console.log('component.get("v.teamID")>>'+component.find('jobPostingFields').get('v.value'));
 
-        var action = component.get("c.updateJobPosting");
-        action.setParams({
-            "jobPostingfields" : jobPostingfields,
-                "skillsList" : skillsList,
-                "docMasterList" : docMasterList,
-                "updateJobPosId" : updateJobPosId
-        });
-       action.setCallback(this, function(response) {
-           var state = response.getState();
-           alert('state>>>'+state);
-               if(state === 'SUCCESS'){
-                   
-               }
-               else if(state === 'ERROR'){
-                   var toastEvent = $A.get("e.force:showToast");
-                   toastEvent.setParams({
-                       "title": "Error!",
-                       "message": "Error in updateJobPosting."
-                   });
-                   toastEvent.fire();   
-                   $A.util.toggleClass(spinner, "slds-hide");
-               }
-       })
-       $A.enqueueAction(action);
-       alert('last>>>'+last);
 
 
         // var action = component.get("c.updateJobPosting");
@@ -855,18 +1155,18 @@
         //         action.setCallback(this, function(response) {
         //         var state = response.getState();
         //                 if(state === 'SUCCESS'){
-                            var toastEvent = $A.get("e.force:showToast");
-                            toastEvent.setParams({
-                                "title": "SUCCESS!",
-                                "message": "Job Post Created Successfully.",
-                                "variant": "Success"
-                            });
-                            toastEvent.fire();
+        //                     var toastEvent = $A.get("e.force:showToast");
+        //                     toastEvent.setParams({
+        //                         "title": "SUCCESS!",
+        //                         "message": "Job Post Created Successfully.",
+        //                         "variant": "Success"
+        //                     });
+        //                     toastEvent.fire();
 
-                            //url redirect
-                            var urlString = window.location.href;
-                            var CommunityBaseURL = urlString.substring(0,urlString.indexOf("/one/"));
-                            window.location.replace(CommunityBaseURL+"/lightning/n/Home_Page");
+        //                     //url redirect
+        //                     var urlString = window.location.href;
+        //                     var CommunityBaseURL = urlString.substring(0,urlString.indexOf("/one/"));
+        //                     window.location.replace(CommunityBaseURL+"/lightning/n/Home_Page");
         //                 }
         //                 else if(state === 'ERROR'){
         //                     var toastEvent = $A.get("e.force:showToast");
@@ -878,6 +1178,44 @@
         //                 }
         //         })
         //         $A.enqueueAction(action);
+
+        var action = cmp.get("c.updateJobPosting");
+        action.setParams({ jobPostingfields : "jobPostingfields",
+        skillsList : "skillsList",
+        docMasterList : "docMasterList",
+        updateJobPosId : "updateJobPosId"
+                             });
+
+        // Create a callback that is executed after 
+        // the server-side action returns
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                // Alert the user with the value returned 
+                // from the server
+                alert("From server: " + response.getReturnValue());
+
+                // You would typically fire a event here to trigger 
+                // client-side notification that the server-side 
+                // action is complete
+            }
+            else if (state === "INCOMPLETE") {
+                // do something
+            }
+            else if (state === "ERROR") {
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        console.log("Error message: " + 
+                                 errors[0].message);
+                    }
+                } else {
+                    console.log("Unknown error");
+                }
+            }
+        });
+        
+
             },
 //UPDATE JOB POSTING ENDS
 
@@ -961,6 +1299,7 @@
             //alert(event.getParam("value")[0]);
             //alert('SELECTED VALUE>>>'+component.find('select').get('v.value'));
             var teamMemlookupId = component.find('select').get('v.value');
+            alert(teamMemlookupId);
             component.set("v.teamID",teamMemlookupId);
     
             var action = component.get("c.getTeamMembers");
@@ -986,5 +1325,47 @@
            },
 
 
+
+
+
+    //        //Validation Part
+    //        var nameValidation = component.find('nameValidation');
+    //        var value = nameValidation.get("v.value");
+    //        var rexName = /^[a-zA-Z\s]*$/ ;
+    //        console.log(' name');
+           
+    //     if( value ==null){
+    //        validatedata=false;
+       
+    //        console.log('inside if name');
+    //        var toastEvent = $A.get("e.force:showToast");
+    //        toastEvent.setParams({
+    //        title: "ERROR!",
+    //        message: " Candidate Name is Empty .",
+    //        duration:' 8000',
+    //        type: "error",
+    //        mode: 'pester'
+    //    });
+    //        toastEvent.fire();
+    //    }
+    //         else if (!value.match(rexName)) {
+    //            validatedata=false;
+       
+    //             console.log('inside if name');
+    //              var toastEvent = $A.get("e.force:showToast");
+    //              toastEvent.setParams({
+    //              title: "ERROR!",
+    //              message: " Candidate Name Should be alphabetic characters .",
+    //              duration:' 8000',
+    //              type: "error",
+    //              mode: 'pester'
+    //    });
+    //              toastEvent.fire();
+    //    //component.set("v.errors",[{message:"Invalid Phone No: " + value}]);
+    //        }
+
+
+
+        
 
 })

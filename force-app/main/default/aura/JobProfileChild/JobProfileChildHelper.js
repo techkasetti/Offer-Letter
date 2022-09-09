@@ -8,15 +8,14 @@
         save_action.setCallback(this, function(response) {
             $A.util.removeClass(component.find("mySpinner"), "slds-show");
             var state = response.getState();
-            //alert(state);
+            // alert(state);
             if (state === "SUCCESS") { 
                 var storeResponse = response.getReturnValue();
                 // $A.get('e.force:refreshView').fire();
                 // set searchResult list with return value from server.
-                console.log('storeResponse >>>>'+JSON.stringify(storeResponse[0].JobApplicationWrapList[0]));
-                component.set("v.jobApplication", storeResponse[0].JobApplicationWrapList[0]);
+                console.log('storeResponse >>>>'+JSON.stringify(storeResponse[0].jobApplicationWrapList[0]));
+                component.set("v.jobApplication", storeResponse[0].jobApplicationWrapList[0]);
                 console.log('storeResponse>>>'+JSON.stringify(component.get("v.jobApplication")));
-                
                 
             }
             

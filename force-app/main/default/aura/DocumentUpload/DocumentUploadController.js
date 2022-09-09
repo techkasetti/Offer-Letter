@@ -20,8 +20,8 @@
         var action = component.get("c.fetchJobPostingDocList");
         console.log('I here 1');
         action.setParams({
-            "JobApplicationId": jobApplication.Id,
-            "JobPostingId": jobApplication.Job_Posting__c
+            "jobApplicationId": jobApplication.Id,
+            "jobPostingId": jobApplication.Job_Posting__c
         });
 
         // action.setParams({
@@ -53,7 +53,7 @@
         //Get documentStorage name from job posting object
         var action = component.get("c.fetchDocumentStorageName");
         action.setParams({
-            "JobPostingId": jobApplication.Job_Posting__c
+            "jobPostingId": jobApplication.Job_Posting__c
         });
 
         // action.setParams({
@@ -203,7 +203,7 @@
         var downloadDocId = event.getSource().get("v.name");
         //alert('downloadDocId>>'+downloadDocId);
 
-        var action = component.get("c.DownloadDoc");
+        var action = component.get("c.downloadDoc");
         action.setParams({
             "downloadDocId": downloadDocId,
         });
@@ -255,7 +255,7 @@
         var viewDocId = event.getSource().get("v.name");
         //alert('viewDocId>>'+viewDocId);
 
-        var action = component.get("c.ViewDoc");
+        var action = component.get("c.viewDoc");
         action.setParams({
             "viewDocId": viewDocId,
         });
@@ -463,6 +463,71 @@
         component.set("v.isModalOpen", true);
 
     },
+
+    ModifyAzureFile: function (component, event, helper) {
+        var modifyDocId = event.getSource().get("v.name");
+        //alert('modifyDocId>>'+modifyDocId);
+        component.set("v.modifyId", modifyDocId);
+        if (component.get("v.isModifyOpen") == false) {
+            component.set("v.isModifyOpen", true);
+        }
+        else {
+            component.set("v.isModifyOpen", false);
+        }
+    },
+
+    /*ViewAzureFile: function (component, event, helper) {
+        window.setTimeout(
+            $A.getCallback(function () {
+                var spinner = component.find('spinner');
+                $A.util.toggleClass(spinner, "slds-is-open");
+            }), 5000
+        );
+
+        var viewDocId = event.getSource().get("v.name");
+        //alert('viewDocId>>'+viewDocId);
+
+        var action = component.get("c.ViewAzureDoc");
+        action.setParams({
+            "viewDocId": viewDocId,
+        });
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var Response = response.getReturnValue();
+                //alert('Response>>>'+JSON.stringify(Response));
+
+                if (Response != null) {
+                    var urlEvent = $A.get("e.force:navigateToURL");
+                    urlEvent.setParams({
+                        "url": Response
+                    });
+                    urlEvent.fire();
+                }
+                else {
+                    var toastEvent = $A.get("e.force:showToast");
+                    toastEvent.setParams({
+                        "title": "Error!",
+                        "message": "There is no file to View"
+                    });
+                    toastEvent.fire();
+
+                }
+            }
+            else {
+                var toastEvent = $A.get("e.force:showToast");
+                toastEvent.setParams({
+                    "title": "Error!",
+                    "message": "There was some error in View File..."
+                });
+                toastEvent.fire();
+            }
+        });
+        $A.enqueueAction(action);
+
+        var spinner = component.find('spinner');
+        $A.util.toggleClass(spinner, "slds-hide");
+    },*/
 
     DownloadAzureFile: function (component, event, helper) {
         alert('iNSIDE CONTOLLER');

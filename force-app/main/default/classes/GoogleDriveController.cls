@@ -1,4 +1,4 @@
-Public class GoogleDriveController {
+Public with sharing class GoogleDriveController {
     
     // private String code;
     
@@ -33,42 +33,48 @@ Public class GoogleDriveController {
     
     
     @AuraEnabled
-    public static List<Job_Posting_Document__c> fetchJobPostingDocList(String JobApplicationId, String JobPostingId) {
-        system.debug('JobApplicationId'+JobApplicationId);
-        system.debug('JobPostingId'+JobPostingId);
+    public static List<Job_Posting_Document__c> fetchJobPostingDocList(String jobApplicationId, String jobPostingId) {
+        system.debug('JobApplicationId'+jobApplicationId);
+        system.debug('JobPostingId'+jobPostingId);
         
-        Boolean DocumentCheck = true;
+        Boolean documentCheck = true;
         
        //INSERTING RECORD IN Job_Posting_Documents__c ,IF THERE IS NO RECORD FOR Job_Application__c STARTS
-        List<Job_Posting_Document__c> docs = [select Id,Name,Job_Posting__c,Document_Master__c,Job_Application__c from Job_Posting_Document__c where Job_Posting__c =: JobPostingId AND Job_Application__c = null];
+       List<Job_Posting_Document__c> docs=new List<Job_Posting_Document__c>();
+       if(Job_Posting_Document__c.sObjectType.getDescribe().isAccessible()){
+         docs = [select Id,Name,Job_Posting__c,Document_Master__c,Job_Application__c from Job_Posting_Document__c where Job_Posting__c =: jobPostingId AND Job_Application__c = null];
+       }
         List<Job_Posting_Document__c> documentList = new  List<Job_Posting_Document__c>();
 
          if(docs <> null){
 
             //CHECKING Job_Application__c IS CREATED IN Job_Posting_Document__c STARTED
-            List<Job_Posting_Document__c> docsCheckList = [select Id,Job_Application__c from Job_Posting_Document__c where Job_Application__c =: JobApplicationId AND Job_Posting__c=: JobPostingId limit 1];
+            List<Job_Posting_Document__c> docsCheckList = [select Id,Job_Application__c from Job_Posting_Document__c where Job_Application__c =: jobApplicationId AND Job_Posting__c=: jobPostingId limit 1];
             System.debug('docsCheckList>>>'+docsCheckList.size());
              if(docsCheckList.size() == 0){
                 for(Job_Posting_Document__c doc : docs){
-                    Job_Posting_Document__c document = new Job_Posting_Document__c(Name = doc.Name,Document_Master__c=doc.Document_Master__c,Job_Posting__c=doc.Job_Posting__c,Job_Application__c=JobApplicationId);
+                    Job_Posting_Document__c document = new Job_Posting_Document__c(Name = doc.Name,Document_Master__c=doc.Document_Master__c,Job_Posting__c=doc.Job_Posting__c,Job_Application__c=jobApplicationId);
                     documentList.add(document);
                        }
             }
+            if(Job_Posting_Document__c.sObjectType.getDescribe().isAccessible() &&
+            Schema.sObjectType.Job_Posting_Document__c.isCreateable()){
                 insert documentList;
+            }
         }
         //INSERTING RECORD IN Job_Posting_Documents__c ,IF THERE IS NO RECORD FOR Job_Application__c STARTS
         
        //GET RECORDS FROM Job_Posting_Document__c
-        List <Job_Posting_Document__c> lstOfValues = [select Name,GDrive_Doc_URL__c,Azure_Document_URL__c,Azure_FileID__c from Job_Posting_Document__c where Job_Application__c =: JobApplicationId AND Job_Posting__c =: JobPostingId];
+        List <Job_Posting_Document__c> lstOfValues = [select Name,GDrive_Doc_URL__c,Azure_Document_URL__c,Azure_FileID__c from Job_Posting_Document__c where Job_Application__c =: jobApplicationId AND Job_Posting__c =: jobPostingId];
         system.debug('lstOfValues>>>'+lstOfValues);
         return lstOfValues;
     }
     
     @AuraEnabled
-    public static boolean showDocumentVerifiedButton(String JobApplicationId, String JobPostingId) {
-        system.debug('JobApplicationId'+JobApplicationId);
-        system.debug('JobPostingId'+JobPostingId);
-        List <Job_Posting_Document__c> lstOfValues = [select Name,GDrive_Doc_URL__c from Job_Posting_Document__c where Job_Application__c =: JobApplicationId AND Job_Posting__c =: JobPostingId];
+    public static boolean showDocumentVerifiedButton(String jobApplicationId, String jobPostingId) {
+        system.debug('JobApplicationId'+jobApplicationId);
+        system.debug('JobPostingId'+jobPostingId);
+        List <Job_Posting_Document__c> lstOfValues = [select Name,GDrive_Doc_URL__c from Job_Posting_Document__c where Job_Application__c =: jobApplicationId AND Job_Posting__c =: jobPostingId];
         system.debug('lstOfValues>>>'+lstOfValues);
         for(Job_Posting_Document__c value : lstOfValues){
             if(value.GDrive_Doc_URL__c == null)
@@ -81,8 +87,11 @@ Public class GoogleDriveController {
     
     
     @AuraEnabled
-    public static String fetchDocumentStorageName(String JobPostingId) {
-        Job_Posting__c storageName = [select Document_Stoarge__c from Job_Posting__c where Id =: JobPostingId];
+    public static String fetchDocumentStorageName(String jobPostingId) {
+        Job_Posting__c storageName=new Job_Posting__c();
+        if(Job_Posting__c.sObjectType.getDescribe().isAccessible()){
+              storageName = [select Document_Stoarge__c from Job_Posting__c where Id =: jobPostingId];
+        }
         String storageNameValue = storageName.Document_Stoarge__c;
         return storageNameValue;
     }
@@ -101,7 +110,10 @@ Public class GoogleDriveController {
         String refreshtoken;
         Integer expiresIn;
         String tokentype;
-        Google_Drive_Token__mdt gd= [Select Refresh_Token__c  from Google_Drive_Token__mdt where DeveloperName =: 'lable_1'];
+        Google_Drive_Token__mdt gd=new Google_Drive_Token__mdt();
+        if(Google_Drive_Token__mdt.sObjectType.getDescribe().isAccessible()){
+         gd= [Select Refresh_Token__c  from Google_Drive_Token__mdt where DeveloperName =: 'lable_1'];
+        }
         refreshtoken = gd.Refresh_Token__c;
         
         HttpRequest req = new HttpRequest();
@@ -133,7 +145,7 @@ Public class GoogleDriveController {
                 
             } 
         }
-        system.debug('accesstoken>>'+accesstoken);
+        // system.debug('accesstoken>>'+accesstoken);
         
         return accesstoken;
     }
@@ -200,7 +212,7 @@ Public class GoogleDriveController {
         System.debug('Job Application Folder'+(folderIdRecord.Job_Applications__r).GDrive_Folder_ID__c);
         System.debug('File Uploaded'+updateDocURL.Name);
         System.debug('attachmentId>>'+attachmentId);
-        System.debug('accessToken>>'+accessToken);
+       // System.debug('accessToken>>'+accessToken);
         System.debug('uploadedDocId>>'+uploadedDocId);
 
         //Acc f
@@ -222,6 +234,8 @@ Public class GoogleDriveController {
                 } 
             }
         }
+        System.debug('FfolderIdRecord.GDrive_Folder_ID__c>>'+folderIdRecord.GDrive_Folder_ID__c);
+        System.debug('folderIdRecord.Account__r.GDrive_Folder_ID__c'+folderIdRecord.Account__r.GDrive_Folder_ID__c);
         if(String.isBlank(folderIdRecord.GDrive_Folder_ID__c) & String.isNotBlank(folderIdRecord.Account__r.GDrive_Folder_ID__c)){
             String name = folderIdRecord.Name;
             String inId = folderIdRecord.Account__r.GDrive_Folder_ID__c;
@@ -242,6 +256,8 @@ Public class GoogleDriveController {
             }
         }
         if(String.isBlank((folderIdRecord.Job_Applications__r).GDrive_Folder_ID__c) & String.isNotBlank(folderIdRecord.GDrive_Folder_ID__c)){
+                   System.debug('FfolderIdRecord.GDrive_Folder_ID__c>>'+(folderIdRecord.Job_Applications__r).GDrive_Folder_ID__c);
+
             String name = (folderIdRecord.Job_Applications__r).Name;
             String inId = folderIdRecord.GDrive_Folder_ID__c;
             Httpresponse response = googleDriveFunction(authorizationHeaders, name, inId);
@@ -264,8 +280,10 @@ Public class GoogleDriveController {
         
         
         // //CREATE NEW FILE IN GOOGLE DRIVE ENDS
-        
-         List<ContentVersion> cvFile = [SELECT VersionData,FileType,ContentDocumentId FROM ContentVersion WHERE ContentDocumentId =: attachmentId];
+        List<ContentVersion> cvFile=new List<ContentVersion>();
+        if(ContentVersion.sObjectType.getDescribe().isAccessible()){
+          cvFile = [SELECT VersionData,FileType,ContentDocumentId FROM ContentVersion WHERE ContentDocumentId =: attachmentId];
+        }
          Blob myBlob = cvFile[0].VersionData;
          String url = 'https://www.googleapis.com/upload/drive/v2/files?uploadType=media';
          string authorizationHeader = 'Bearer ' + accessToken; 
@@ -349,11 +367,20 @@ Public class GoogleDriveController {
         System.debug('embedLink>>'+embedLink);
         
         if(folderIdRecord != null){
+            if(Job_Posting__c.sObjectType.getDescribe().isAccessible() &&
+               Schema.sObjectType.Job_Posting__c.isUpdateable()){
             update folderIdRecord;
+               }
             System.debug(jobAccount);
             System.debug(jobGDApplication);
+            if(Account.sObjectType.getDescribe().isAccessible() &&
+                  Schema.sObjectType.Account.isUpdateable()){
             update jobAccount;
+                  }
+                  if(Job_Application__c.sObjectType.getDescribe().isAccessible() &&
+                       Schema.sObjectType.Job_Application__c.isUpdateable()){
             update jobGDApplication;
+                       }
         }
         
         if(uploadedDocId != null){
@@ -362,10 +389,15 @@ Public class GoogleDriveController {
             updateDocURL.GDrive_Doc_URL__c = webContentLink;
             updateDocURL.GDrive_View_URL__c = embedLink;
             updateDocURL.GDrive_FileID__c = fileID;
+            if(Job_Posting_Document__c.sObjectType.getDescribe().isAccessible() &&
+                 Schema.sObjectType.Job_Posting_Document__c.isUpdateable()){
             update updateDocURL;
+                 }
         }
-        
+        if(ContentDocument.sObjectType.getDescribe().isAccessible() &&
+             Schema.sObjectType.ContentDocument.isDeletable()){
         delete new ContentDocument(Id = cvFile[0].ContentDocumentId);
+             }
         //return String.valueOf(res.getStatuscode());
         // return 'null';
 
@@ -467,8 +499,10 @@ Public class GoogleDriveController {
             newResume.Name = fileId;
             newResume.PreviewLink__c = 'https://drive.google.com/file/d/'+fileId+'/view';
             newResume.FileLink__c	='https://drive.google.com/uc?id='+fileId+'&export=download';
-            
+            if(Resume__c.sObjectType.getDescribe().isAccessible() &&
+                Schema.sObjectType.Resume__c.isCreateable()){
             insert newResume;
+                }
             String returnResponse= responsep.getStatusCode()+'#'+newResume.Id;
            return returnResponse;
 
@@ -510,7 +544,7 @@ Public class GoogleDriveController {
     
     
     @AuraEnabled
-    public static String DownloadDoc(String downloadDocId) {
+    public static String downloadDoc(String downloadDocId) {
         System.debug('downloadDocId>>'+downloadDocId);
         Job_Posting_Document__c downloadDocURL = [SELECT GDrive_Doc_URL__c FROM Job_Posting_Document__c WHERE Id =: downloadDocId];
         System.debug('downloadDocURL>>'+downloadDocURL);
@@ -519,7 +553,7 @@ Public class GoogleDriveController {
     }
     
     @AuraEnabled
-    public static String ViewDoc(String viewDocId) {
+    public static String viewDoc(String viewDocId) {
         System.debug('viewDocId>>'+viewDocId);
         Job_Posting_Document__c viewDocURL = [SELECT GDrive_View_URL__c FROM Job_Posting_Document__c WHERE Id =: viewDocId];
         System.debug('viewDocURL>>'+viewDocURL);
@@ -559,34 +593,32 @@ Public class GoogleDriveController {
     // Azure File Upload and File Download
     @AuraEnabled
     Public static string azureDocUpload(String attachmentId ,String uploadedDocId, String jobApplication, String jobPosting) {
+        Boolean isReupload = true; 
         AzureFileUpload azureupload = new AzureFileUpload();
-        Job_Posting_Document__c applicationDocument = [SELECT Id,Document_Master__c, 	Job_Application__c FROM Job_Posting_Document__c WHERE Id=:uploadedDocId LIMIT 1];
+        Job_Posting_Document__c applicationDocument = [SELECT Id,Document_Master__c, Job_Application__c, Azure_FileID__c, Azure_Document_URL__c FROM Job_Posting_Document__c WHERE Id=:uploadedDocId LIMIT 1];
         System.debug(applicationDocument);
 
         // to get which document is being uploaded Ex SSLC PAN etc
         Job_Posting_Document__c updateDocURL = [SELECT Name, Azure_FileID__c, Id, Document_Master__c, Job_Application__c FROM Job_Posting_Document__c WHERE Id =: uploadedDocId LIMIT 1];
         
          Job_Posting__c folderIdRecord = [SELECT Id ,Name, Azure_Folder_ID__c, Account__c, Account__r.Azure_Folder_ID__c , Account__r.Name,(SELECT id ,Name, Azure_Folder_ID__c FROM Job_Applications__r WHERE Id = :jobApplication) FROM Job_Posting__c WHERE Id = :jobPosting];
-
-        
-
          
+
          Account jobAccount = new Account(Id=folderIdRecord.Account__c, Name=folderIdRecord.Account__r.Name);
          if(String.isBlank(folderIdRecord.Account__r.Azure_Folder_ID__c)){
             String folderId = folderIdRecord.Account__r.Name +'-'+folderIdRecord.Account__c;
             jobAccount.Azure_Folder_ID__c = folderId;
             System.debug(LoggingLevel.INFO, jobAccount.Azure_Folder_ID__c);
-            
             System.debug('Account Folder name updated');
+            isReupload = false;
         }else {
             System.debug('Azure account Folder Name Already Exist');
-          
         }
         if(String.isBlank(folderIdRecord.Account__r.Azure_Folder_ID__c)){
             folderIdRecord.Azure_Folder_ID__c = folderIdRecord.Name +'-'+ folderIdRecord.Id;
             System.debug(LoggingLevel.INFO, folderIdRecord.Azure_Folder_ID__c);
-          
             System.debug('job posting Folder name updated');
+            isReupload = false;
         } else {
             System.debug('Job Posting Folder Name Already Exist');
             
@@ -595,19 +627,30 @@ Public class GoogleDriveController {
         if(String.isBlank((folderIdRecord.Job_Applications__r).Azure_Folder_ID__c)){
             jobGDApplication.Azure_Folder_ID__c = (folderIdRecord.Job_Applications__r).Name +'-'+ jobGDApplication.Id;
             System.debug(jobGDApplication.Azure_Folder_ID__c);
-           
             System.debug('job Application Folder name updated');
+            isReupload = false;
         } else {
             System.debug('Job Application Folder Name Already Exist');
         }
-        // update jobAccount;
-    
-
+        
         String fplink;
-        if(String.isNotBlank(folderIdRecord.Azure_Folder_ID__c) && String.isNotBlank( jobAccount.Azure_Folder_ID__c) && String.isNotBlank(jobGDApplication.Azure_Folder_ID__c)){
-            fplink = jobAccount.Azure_Folder_ID__c+'/'+folderIdRecord.Azure_Folder_ID__c+'/'+jobGDApplication.Azure_Folder_ID__c+'/';
-        }
+        if(String.isBlank(applicationDocument.Azure_FileID__c) && isReupload){
+            isReupload = false;
+        } 
+         
+        System.debug('Im in else block');
+        System.debug(String.isNotBlank(folderIdRecord.Azure_Folder_ID__c));
+        System.debug(String.isNotBlank( folderIdRecord.Account__r.Azure_Folder_ID__c));
+        System.debug(String.isNotBlank((folderIdRecord.Job_Applications__r).Azure_Folder_ID__c));
+        if(String.isNotBlank(folderIdRecord.Azure_Folder_ID__c) && String.isNotBlank(folderIdRecord.Account__r.Azure_Folder_ID__c) && String.isNotBlank((folderIdRecord.Job_Applications__r).Azure_Folder_ID__c)){
 
+        fplink = folderIdRecord.Account__r.Azure_Folder_ID__c+'/'+folderIdRecord.Azure_Folder_ID__c+'/'+(folderIdRecord.Job_Applications__r).Azure_Folder_ID__c+'/';
+
+        System.debug(LoggingLevel.INFO, fplink);
+        System.debug(LoggingLevel.INFO, applicationDocument.Azure_Document_URL__c);
+        azureupload.fileDel(fplink, applicationDocument.Azure_Document_URL__c);
+            
+        }
 
         System.debug(LoggingLevel.INFO, updateDocURL);
         System.debug('File Uploaded'+updateDocURL.Name);
@@ -623,7 +666,7 @@ Public class GoogleDriveController {
         System.debug('attachmentId>>'+attachmentId);
         System.debug('uploadedDocId>>'+uploadedDocId);
         
-        String fileUploadName = (folderIdRecord.Job_Applications__r).Name+'-'+ updateDocURL.Name+ '.jpg';
+        String fileUploadName = (folderIdRecord.Job_Applications__r).Name+'-'+ updateDocURL.Name;
         System.debug(LoggingLevel.INFO, fileUploadName+'File Upload Name');
 
         String status = azureupload.fileUpload(attachmentId, uploadedDocId, fplink, fileUploadName);

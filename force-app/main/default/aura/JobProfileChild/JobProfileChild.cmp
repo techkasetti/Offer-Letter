@@ -44,12 +44,12 @@
 
         <td>
             <div class="slds-text-heading-large">
-                <b>{!v.jobApplication.JobApplication.Name}/{!v.jobApplication.JobApplication.Candidate_Profile__r.Designation__c}</b>
+                <b>{!v.jobApplication.jobApplication.Name}/{!v.jobApplication.jobApplication.Candidate_Profile__r.Designation__c}</b>
             </div>
         </td>
         <!--td><div class="slds-text-heading-large"><b>{!v.POList.Name}/{!v.POList.JobAppication.Candidate_Profile__r.Designation__c}</b></div></td-->
         <td>
-            <div class="slds-text-heading-large"><b>{!v.jobApplication.JobApplication.Profile_Status__c}</b></div>
+            <div class="slds-text-heading-large"><b>{!v.jobApplication.jobApplication.Profile_Status__c}</b></div>
         </td>
         <td></td>
         <td></td>
@@ -93,34 +93,34 @@
 
             <td>
                 <div class="slds-text-heading-large">
-                    {!v.jobApplication.JobApplication.Name}/{!v.jobApplication.JobApplication.Candidate_Profile__r.Designation__c}
+                    {!v.jobApplication.jobApplication.Name}/{!v.jobApplication.jobApplication.Candidate_Profile__r.Designation__c}
                 </div>
             </td>
             <td>
                 <div class="slds-text-heading-large">
-                    {!v.jobApplication.JobApplication.Candidate_Profile__r.Experience__c}</div>
+                    {!v.jobApplication.jobApplication.Candidate_Profile__r.Experience__c}</div>
             </td>
             <td>
-                <div class="slds-text-heading-large">{!v.jobApplication.JobApplication.Candidate_Profile__r.Skills__c}
+                <div class="slds-text-heading-large">{!v.jobApplication.jobApplication.Candidate_Profile__r.Skills__c}
                 </div>
             </td>
             <td>
                 <div class="slds-text-heading-large">
-                    {!v.jobApplication.JobApplication.Candidate_Profile__r.Current_Location__c}</div>
+                    {!v.jobApplication.jobApplication.Candidate_Profile__r.Current_Location__c}</div>
             </td>
             <td>
                 <div class="slds-text-heading-large">
-                    {!v.jobApplication.JobApplication.Candidate_Profile__r.Notice_Period__c}</div>
+                    {!v.jobApplication.jobApplication.Candidate_Profile__r.Notice_Period__c}</div>
             </td>
             <td>
-                <div class="slds-text-heading-large">{!v.jobApplication.JobApplication.Profile_Status__c}</div>
+                <div class="slds-text-heading-large">{!v.jobApplication.jobApplication.Profile_Status__c}</div>
             </td>
             <td>
                 <div class="Status_Button">
                     <aura:if isTrue="{!v.ShowStatusAction}">
-                        <aura:iteration items="{!v.jobApplication.StatusButtons}" var="status" indexVar="index">
+                        <aura:iteration items="{!v.jobApplication.statusButtons}" var="status" indexVar="index">
                             <lightning:button label="{!status}" title="{!status}"
-                                value="{!v.jobApplication.JobApplication.Id}" variant="success"
+                                value="{!v.jobApplication.jobApplication.Id}" variant="success"
                                 onclick="{! c.handleClick }" disabled="{!v.disableButton}" />
                         </aura:iteration>
                     </aura:if>
@@ -136,16 +136,16 @@
                 <div>
 
                     <lightning:button variant="Brand" label="Add Comments" title="Comments"
-                        value="{!v.jobApplication.JobApplication.Id}" onclick="{!c.saveComments}" />
+                        value="{!v.jobApplication.jobApplication.Id}" onclick="{!c.saveComments}" />
                     <!--<lightning:button variant="Brand" label="Show Comments" title="Show Comments"  value="{!v.POList.JobAppication.Id}" onclick="{!c.showComments}"/>-->
                     <!--lightning:button variant="Brand" label="View Documents" title="View Documents"   value="{!v.POList.JobAppication.Candidate_Profile__r.Id}" onclick="{!c.handleViewDocuments}"/-->
                     <aura:if isTrue="{!v.ShowUploadDocuments}">
-                        <lightning:button variant="Brand" aura:id="profile" value="{!v.jobApplication.JobApplication}"
+                        <lightning:button variant="Brand" aura:id="profile" value="{!v.jobApplication.jobApplication}"
                             type="submit" label="Upload Documents" onclick="{!c.handleUpload}" />
                     </aura:if>
                     <aura:if isTrue="{!v.ShowScheduleInterviewButton}">
                         <lightning:button variant="Brand" aura:id="scheduleInterview"
-                            value="{!v.jobApplication.JobApplication.Id}" type="submit" label="Schedule Meeting"
+                            value="{!v.jobApplication.jobApplication.Id}" type="submit" label="Schedule Meeting"
                             onclick="{!c.handleScheduleInterview}" />
                     </aura:if>
                     <aura:if isTrue="{!v.ShowResubmissionButton}">
@@ -178,7 +178,7 @@
             <footer class="slds-modal__footer">
                 <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{! c.hideModel2 }" />
                 <lightning:button variant="brand" label="OK" title="OK"
-                    value="{!v.POList.JobAppication.Candidate_Profile__c}" onclick="{!c.saveFile}" />
+                    value="{!v.POList.jobAppication.Candidate_Profile__c}" onclick="{!c.saveFile}" />
             </footer>
             </div>
             </section>
@@ -354,7 +354,7 @@
                 <footer class="slds-modal__footer">
                     <lightning:button variant="neutral" label="Cancel" title="Cancel" onclick="{! c.hideModel3 }" />
                     <lightning:button variant="brand" label="OK" title="OK"
-                        value="{!v.jobApplication.JobApplication.Id}" onclick="{!c.handleSaveComment}" />
+                        value="{!v.jobApplication.jobApplication.Id}" onclick="{!c.handleSaveComment}" />
                 </footer>
             </div>
         </section>
@@ -378,7 +378,7 @@
                     <lightning:button variant="neutral" label="Cancel" title="Cancel"
                         onclick="{! c.hideModelOfferLetter }" />
                     <lightning:button variant="brand" label="OK" title="OK"
-                        value="{!v.jobApplication.JobApplication.Id}" onclick="{!c.createOffer}" />
+                        value="{!v.jobApplication.jobApplication.Id}" onclick="{!c.createOffer}" />
                 </footer>
             </div>
         </section>
